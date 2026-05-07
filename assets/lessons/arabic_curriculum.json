@@ -1,0 +1,262 @@
+{
+  "subjectType": "Arabic",
+  "term": 2,
+  "grade": 1,
+  "totalUnits": 3,
+  "units": [
+    {
+      "id": 1,
+      "title": "مَاذَا أَرَى؟",
+      "theme": "الطبيعة والألوان",
+      "lessons": [
+        {
+          "type": "Vocabulary",
+          "topic": "الألوان والأشياء",
+          "gameTemplate": "Selector",
+          "questionIsImage": false,
+          "question": "مَا لَوْنُ عَلَمِ مِصْرَ؟",
+          "options": [
+            {"text": "أَحْمَرُ وَأَسْوَدُ وَأَصْفَرُ", "isCorrect": true},
+            {"text": "أَخْضَرُ وَأَبْيَضُ", "isCorrect": false},
+            {"text": "أَزْرَقُ وَبُنِّيٌّ", "isCorrect": false},
+            {"text": "أَصْفَرُ فَقَطْ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "التاء المربوطة",
+          "gameTemplate": "Selector",
+          "question": "اخْتَرِ الْكَلِمَةَ التي يوجد بها تاء مربوطة",
+          "options": [
+            {"text": "مَدْرَسَةٌ", "isCorrect": true},
+            {"text": "مَدْرَسَ", "isCorrect": false},
+            {"text": "مَدْرَس", "isCorrect": false},
+            {"text": "مَدْرَسَه", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "المذكر والمؤنث",
+          "gameTemplate": "Sorter",
+          "question": "صَنِّفْ: مُذَكَّر أَمْ مُؤَنَّث؟",
+          "options": [
+            {"text": "وَلَد", "category": "مُذَكَّر", "isCorrect": true},
+            {"text": "بِنْت", "category": "مُؤَنَّث", "isCorrect": true},
+            {"text": "مُعَلِّم", "category": "مُذَكَّر", "isCorrect": true},
+            {"text": "مُعَلِّمَة", "category": "مُؤَنَّث", "isCorrect": true}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "المد بالألف",
+          "gameTemplate": "Popper",
+          "question": "فَرْقَعِ الْكَلِمَاتِ الَّتِي بِهَا مَدٌّ بِالْأَلِف",
+          "options": [
+            {"text": "بَاب", "isCorrect": true},
+            {"text": "سمير", "isCorrect": false},
+            {"text": "شراع", "isCorrect": true},
+            {"text": "قَلَم", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "الفرق بين ث وس",
+          "gameTemplate": "Selector",
+          "question": "اخْتَرِ الْكَلِمَةَ الصَّحِيحَةَ:",
+          "options": [
+            {"text": "ثَوْب", "isCorrect": true},
+            {"text": "سَوْب", "isCorrect": false},
+            {"text": "ثَوْبُ", "isCorrect": false},
+            {"text": "ثَمَك", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "المفرد والجمع",
+          "gameTemplate": "Sorter",
+          "question": "هَلْ هِيَ مُفْرَدٌ أَمْ جَمْعٌ؟",
+          "options": [
+            {"text": "أَزْهَار", "category": "جَمْع", "isCorrect": true},
+            {"text": "شَجَرَة", "category": "مُفْرَد", "isCorrect": true},
+            {"text": "أَشْجَار", "category": "جَمْع", "isCorrect": true},
+            {"text": "زَهْرَة", "category": "مُفْرَد", "isCorrect": true}
+          ]
+        },
+        {
+          "type": "Sentence",
+          "topic": "ترتيب الجملة",
+          "gameTemplate": "Sequencer",
+          "question": "رَتِّبِ الْكَلِمَاتِ لِتَكْوِينِ جُمْلَةٍ",
+          "options": [
+            {"text": "أَنَا", "order": 1},
+            {"text": "أُحِبُّ", "order": 2},
+            {"text": "مِصْرَ", "order": 3}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "أَخْلَاقُنَا الْجَمِيلَةُ",
+      "theme": "الأخلاق والقيم",
+      "lessons": [
+        {
+          "type": "Grammar",
+          "topic": "أنا - نحن",
+          "gameTemplate": "Selector",
+          "question": "......... أَلْعَبُ مَعَ أَصْدِقَائِي.",
+          "options": [
+            {"text": "أَنَا", "isCorrect": true},
+            {"text": "نَحْنُ", "isCorrect": false},
+            {"text": "هُوَ", "isCorrect": false},
+            {"text": "هِيَ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "أنا - نحن",
+          "gameTemplate": "Selector",
+          "question": "......... نَلْعَبُ فِي الْحَدِيقَةِ.",
+          "options": [
+            {"text": "نَحْنُ", "isCorrect": true},
+            {"text": "أَنَا", "isCorrect": false},
+            {"text": "أَنْتَ", "isCorrect": false},
+            {"text": "هُمْ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "المد بالياء",
+          "gameTemplate": "Popper",
+          "question": "فَرْقَعِ الْكَلِمَاتِ الَّتِي بِهَا مَدٌّ بِالْيَاءِ",
+          "options": [
+            {"text": "سَرِير", "isCorrect": true},
+            {"text": "عَصِير", "isCorrect": true},
+            {"text": "كِتَاب", "isCorrect": false},
+            {"text": "بَاب", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "هذا - هذه",
+          "gameTemplate": "Selector",
+          "question": "......... وَلَدٌ مُهَذَّبٌ.",
+          "options": [
+          
+            {"text": "هَذِهِ", "isCorrect": false},
+            {"text": "هَؤُلَاءِ", "isCorrect": false},
+            {"text": "هَذَا", "isCorrect": true},
+            {"text": "ذَلِكَ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Values",
+          "topic": "الأمانة والتعاون",
+          "gameTemplate": "Selector",
+          "question": "مَاذَا يَفْعَلُ الْوَلَدُ الْأَمِينُ؟",
+          "options": [
+            
+            {"text": "يَأْخُذُهَا", "isCorrect": false},
+            {"text": "يُخْفِيهَا", "isCorrect": false},
+            {"text": "يُرْجِعُ اللُّعْبَةَ", "isCorrect": true},
+            {"text": "يَكْسِرُهَا", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Sentence",
+          "topic": "ترتيب جملة",
+          "gameTemplate": "Sequencer",
+          "question": "رَتِّبِ الْكَلِمَاتِ",
+          "options": [
+            {"text": "أَنَا", "order": 1},
+            {"text": "أَصْدِقَائِي", "order": 4},
+            {"text": "مَعَ", "order": 3},
+            {"text": "أَمِينٌ", "order": 2}
+            
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "فِي السُّوقِ",
+      "theme": "السوق والشراء",
+      "lessons": [
+        {
+          "type": "Grammar",
+          "topic": "أنتَ - أنتِ",
+          "gameTemplate": "Selector",
+          "question": "......... تَلْعَبُ كُرَةً.",
+          "options": [
+            {"text": "أَنْتَ", "isCorrect": true},
+            {"text": "أَنْتِ", "isCorrect": false},
+            {"text": "أَنَا", "isCorrect": false},
+            {"text": "نَحْنُ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "الفعل الماضي والمضارع",
+          "gameTemplate": "Sorter",
+          "question": "صَنِّفِ الْفِعْلَ:",
+          "options": [
+            {"text": "لَعِبَ", "category": "مَاضٍ", "isCorrect": true},
+            {"text": "يَلْعَبُ", "category": "مُضَارِع", "isCorrect": true},
+            {"text": "ذَهَبَ", "category": "مَاضٍ", "isCorrect": true},
+            {"text": "يَذْهَبُ", "category": "مُضَارِع", "isCorrect": true}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "الشدة",
+          "gameTemplate": "Popper",
+          "question": "فَرْقَعِ الْكَلِمَاتِ الَّتِي بِهَا شَدَّة",
+          "options": [
+            {"text": "مُعَلِّم", "isCorrect": true},
+            {"text": "قِطَّة", "isCorrect": true},
+            {"text": "سَيَّارَة", "isCorrect": true},
+            {"text": "كِتَاب", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Vocabulary",
+          "topic": "أشياء السوق",
+          "gameTemplate": "Selector",
+          "question": "مَا الَّذِي تَشْتَرِيهِ مِنَ السُّوقِ؟",
+          "options": [
+            {"text": "سَيَّارَةً", "isCorrect": false},
+            {"text": "فَاكِهَةً وَخُضَرًا", "isCorrect": true},
+            {"text": "طَائِرَةً", "isCorrect": false},
+            {"text": "حَاسُوبًا", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Grammar",
+          "topic": "هو - هي",
+          "gameTemplate": "Selector",
+          "question": "......... يَلْعَبُ.",
+          "options": [
+            {"text": "هِيَ", "isCorrect": false},
+            {"text": "هُوَ", "isCorrect": true},
+            {"text": "نَحْنُ", "isCorrect": false},
+            {"text": "أَنْتَ", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Sentence",
+          "topic": "ترتيب جملة",
+          "gameTemplate": "Sequencer",
+          "question": "رَتِّبْ جُمْلَةً صَحِيحَةً",
+          "options": [
+
+
+            {"text": "السُّوقِ", "order": 4},
+            {"text": "أَحْمَدُ", "order": 2},
+            {"text": "إِلَى", "order": 3},
+            {"text": "ذَهَبَ", "order": 1}
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "subjectType": "English",
+  "term": 2,
+  "grade": 1,
+  "totalUnits": 6,
+  "units": [
+    {
+      "id": 1,
+      "title": "My Week",
+      "theme": "Daily Routine & Meals",
+      "lessons": [
+        {
+          "type": "Vocabulary",
+          "topic": "Days of the Week",
+          "gameTemplate": "Selector",
+          "questionIsImage": false,
+          "question": "What day comes after Monday?",
+          "options": [
+            {"text": "Tuesday", "isCorrect": true},
+            {"text": "Wednesday", "isCorrect": false},
+            {"text": "Friday", "isCorrect": false},
+            {"text": "Sunday", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Vocabulary",
+          "topic": "Meals of the Day",
+          "gameTemplate": "Matcher",
+          "question": "Match the meal",
+          "pairs": [
+            {"left": "breakfast", "right": "eggs and milk"},
+            {"left": "lunch", "right": "rice and chicken"},
+            {"left": "dinner", "right": "sandwich and soup"}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Letter Ww",
+          "gameTemplate": "Popper",
+          "question": "Pop the words that start with Yy",
+          "options": [
+            {"text": "yellow", "isCorrect": true},
+            {"text": "yes", "isCorrect": true},
+            {"text": "yogurt", "isCorrect": true},
+            {"text": "queen", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Letter Qq",
+          "gameTemplate": "Selector",
+          "question": "Which picture starts with Qq?",
+          "options": [
+            {"isCorrect": true, "imageHint": "assets/images/queen.png"},
+            {"isCorrect": true, "imageHint": "assets/images/quiet.png"},
+            {"isCorrect": false, "imageHint": "assets/images/van.png"},
+            {"isCorrect": false, "imageHint": "assets/images/zebra.png"}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Letter Vv & Zz",
+          "gameTemplate": "Sorter",
+          "question": "Sort by starting letter",
+          "options": [
+            {"text": "van", "category": "V", "isCorrect": true},
+            {"text": "vegetables", "category": "V", "isCorrect": true},
+            {"text": "zebra", "category": "Z", "isCorrect": true},
+            {"text": "zoo", "category": "Z", "isCorrect": true}
+          ]
+        },
+        {
+          "type": "Speaking",
+          "topic": "Daily Routine",
+          "gameTemplate": "Sequencer",
+          "question": "Order the days: Sunday → Monday → ...",
+          "options": [
+            {"text": "Sunday", "order": 1},
+            {"text": "Monday", "order": 2},
+            {"text": "Tuesday", "order": 3}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Feelings",
+      "theme": "Emotions & Pronouns",
+      "lessons": [
+        
+        {
+          "type": "Grammar",
+          "topic": "Personal Pronouns",
+          "gameTemplate": "Matcher",
+          "question": "Choose the correct pronoun",
+          "pairs": [
+            {"left": "___ am happy.", "right": "I"},
+            {"left": "___ is sad.", "right": "He / She"},
+            {"left": "___ are tired.", "right": "We / They"}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Letter Yy",
+          "gameTemplate": "Popper",
+          "question": "Pop the words that start with Yy",
+          "options": [
+            {"text": "yellow", "isCorrect": true},
+            {"text": "yogurt", "isCorrect": true},
+            {"text": "yes", "isCorrect": true},
+            {"text": "queen", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Letter Xx",
+          "gameTemplate": "Sorter",
+          "question": "Sort words with Xx sound",
+          "options": [
+            {"text": "x-ray", "category": "Xx", "isCorrect": true},
+            {"text": "box", "category": "Xx", "isCorrect": true},
+            {"text": "six", "category": "Xx", "isCorrect": true}
+          ]
+        },
+        {
+          "type": "Numbers",
+          "topic": "11 to 20",
+          "gameTemplate": "Sequencer",
+          "question": "Put the numbers in order",
+          "options": [
+            {"text": "11", "order": 1},
+            {"text": "20", "order": 3},
+            {"text": "15", "order": 2}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Seasons",
+      "theme": "Months & Weather",
+      "lessons": [
+        
+        {
+          "type": "Vocabulary",
+          "topic": "Weather",
+          "gameTemplate": "Matcher",
+          "question": "Match the weather",
+          "pairs": [
+            {"left": "It's sunny.", "right": "summer"},
+            {"left": "It's cold.", "right": "winter"}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Short Vowels",
+          "gameTemplate": "Popper",
+          "question": "Short vowel /a/ and /e/",
+          "options": [
+            {"text": "hat", "isCorrect": true},
+            {"text": "hen", "isCorrect": true},
+            {"text": "pot", "isCorrect": false},
+            {"text": "dog", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "My House",
+      "theme": "House & Rooms",
+      "lessons": [
+        {
+          "type": "Vocabulary",
+          "topic": "Rooms in the House",
+          "gameTemplate": "Selector",
+          "question": "Where do you sleep?",
+          "options": [
+            {"text": "bedroom", "isCorrect": true},
+            {"text": "kitchen", "isCorrect": false},
+            {"text": "bathroom", "isCorrect": false},
+            {"text": "park", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Vocabulary",
+          "topic": "House Activities",
+          "gameTemplate": "Matcher",
+          "question": "Match the action",
+          "pairs": [
+            {"left": "I sleep in the", "right": "bedroom"},
+            {"left": "I cook in the", "right": "kitchen"}
+          ]
+        },
+        {
+          "type": "Phonics",
+          "topic": "Short Vowels i & u",
+          "gameTemplate": "Sorter",
+          "question": "Sort short vowel sounds",
+          "options": [
+            {"text": "big - hip", "category": "/i/", "isCorrect": true},
+            {"text": "dog - hot", "category": "/o/", "isCorrect": true}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Neighborhood",
+      "theme": "Places & Actions",
+      "lessons": [
+        {
+          "type": "Vocabulary",
+          "topic": "Places in the Neighborhood",
+          "gameTemplate": "Selector",
+          "question": "Where do you go when you are sick?",
+          "options": [
+            {"text": "hospital", "isCorrect": true},
+            {"text": "school", "isCorrect": false},
+            {"text": "park", "isCorrect": false},
+            {"text": "zoo", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Vocabulary",
+          "topic": "Actions",
+          "gameTemplate": "Popper",
+          "question": "Pop the action words",
+          "options": [
+            {"text": "jump", "isCorrect": true},
+            {"text": "run", "isCorrect": true},
+            {"text": "swim", "isCorrect": true},
+            {"text": "sleep", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Two Friends and One Apple",
+      "theme": "Story & Values",
+      "lessons": [
+        {
+          "type": "Story",
+          "topic": "Two Friends and One Apple",
+          "gameTemplate": "Sequencer",
+          "question": "Order the story events",
+          "options": [
+            {"text": "They play in the park", "order": 1},
+            {"text": "They find a big red apple", "order": 2},
+            {"text": "They share the apple", "order": 3}
+          ]
+        },
+        {
+          "type": "Values",
+          "topic": "Sharing & Empathy",
+          "gameTemplate": "Selector",
+          "question": "What should they do?",
+          "options": [
+            {"text": "Share the apple", "isCorrect": true},
+            {"text": "Fight over it", "isCorrect": false},
+            {"text": "Throw it away", "isCorrect": false},
+            {"text": "Hide it", "isCorrect": false}
+          ]
+        }
+      ]
+    }
+  ]
+}

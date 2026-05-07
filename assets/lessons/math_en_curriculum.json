@@ -1,0 +1,192 @@
+{
+  "subjectType": "Math_EN",
+  "term": 2,
+  "grade": 1,
+  "totalUnits": 8,
+  "units": [
+    {
+      "id": 10,
+      "title": "Different Shapes",
+      "theme": "Shapes_Exploration",
+      "lessons": [
+        {
+          "type": "Geometry",
+          "topic": "3D Shapes Recognition",
+          "gameTemplate": "Selector",
+          "question": "Which shape is a cylinder?",
+          "options": [
+            { "isCorrect": false, "imageHint": "assets/images/sphere.png"},
+            { "isCorrect": false, "imageHint": "assets/images/cube.png"},
+            { "isCorrect": true, "imageHint": "assets/images/cylinder.png"},
+            { "isCorrect": false, "imageHint": "assets/images/cuboid.png"}
+          ]
+        },
+        {
+          "type": "Geometry",
+          "topic": "Tracing Faces",
+          "gameTemplate": "Matcher",
+          "question": "Match the 3D shape to its traced face",
+          "pairs": [
+            {"left": "Cylinder", "right": "Circle"},
+            {"left": "Cube", "right": "Square"},
+            {"left": "Cuboid", "right": "Rectangle"}
+          ]
+        },
+        {
+          "type": "Geometry",
+          "topic": "Identifying Shapes",
+          "gameTemplate": "Popper",
+          "question": "Pop the objects that have a cylinder shape",
+          "options": [
+            {"text": "Can", "isCorrect": true},
+            {"text": "Ball", "isCorrect": false},
+            {"text": "Battery", "isCorrect": true},
+            {"text": "Dice", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "How to Compare",
+      "theme": "Compare_Adventure",
+      "lessons": [
+        {
+          "type": "Measurement",
+          "topic": "Capacity (Volume)",
+          "gameTemplate": "Selector",
+          "question": "Which container holds more water?",
+          "options": [
+            {"isCorrect": true, "imageHint": "assets/images/tall_glass.png"},
+            {"isCorrect": false, "imageHint": "assets/images/short_glass.png"}
+          ]
+        },
+        {
+          "type": "Measurement",
+          "topic": "Comparing Area",
+          "gameTemplate": "Sorter",
+          "question": "Sort by area: Larger or Smaller?",
+          "options": [
+            {"text": "Big handkerchief", "category": "Larger", "isCorrect": true, "imageHint": "large_handkerchief.png"},
+            {"text": "Small notebook", "category": "Smaller", "isCorrect": true, "imageHint": "small_notebook.png"}
+          ]
+        },
+        {
+          "type": "Measurement",
+          "topic": "Using Units",
+          "gameTemplate": "Selector",
+          "question": "Which holds more cups of water?",
+          "options": [
+            {"isCorrect": true, "imageHint": "assets/images/kettle.png"},
+            {"isCorrect": false, "imageHint": "assets/images/bottle.png"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Addition by Making 10",
+      "theme": "Make_Ten_Mission",
+      "lessons": [
+        {
+          "type": "Arithmetic",
+          "topic": "Making Teen Numbers",
+          "gameTemplate": "Selector",
+          "question": "9 + 6 = ?",
+          "options": [
+            {"text": "13", "isCorrect": false},
+            {"text": "15", "isCorrect": true},
+            {"text": "14", "isCorrect": false},
+            {"text": "11", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Subtraction by Using 10",
+      "theme": "Subtract_Smart",
+      "lessons": [
+        {
+          "type": "Arithmetic",
+          "topic": "Subtract from Teens",
+          "gameTemplate": "Selector",
+          "question": "15 - 9 = ?",
+          "options": [
+            {"text": "6", "isCorrect": true},
+            {"text": "5", "isCorrect": false},
+            {"text": "7", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Ones, Tens, and Hundreds",
+      "theme": "Place_Value_World",
+      "lessons": [
+        {
+          "type": "Number_Sense",
+          "topic": "Tens and Ones",
+          "gameTemplate": "Selector",
+          "question": "How many tens are in 64?",
+          "options": [
+            {"text": "6", "isCorrect": true},
+            {"text": "4", "isCorrect": false},
+            {"text": "64", "isCorrect": false}
+          ]
+        },
+        {
+          "type": "Number_Sense",
+          "topic": "Ten 10s",
+          "gameTemplate": "Selector",
+          "question": "Ten 10s make?",
+          "options": [
+            {"text": "100", "isCorrect": true},
+            {"text": "10", "isCorrect": false}
+          ]
+        }
+      ]
+    },
+    
+    {
+      "id": 15,
+      "title": "What Time Is It?",
+      "theme": "Time_Telling",
+      "lessons": [
+        
+        {
+          "type": "Time",
+          "topic": "Half Past",
+          "gameTemplate": "Selector",
+          "question": "What time is 'half past 4'?",
+          "options": [
+            {"isCorrect": true, "imageHint": "assets/images/430clock.png"},
+            {"isCorrect": false, "imageHint": "assets/images/4clock.png"},
+            {"isCorrect": false, "imageHint": "assets/images/3clock.png"},
+            {"isCorrect": false, "imageHint": "assets/images/530clock.png"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Addition and Subtraction",
+      "theme": "Add_Subtract_Mastery",
+      "lessons": [
+        {
+          "type": "Arithmetic",
+          "topic": "Mixed Practice",
+          "gameTemplate": "Selector",
+          "question": "52 + 37 = ?",
+          "options": [
+            {"text": "89", "isCorrect": true},
+            {"text": "88", "isCorrect": false},
+            {"text": "99", "isCorrect": false},
+            {"text": "100", "isCorrect": false}
+          ]
+        }
+      ]
+    }
+  ]
+}
