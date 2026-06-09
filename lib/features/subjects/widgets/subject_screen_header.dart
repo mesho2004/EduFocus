@@ -1,5 +1,9 @@
-import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_state.dart';
 
 class SubjectScreenHeader extends StatelessWidget {
   const SubjectScreenHeader({super.key});
@@ -8,43 +12,80 @@ class SubjectScreenHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: AppColors.slate100, width: 1)),
+        color: context.colors.cardBackground,
+        border: Border(
+          bottom: BorderSide(color: context.colors.border, width: 1),
+        ),
       ),
       child: Row(
         children: [
           const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'Hi champ! 👋',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.slate900,
-                  ),
-                ),
-                Text(
-                  'Choose your subject and start playing!',
-                  style: TextStyle(fontSize: 12, color: AppColors.slate500),
-                ),
-              ],
+            child: BlocBuilder<CurriculumCubit, CurriculumState>(
+              builder: (context, state) {
+                String name = 'champ';
+                if (state is CurriculumLoaded && state.childProfile != null) {
+                  name = state.childProfile!.name;
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hi $name! 👋',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: context.colors.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      'Choose your subject and start playing!',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: context.colors.textTertiary,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.notifications_rounded,
-                color: AppColors.primary,
-              ),
-              onPressed: () {},
-            ),
+          BlocBuilder<StarsCubit, int>(
+            builder: (context, stars) {
+              return Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.brandYellow.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: context.colors.brandYellow.withOpacity(0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.star_rounded,
+                      color: Color(0xFFF3C344),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$stars',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: context.colors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

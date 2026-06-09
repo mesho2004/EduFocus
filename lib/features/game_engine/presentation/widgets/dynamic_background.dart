@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../data/models/lesson_content.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// Renders a fullscreen animated background that matches the lesson theme.
 class DynamicBackground extends StatefulWidget {
@@ -51,7 +52,7 @@ class _DynamicBackgroundState extends State<DynamicBackground>
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
-              gradient: _gradientFor(widget.theme),
+              gradient: _gradientFor(context, widget.theme),
             ),
           ),
         ),
@@ -65,29 +66,48 @@ class _DynamicBackgroundState extends State<DynamicBackground>
     );
   }
 
-  LinearGradient _gradientFor(GameTheme theme) {
+  LinearGradient _gradientFor(BuildContext context, GameTheme theme) {
+    final isDark = context.isDarkMode;
     switch (theme) {
       case GameTheme.beach:
-        return const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF87CEEB), Color(0xFF98D8C8), Color(0xFFFFE0A3)],
-          stops: [0.0, 0.6, 1.0],
-        );
+        return isDark
+            ? const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF0F2537)],
+              )
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF87CEEB), Color(0xFF98D8C8), Color(0xFFFFE0A3)],
+                stops: [0.0, 0.6, 1.0],
+              );
       case GameTheme.jungle:
-        return const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF1B5E20), Color(0xFF2E7D32), Color(0xFF388E3C)],
-          stops: [0.0, 0.5, 1.0],
-        );
+        return isDark
+            ? const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF041A06), Color(0xFF0C2B0E), Color(0xFF031404)],
+              )
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF1B5E20), Color(0xFF2E7D32), Color(0xFF388E3C)],
+                stops: [0.0, 0.5, 1.0],
+              );
       case GameTheme.space:
-        return const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF0D0630), Color(0xFF1A1060), Color(0xFF0D47A1)],
-          stops: [0.0, 0.6, 1.0],
-        );
+        return isDark
+            ? const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF02000A), Color(0xFF0A0520), Color(0xFF04122C)],
+              )
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF0D0630), Color(0xFF1A1060), Color(0xFF0D47A1)],
+                stops: [0.0, 0.6, 1.0],
+              );
     }
   }
 

@@ -2,28 +2,40 @@ import 'package:edufocus/features/subjects/widgets/overall_progress_card.dart';
 import 'package:edufocus/features/subjects/widgets/subject_card.dart';
 import 'package:edufocus/features/subjects/widgets/subject_screen_header.dart';
 import 'package:flutter/material.dart';
-import 'package:edufocus/core/themes/app_colors.dart';
-import 'package:edufocus/widgets/custom_bottom_nav_bar.dart';
-import 'package:edufocus/core/data/curriculum_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_state.dart';
 
 class SubjectsGridViewScreen extends StatelessWidget {
   const SubjectsGridViewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<SubjectData>>(
-      future: CurriculumData.loadAllSubjects(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: AppColors.backgroundLight,
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, state) {
+        if (state is CurriculumLoading || state is CurriculumInitial) {
+          return Scaffold(
+            backgroundColor: context.colors.background,
             body: Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+              child: CircularProgressIndicator(color: context.colors.primary),
             ),
           );
         }
 
-        final subjects = snapshot.data ?? [];
+        if (state is CurriculumError) {
+          return Scaffold(
+            backgroundColor: context.colors.background,
+            body: Center(
+              child: Text(
+                state.message,
+                style: TextStyle(color: context.colors.textPrimary),
+              ),
+            ),
+          );
+        }
+
+        final subjects = (state as CurriculumLoaded).subjects;
 
         // Overall progress across all subjects
         final totalLessons = subjects.fold<int>(
@@ -40,7 +52,7 @@ class SubjectsGridViewScreen extends StatelessWidget {
         final overallPct = (overallProgress * 100).round();
 
         return Scaffold(
-          backgroundColor: AppColors.backgroundLight,
+          backgroundColor: context.colors.background,
           body: SafeArea(
             child: Column(
               children: [
@@ -65,13 +77,13 @@ class SubjectsGridViewScreen extends StatelessWidget {
                         const SizedBox(height: 28),
 
                         // ── Section label ───────────────────────
-                        const Text(
+                        Text(
                           "Let's start playing",
                           textAlign: TextAlign.right,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.slate900,
+                            color: context.colors.textPrimary,
                           ),
                         ),
 
@@ -108,16 +120,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          bottomSheet: CustomBottomNavBar(
-            currentIndex: 0,
-            onTap: (index) {
-              if (index == 1) {
-                Navigator.pushReplacementNamed(context, '/progress');
-              } else if (index == 2) {
-                Navigator.pushReplacementNamed(context, '/profile');
-              }
-            },
           ),
         );
       },

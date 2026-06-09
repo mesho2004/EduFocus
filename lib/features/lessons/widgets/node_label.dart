@@ -1,4 +1,5 @@
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class NodeLabel extends StatelessWidget {
@@ -17,7 +18,7 @@ class NodeLabel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
       decoration: BoxDecoration(
-        color: isActive ? color.withValues(alpha: 0.12) : Colors.white,
+        color: isActive ? color.withValues(alpha: 0.12) : context.colors.cardBackground,
         borderRadius: BorderRadius.circular(9999),
         border: isActive
             ? Border.all(color: color.withValues(alpha: 0.3))
@@ -35,7 +36,7 @@ class NodeLabel extends StatelessWidget {
         style: TextStyle(
           fontSize: isActive ? 15 : 13,
           fontWeight: isActive ? FontWeight.w900 : FontWeight.w700,
-          color: isActive ? color : AppColors.slate700,
+          color: isActive ? color : context.colors.textSecondary,
         ),
       ),
     );

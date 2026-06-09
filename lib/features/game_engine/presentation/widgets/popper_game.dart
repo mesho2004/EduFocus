@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import '../../../../core/themes/app_theme.dart';
 import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
@@ -182,7 +183,7 @@ class _PopperGameState extends State<PopperGame> {
         Text(
           'Pop the correct bubbles! 🫧',
           style: TextStyle(
-            color: const Color(0xFF64748B).withValues(alpha: 0.85),
+            color: context.colors.textSecondary,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -326,17 +327,26 @@ class _PopperQuestionBanner extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+        border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Text(
         question.question,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1E3A5F), height: 1.4),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          color: context.colors.textPrimary,
+          height: 1.4,
+        ),
       ),
     );
   }

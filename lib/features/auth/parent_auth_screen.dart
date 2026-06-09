@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/utils/widgets/custom_text_field.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
+import 'package:edufocus/features/auth/cubit/auth_cubit.dart';
+import 'package:edufocus/features/auth/cubit/auth_state.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ParentAuthScreen  –  Login / Sign-Up gateway for parents
@@ -19,44 +24,58 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _loginEmailController = TextEditingController();
+  final _loginPasswordController = TextEditingController();
+
+  final _signUpEmailController = TextEditingController();
+  final _signUpPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   _AuthMode _mode = _AuthMode.login;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _loginEmailController.dispose();
+    _loginPasswordController.dispose();
+    _signUpEmailController.dispose();
+    _signUpPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
   // ── Validation helpers ─────────────────────────────────────────────────────
   String? _validateEmail(String? v) {
-    // if (v == null || v.trim().isEmpty) return 'Email is required';
-    // final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    // if (!emailRegex.hasMatch(v.trim())) return 'Enter a valid email address';
-    // return null;
+    if (v == null || v.trim().isEmpty) return 'Email is required';
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(v.trim())) return 'Enter a valid email address';
+    return null;
   }
 
   String? _validatePassword(String? v) {
-    // if (v == null || v.isEmpty) return 'Password is required';
-    // if (v.length < 6) return 'Password must be at least 6 characters';
-    // return null;
+    if (v == null || v.isEmpty) return 'Password is required';
+    if (v.length < 6) return 'Password must be at least 6 characters';
+    return null;
   }
 
   String? _validateConfirmPassword(String? v) {
-    // if (v == null || v.isEmpty) return 'Please confirm your password';
-    // if (v != _passwordController.text) return 'Passwords do not match';
-    // return null;
+    if (v == null || v.isEmpty) return 'Please confirm your password';
+    if (v != _signUpPasswordController.text) return 'Passwords do not match';
+    return null;
   }
 
   // ── Action ─────────────────────────────────────────────────────────────────
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.pushReplacementNamed(context, '/registration');
+      if (_mode == _AuthMode.login) {
+        final email = _loginEmailController.text.trim();
+        final password = _loginPasswordController.text;
+        context.read<AuthCubit>().login(email, password);
+      } else {
+        final email = _signUpEmailController.text.trim();
+        final password = _signUpPasswordController.text;
+        final confirmPassword = _confirmPasswordController.text;
+        context.read<AuthCubit>().register(email, password, confirmPassword);
+      }
     }
   }
 
@@ -67,149 +86,180 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
   Widget build(BuildContext context) {
     final isLogin = _mode == _AuthMode.login;
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          context.read<CurriculumCubit>().loadCurriculum();
+          if (state.hasChild) {
+            Navigator.pushReplacementNamed(context, '/subjects_grid_view');
+          } else {
+            Navigator.pushReplacementNamed(context, '/registration');
+          }
+        } else if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: context.colors.brandRed,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is AuthLoading;
 
-                // ── Logo ──────────────────────────────────────────────────
-                const EduFocusLogo(fontSize: 32, animate: false),
-                const SizedBox(height: 28),
+        return Scaffold(
+          backgroundColor: context.colors.background,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 40),
 
-                // ── Title ──────────────────────────────────────────────────
-                const Text(
-                  'Parent Portal',
-                  style: TextStyle(
-                    color: AppColors.slate900,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                    // ── Logo ──────────────────────────────────────────────────
+                    const EduFocusLogo(fontSize: 32, animate: false),
+                    const SizedBox(height: 28),
 
-                // ── Subtitle ───────────────────────────────────────────────
-                const Text(
-                  'Sign in to set up a safe learning\nenvironment for your hero.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.slate500,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // ── Login / Sign Up tab toggle ─────────────────────────────
-                _ModeToggle(
-                  current: _mode,
-                  onChanged: (m) => setState(() {
-                    _mode = m;
-                    _formKey.currentState?.reset();
-                  }),
-                ),
-                const SizedBox(height: 28),
-
-                // ── Email field ────────────────────────────────────────────
-                _FieldLabel(text: "Parent's Email"),
-                const SizedBox(height: 8),
-                CustomTextFormField(
-                  controller: _emailController,
-                  hintText: 'Email',
-                  keyboardType: TextInputType.emailAddress,
-                  validator: _validateEmail,
-                ),
-                const SizedBox(height: 20),
-
-                // ── Password field ─────────────────────────────────────────
-                _FieldLabel(text: 'Password'),
-                const SizedBox(height: 8),
-                CustomTextFormField(
-                  controller: _passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                  isPassword: true,
-                  validator: _validatePassword,
-                ),
-
-                // ── Forgot password ────────────────────────────────────────
-                if (isLogin) ...[
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {}, // TODO: forgot password flow
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.brandBlue,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 4,
-                        ),
-                      ),
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(fontSize: 13),
+                    // ── Title ──────────────────────────────────────────────────
+                    Text(
+                      'Parent Portal',
+                      style: TextStyle(
+                        color: context.colors.textPrimary,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.5,
                       ),
                     ),
-                  ),
-                ] else ...[
-                  const SizedBox(height: 20),
-                  // ── Confirm password (Sign Up only) ──────────────────────
-                  _FieldLabel(text: 'Confirm Password'),
-                  const SizedBox(height: 8),
-                  CustomTextFormField(
-                    controller: _confirmPasswordController,
-                    hintText: 'Re-enter your password',
-                    obscureText: true,
-                    isPassword: true,
-                    validator: _validateConfirmPassword,
-                  ),
-                  const SizedBox(height: 8),
-                ],
+                    const SizedBox(height: 8),
 
-                const SizedBox(height: 24),
+                    // ── Subtitle ───────────────────────────────────────────────
+                    Text(
+                      'Sign in to set up a safe learning\nenvironment for your hero.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: context.colors.textSecondary,
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
 
-                // ── Primary CTA button ─────────────────────────────────────
-                _PrimaryButton(
-                  label: isLogin ? 'Sign In' : 'Create Account',
-                  icon: isLogin
-                      ? Icons.login_rounded
-                      : Icons.person_add_alt_1_rounded,
-                  onPressed: _submit,
+                    // ── Login / Sign Up tab toggle ─────────────────────────────
+                    _ModeToggle(
+                      current: _mode,
+                      onChanged: (m) => setState(() {
+                        _mode = m;
+                        _formKey.currentState?.reset();
+                      }),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // ── Email field ────────────────────────────────────────────
+                    _FieldLabel(text: "Parent's Email"),
+                    const SizedBox(height: 8),
+                    CustomTextFormField(
+                      key: ValueKey(isLogin ? 'login_email' : 'signup_email'),
+                      controller: isLogin ? _loginEmailController : _signUpEmailController,
+                      hintText: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // ── Password field ─────────────────────────────────────────
+                    _FieldLabel(text: 'Password'),
+                    const SizedBox(height: 8),
+                    CustomTextFormField(
+                      key: ValueKey(isLogin ? 'login_password' : 'signup_password'),
+                      controller: isLogin ? _loginPasswordController : _signUpPasswordController,
+                      hintText: 'Password',
+                      obscureText: true,
+                      isPassword: true,
+                      validator: _validatePassword,
+                    ),
+
+                    // ── Forgot password ────────────────────────────────────────
+                    if (isLogin) ...[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {}, // TODO: forgot password flow
+                          style: TextButton.styleFrom(
+                            foregroundColor: context.colors.brandBlue,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 4,
+                            ),
+                          ),
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      const SizedBox(height: 20),
+                      // ── Confirm password (Sign Up only) ──────────────────────
+                      _FieldLabel(text: 'Confirm Password'),
+                      const SizedBox(height: 8),
+                      CustomTextFormField(
+                        key: const ValueKey('signup_confirm_password'),
+                        controller: _confirmPasswordController,
+                        hintText: 'Re-enter your password',
+                        obscureText: true,
+                        isPassword: true,
+                        validator: _validateConfirmPassword,
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+
+                    const SizedBox(height: 24),
+
+                    // ── Primary CTA button ─────────────────────────────────────
+                    _PrimaryButton(
+                      label: isLogin ? 'Sign In' : 'Create Account',
+                      icon: isLogin
+                          ? Icons.login_rounded
+                          : Icons.person_add_alt_1_rounded,
+                      isLoading: isLoading,
+                      onPressed: _submit,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // ── OR divider ─────────────────────────────────────────────
+                    const _OrDivider(),
+                    const SizedBox(height: 20),
+
+                    // ── Google button ──────────────────────────────────────────
+                    _GoogleButton(onPressed: _handleGoogle),
+                    const SizedBox(height: 36),
+
+                    // ── Footer note ────────────────────────────────────────────
+                    Text(
+                      'Once signed in, the child\'s world begins.\nThis screen will not appear again.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: context.colors.textTertiary,
+                        fontSize: 12,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
-                const SizedBox(height: 24),
-
-                // ── OR divider ─────────────────────────────────────────────
-                const _OrDivider(),
-                const SizedBox(height: 20),
-
-                // ── Google button ──────────────────────────────────────────
-                _GoogleButton(onPressed: _handleGoogle),
-                const SizedBox(height: 36),
-
-                // ── Footer note ────────────────────────────────────────────
-                const Text(
-                  'Once signed in, the child\'s world begins.\nThis screen will not appear again.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.slate400,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -228,7 +278,7 @@ class _ModeToggle extends StatelessWidget {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: AppColors.slate100,
+        color: context.colors.border,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -272,8 +322,8 @@ class _Tab extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: selected
-                  ? AppColors.brandGreen
-                  : Colors.white.withValues(alpha: 0.4),
+                  ? context.colors.brandGreen
+                  : context.colors.cardBackground.withOpacity(0.4),
               borderRadius: BorderRadius.circular(10),
               boxShadow: selected
                   ? [
@@ -290,8 +340,8 @@ class _Tab extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 color: selected
-                    ? AppColors.backgroundLight
-                    : AppColors.slate500,
+                    ? Colors.white
+                    : context.colors.textSecondary,
                 fontWeight: selected ? FontWeight.bold : FontWeight.w500,
                 fontSize: 15,
               ),
@@ -317,8 +367,8 @@ class _FieldLabel extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(
-          color: AppColors.slate700,
+        style: TextStyle(
+          color: context.colors.textSecondary,
           fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
@@ -334,11 +384,13 @@ class _PrimaryButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const _PrimaryButton({
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -347,10 +399,19 @@ class _PrimaryButton extends StatelessWidget {
       width: double.infinity,
       height: 56,
       child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon, color: Colors.white, size: 20),
+        onPressed: isLoading ? null : onPressed,
+        icon: isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Icon(icon, color: Colors.white, size: 20),
         label: Text(
-          label,
+          isLoading ? 'Please wait...' : label,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 17,
@@ -358,12 +419,12 @@ class _PrimaryButton extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.brandGreen,
+          backgroundColor: context.colors.brandGreen,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          elevation: 4,
-          shadowColor: AppColors.brandGreen.withOpacity(0.35),
+          elevation: isLoading ? 0 : 4,
+          shadowColor: context.colors.brandGreen.withOpacity(0.35),
         ),
       ),
     );
@@ -380,20 +441,20 @@ class _OrDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: AppColors.slate200, thickness: 1)),
+        Expanded(child: Divider(color: context.colors.border, thickness: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             'OR',
             style: TextStyle(
-              color: AppColors.slate400,
+              color: context.colors.textTertiary,
               fontSize: 13,
               fontWeight: FontWeight.w600,
               letterSpacing: 1,
             ),
           ),
         ),
-        const Expanded(child: Divider(color: AppColors.slate200, thickness: 1)),
+        Expanded(child: Divider(color: context.colors.border, thickness: 1)),
       ],
     );
   }
@@ -414,11 +475,11 @@ class _GoogleButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.slate200, width: 1.5),
+          side: BorderSide(color: context.colors.border, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: context.colors.cardBackground,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -440,10 +501,10 @@ class _GoogleButton extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            const Text(
+            Text(
               'Continue with Google',
               style: TextStyle(
-                color: AppColors.slate700,
+                color: context.colors.textSecondary,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),

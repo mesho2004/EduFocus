@@ -5,6 +5,7 @@ import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// "Drag to Sort" game — items are draggable, buckets are drop targets.
 ///
@@ -73,9 +74,9 @@ class _SorterGameState extends State<SorterGame> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.cardBackground,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                border: Border.all(color: context.colors.border, width: 1.5),
                 boxShadow: [
                   BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3)),
                 ],
@@ -83,7 +84,7 @@ class _SorterGameState extends State<SorterGame> {
               child: Text(
                 question.question,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF1E3A5F)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: context.colors.textPrimary),
               ),
             ),
           ),
@@ -197,15 +198,15 @@ class _DraggableToken extends StatelessWidget {
     required this.onDragEnd,
   });
 
-  Widget _buildCard({double opacity = 1.0}) {
+  Widget _buildCard(BuildContext context, {double opacity = 1.0}) {
     return Opacity(
       opacity: opacity,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+          border: Border.all(color: context.colors.border, width: 1.5),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
@@ -216,10 +217,10 @@ class _DraggableToken extends StatelessWidget {
         ),
         child: Text(
           option.text ?? '',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF1E3A5F),
+            color: context.colors.textPrimary,
           ),
         ),
       ),
@@ -232,9 +233,9 @@ class _DraggableToken extends StatelessWidget {
       data: index,
       onDragStarted: onDragStarted,
       onDragEnd: (_) => onDragEnd(),
-      feedback: Material(color: Colors.transparent, child: _buildCard()),
-      childWhenDragging: _buildCard(opacity: 0.3),
-      child: _buildCard(),
+      feedback: Material(color: Colors.transparent, child: _buildCard(context)),
+      childWhenDragging: _buildCard(context, opacity: 0.3),
+      child: _buildCard(context),
     );
   }
 }
@@ -272,7 +273,7 @@ class _DropBucket extends StatelessWidget {
                 : color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isDragging ? color : const Color(0xFFE2E8F0),
+              color: isDragging ? color : context.colors.border,
               width: isHovered ? 3 : 2,
             ),
             boxShadow: isHovered

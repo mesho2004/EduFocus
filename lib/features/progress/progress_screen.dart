@@ -1,6 +1,10 @@
-import 'package:edufocus/core/themes/app_colors.dart';
-import 'package:edufocus/widgets/custom_bottom_nav_bar.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/features/main_navigation_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_state.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
@@ -8,17 +12,17 @@ class ProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.colors.background,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'My Progress',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color: AppColors.slate900,
+            color: context.colors.textPrimary,
           ),
         ),
       ),
@@ -28,37 +32,32 @@ class ProgressScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildHeroSection(),
+              _buildHeroSection(context),
+              // _buildSectionTitle(
+              //   context,
+              //   'Learning Map',
+              //   Icons.map_rounded,
+              //   context.colors.brandBlue,
+              // ),
+              // const SizedBox(height: 16),
+              // _buildLearningMap(context),
               const SizedBox(height: 32),
-              _buildSectionTitle('Learning Map', Icons.map_rounded, AppColors.brandBlue),
+              _buildSectionTitle(
+                context,
+                'Trophy Room',
+                Icons.emoji_events_rounded,
+                context.colors.brandYellow,
+              ),
               const SizedBox(height: 16),
-              _buildLearningMap(),
-              const SizedBox(height: 32),
-              _buildSectionTitle('Trophy Room', Icons.emoji_events_rounded, AppColors.brandYellow),
-              const SizedBox(height: 16),
-              _buildTrophyRoom(),
-              const SizedBox(height: 32),
-              _buildSectionTitle('Jump Back In', Icons.play_circle_fill_rounded, AppColors.brandRed),
-              const SizedBox(height: 16),
-              _buildJumpBackInCard(context),
+              _buildTrophyRoom(context),
             ],
           ),
         ),
       ),
-      bottomSheet: CustomBottomNavBar(
-        currentIndex: 1,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/subjects_grid_view');
-          } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/profile');
-          }
-        },
-      ),
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon, Color color) {
+  Widget _buildSectionTitle(BuildContext context, String title, IconData icon, Color color) {
     return Row(
       children: [
         Container(
@@ -72,99 +71,120 @@ class ProgressScreen extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: AppColors.slate900,
+            color: context.colors.textPrimary,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildHeroSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF8B59A7), Color(0xFF6B4282)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF8B59A7).withOpacity(0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildHeroStat(
-                icon: '🔥',
-                label: 'Streak',
-                value: '3 Days',
-                color: AppColors.brandOrange,
-              ),
-              Container(
-                width: 2,
-                height: 50,
-                color: Colors.white.withOpacity(0.2),
-              ),
-              _buildHeroStat(
-                icon: '⭐',
-                label: 'Coins',
-                value: '1,250',
-                color: AppColors.brandYellow,
+  Widget _buildHeroSection(BuildContext context) {
+    final stars = context.watch<StarsCubit>().state;
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, state) {
+        int totalLessons = 0;
+        int completedLessons = 0;
+        double progress = 0.0;
+        int streakDays = 0;
+
+        if (state is CurriculumLoaded) {
+          totalLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.totalLessons);
+          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          progress = totalLessons == 0 ? 0.0 : completedLessons / totalLessons;
+          if (state.progressModel != null) {
+            streakDays = state.progressModel!.streakDays;
+          }
+        }
+
+        final pct = (progress * 100).round();
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF8B59A7), Color(0xFF6B4282)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF8B59A7).withValues(alpha: 0.3),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Level 5 - Letter Hero',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildHeroStat(
+                    icon: '🔥',
+                    label: 'Streak',
+                    value: '$streakDays Days',
+                    color: context.colors.brandOrange,
                   ),
-                  Text(
-                    '80%',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.brandYellow,
+                  Container(
+                    width: 2,
+                    height: 50,
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
+                  _buildHeroStat(
+                    icon: '⭐',
+                    label: 'Coins',
+                    value: '$stars',
+                    color: context.colors.brandYellow,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Completed $completedLessons of $totalLessons lessons',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '$pct%',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: context.colors.brandYellow,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.white.withValues(alpha: 0.2),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        context.colors.brandYellow,
+                      ),
+                      minHeight: 14,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: 0.8,
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.brandYellow,
-                  ),
-                  minHeight: 14,
-                ),
-              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -205,13 +225,13 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLearningMap() {
+  Widget _buildLearningMap(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.slate200, width: 2),
+        border: Border.all(color: context.colors.border, width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -230,7 +250,7 @@ class ProgressScreen extends StatelessWidget {
               child: Container(
                 width: 8,
                 decoration: BoxDecoration(
-                  color: AppColors.slate200,
+                  color: context.colors.border,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -245,7 +265,7 @@ class ProgressScreen extends StatelessWidget {
                 child: Container(
                   width: 8,
                   decoration: BoxDecoration(
-                    color: AppColors.brandGreen,
+                    color: context.colors.brandGreen,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -256,51 +276,56 @@ class ProgressScreen extends StatelessWidget {
           Column(
             children: [
               _buildMapNode(
+                context,
                 title: 'Sentences',
                 isLocked: true,
                 isActive: false,
                 isCompleted: false,
-                color: AppColors.slate300,
+                color: context.colors.textTertiary,
                 icon: Icons.lock_rounded,
                 alignment: Alignment.centerRight,
               ),
               const SizedBox(height: 32),
               _buildMapNode(
+                context,
                 title: 'Words II',
                 isLocked: true,
                 isActive: false,
                 isCompleted: false,
-                color: AppColors.slate300,
+                color: context.colors.textTertiary,
                 icon: Icons.lock_rounded,
                 alignment: Alignment.centerLeft,
               ),
               const SizedBox(height: 32),
               _buildMapNode(
+                context,
                 title: 'Words I',
                 isLocked: false,
                 isActive: true,
                 isCompleted: false,
-                color: AppColors.brandBlue,
+                color: context.colors.brandBlue,
                 icon: Icons.play_arrow_rounded,
                 alignment: Alignment.centerRight,
               ),
               const SizedBox(height: 32),
               _buildMapNode(
+                context,
                 title: 'Letters II',
                 isLocked: false,
                 isActive: false,
                 isCompleted: true,
-                color: AppColors.brandGreen,
+                color: context.colors.brandGreen,
                 icon: Icons.check_rounded,
                 alignment: Alignment.centerLeft,
               ),
               const SizedBox(height: 32),
               _buildMapNode(
+                context,
                 title: 'Letters I',
                 isLocked: false,
                 isActive: false,
                 isCompleted: true,
-                color: AppColors.brandGreen,
+                color: context.colors.brandGreen,
                 icon: Icons.check_rounded,
                 alignment: Alignment.centerRight,
               ),
@@ -311,7 +336,8 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMapNode({
+  Widget _buildMapNode(
+    BuildContext context, {
     required String title,
     required bool isLocked,
     required bool isActive,
@@ -330,17 +356,17 @@ class ProgressScreen extends StatelessWidget {
               : MainAxisAlignment.start,
           children: [
             if (alignment == Alignment.centerLeft) ...[
-              _buildNodeLabel(title, isActive, color),
+              _buildNodeLabel(context, title, isActive, color),
               const SizedBox(width: 16),
             ],
             Container(
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: isLocked ? Colors.white : color,
+                color: isLocked ? context.colors.cardBackground : color,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isLocked ? AppColors.slate300 : color,
+                  color: isLocked ? context.colors.border : color,
                   width: 3,
                 ),
                 boxShadow: isActive
@@ -349,21 +375,21 @@ class ProgressScreen extends StatelessWidget {
                           color: color.withOpacity(0.4),
                           blurRadius: 16,
                           spreadRadius: 4,
-                        )
+                        ),
                       ]
                     : [],
               ),
               child: Center(
                 child: Icon(
                   icon,
-                  color: isLocked ? AppColors.slate400 : Colors.white,
+                  color: isLocked ? context.colors.textTertiary : Colors.white,
                   size: 28,
                 ),
               ),
             ),
             if (alignment == Alignment.centerRight) ...[
               const SizedBox(width: 16),
-              _buildNodeLabel(title, isActive, color),
+              _buildNodeLabel(context, title, isActive, color),
             ],
           ],
         ),
@@ -371,14 +397,14 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNodeLabel(String title, bool isActive, Color color) {
+  Widget _buildNodeLabel(BuildContext context, String title, bool isActive, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: isActive ? color.withOpacity(0.1) : Colors.white,
+        color: isActive ? color.withOpacity(0.1) : context.colors.cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isActive ? color : AppColors.slate200,
+          color: isActive ? color : context.colors.border,
           width: 2,
         ),
       ),
@@ -387,66 +413,84 @@ class ProgressScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w800,
-          color: isActive ? color : AppColors.slate500,
+          color: isActive ? color : context.colors.textTertiary,
         ),
       ),
     );
   }
 
-  Widget _buildTrophyRoom() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.slate200, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  Widget _buildTrophyRoom(BuildContext context) {
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, state) {
+        int completedLessons = 0;
+        int streakDays = 0;
+        if (state is CurriculumLoaded) {
+          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          streakDays = state.progressModel?.streakDays ?? 0;
+        }
+
+        final firstWinUnlocked = completedLessons > 0;
+        final speedyUnlocked = completedLessons >= 2;
+        final streakUnlocked = streakDays >= 3;
+        final wordsUnlocked = completedLessons >= 4;
+        final numbersUnlocked = completedLessons >= 6;
+        final masterUnlocked = completedLessons >= 10;
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: context.colors.cardBackground,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: context.colors.border, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: GridView.count(
-        crossAxisCount: 3,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 16,
-        childAspectRatio: 0.8,
-        children: [
-          _buildTrophyBadge('First Win', '🌟', true),
-          _buildTrophyBadge('Speedy', '⚡', true),
-          _buildTrophyBadge('Streak x3', '🔥', true),
-          _buildTrophyBadge('Words', '📖', true),
-          _buildTrophyBadge('Numbers', '🔢', false),
-          _buildTrophyBadge('Master', '👑', false),
-        ],
-      ),
+          child: GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 16,
+            childAspectRatio: 0.8,
+            children: [
+              _buildTrophyBadge(context, 'First Win', '🌟', firstWinUnlocked),
+              _buildTrophyBadge(context, 'Speedy', '⚡', speedyUnlocked),
+              _buildTrophyBadge(context, 'Streak x3', '🔥', streakUnlocked),
+              _buildTrophyBadge(context, 'Words', '📖', wordsUnlocked),
+              _buildTrophyBadge(context, 'Numbers', '🔢', numbersUnlocked),
+              _buildTrophyBadge(context, 'Master', '👑', masterUnlocked),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildTrophyBadge(String title, String emoji, bool unlocked) {
+  Widget _buildTrophyBadge(BuildContext context, String title, String emoji, bool unlocked) {
     return Column(
       children: [
         Expanded(
           child: Container(
             decoration: BoxDecoration(
               color: unlocked
-                  ? AppColors.brandYellow.withOpacity(0.2)
-                  : AppColors.slate100,
+                  ? context.colors.brandYellow.withOpacity(0.2)
+                  : context.colors.border.withOpacity(0.5),
               shape: BoxShape.circle,
               border: Border.all(
-                color: unlocked ? AppColors.brandYellow : AppColors.slate200,
+                color: unlocked ? context.colors.brandYellow : context.colors.border,
                 width: 3,
               ),
               boxShadow: unlocked
                   ? [
                       BoxShadow(
-                        color: AppColors.brandYellow.withOpacity(0.3),
+                        color: context.colors.brandYellow.withOpacity(0.3),
                         blurRadius: 12,
-                      )
+                      ),
                     ]
                   : [],
             ),
@@ -467,7 +511,7 @@ class ProgressScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: unlocked ? AppColors.slate700 : AppColors.slate400,
+            color: unlocked ? context.colors.textSecondary : context.colors.textTertiary,
           ),
         ),
       ],
@@ -478,9 +522,12 @@ class ProgressScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.brandRed.withOpacity(0.1),
+        color: context.colors.brandRed.withOpacity(0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.brandRed.withOpacity(0.3), width: 2),
+        border: Border.all(
+          color: context.colors.brandRed.withOpacity(0.3),
+          width: 2,
+        ),
       ),
       child: Row(
         children: [
@@ -488,11 +535,11 @@ class ProgressScreen extends StatelessWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.cardBackground,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.brandRed.withOpacity(0.2),
+                  color: context.colors.brandRed.withOpacity(0.2),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -507,21 +554,21 @@ class ProgressScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Supermarket',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.slate900,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Continue your shopping adventure!',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.slate600,
+                    color: context.colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -530,10 +577,18 @@ class ProgressScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       // Navigate back to home or the specific lesson
-                      Navigator.pushReplacementNamed(context, '/subjects_grid_view');
+                      final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+                      if (mainNavState != null) {
+                        mainNavState.setIndex(0);
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/subjects_grid_view',
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.brandRed,
+                      backgroundColor: context.colors.brandRed,
                       foregroundColor: Colors.white,
                       elevation: 4,
                       padding: const EdgeInsets.symmetric(vertical: 12),

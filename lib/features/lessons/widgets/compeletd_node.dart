@@ -1,5 +1,6 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/features/lessons/widgets/node_label.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,7 @@ class CompletedNode extends StatelessWidget {
                       size: 18,
                       color: i < lesson.stars
                           ? const Color(0xFFF3C344)
-                          : AppColors.slate200,
+                          : context.colors.border,
                     );
                   }),
                 ),
@@ -75,4 +76,4 @@ class CompletedNode extends StatelessWidget {
       ),
     );
   }
-}
+}

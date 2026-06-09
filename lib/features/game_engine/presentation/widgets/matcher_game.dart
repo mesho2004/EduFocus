@@ -6,6 +6,7 @@ import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// Matcher game — two columns of items; tap left then right to match pairs.
 /// Lines are drawn between matched pairs using [CustomPaint].
@@ -214,7 +215,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                   color: isMatched
                                       ? _pairColors[i % _pairColors.length]
                                           .withOpacity(0.25)
-                                      : Colors.white,
+                                      : context.colors.cardBackground,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: isSelected
@@ -222,7 +223,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                         : isMatched
                                             ? _pairColors[
                                                 i % _pairColors.length]
-                                            : Colors.transparent,
+                                            : context.colors.border,
                                     width: isSelected ? 3 : 2,
                                   ),
                                   boxShadow: [
@@ -244,7 +245,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                           color: isMatched
                                               ? _pairColors[
                                                   i % _pairColors.length]
-                                              : const Color(0xFF0F172A),
+                                              : context.colors.textPrimary,
                                         ),
                                       ),
                                     ),
@@ -290,7 +291,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                       : _wrongFlash
                                           ? const Color(0xFFE55A54)
                                               .withOpacity(0.15)
-                                          : Colors.white,
+                                          : context.colors.cardBackground,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: isMatched
@@ -298,7 +299,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                             originalIdx % _pairColors.length]
                                         : _wrongFlash
                                             ? const Color(0xFFE55A54)
-                                            : Colors.transparent,
+                                            : context.colors.border,
                                     width: 2,
                                   ),
                                   boxShadow: [
@@ -320,7 +321,7 @@ class _MatcherGameState extends State<MatcherGame> {
                                           color: isMatched
                                               ? _pairColors[originalIdx %
                                                   _pairColors.length]
-                                              : const Color(0xFF0F172A),
+                                              : context.colors.textPrimary,
                                         ),
                                       ),
                                     ),
@@ -400,9 +401,9 @@ class _MatcherQuestionBanner extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+        border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -410,7 +411,7 @@ class _MatcherQuestionBanner extends StatelessWidget {
       child: Text(
         question.question,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1E3A5F), height: 1.4),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: context.colors.textPrimary, height: 1.4),
       ),
     );
   }

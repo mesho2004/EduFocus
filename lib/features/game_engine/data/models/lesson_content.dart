@@ -116,6 +116,11 @@ class LessonContent {
   final GameTemplate gameTemplate;
   final GameTheme theme;
   final List<GameQuestion> questions;
+  final int? unitId;
+  final int? lessonIndex;
+  final int? grade;
+  final int? term;
+  final String? rawSubjectType;
 
   const LessonContent({
     required this.lessonTitle,
@@ -123,6 +128,11 @@ class LessonContent {
     required this.gameTemplate,
     required this.theme,
     required this.questions,
+    this.unitId,
+    this.lessonIndex,
+    this.grade,
+    this.term,
+    this.rawSubjectType,
   });
 
   // ── JSON parsing ────────────────────────────
@@ -136,6 +146,11 @@ class LessonContent {
       questions: (json['questions'] as List<dynamic>? ?? [])
           .map((q) => GameQuestion.fromJson(q as Map<String, dynamic>))
           .toList(),
+      unitId: json['unitId'] as int?,
+      lessonIndex: json['lessonIndex'] as int?,
+      grade: json['grade'] as int?,
+      term: json['term'] as int?,
+      rawSubjectType: json['rawSubjectType'] as String?,
     );
   }
 

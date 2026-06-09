@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,7 +26,6 @@ class _ParentPinCreationScreenState extends State<ParentPinCreationScreen>
   // Shake animation for wrong-length submission attempt
   late final AnimationController _shakeCtrl;
   late final Animation<double> _shakeAnim;
-
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _ParentPinCreationScreenState extends State<ParentPinCreationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8F0), // warm cream, child-friendly
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -133,23 +133,23 @@ class _HeaderSection extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.brandBlue.withValues(alpha: 0.12),
+              color: context.colors.brandBlue.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.shield_rounded,
               size: 34,
-              color: AppColors.brandBlue,
+              color: context.colors.brandBlue,
             ),
           ),
           const SizedBox(height: 16),
 
           // Title
-          const Text(
+          Text(
             'Secure Parent Settings',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppColors.slate900,
+              color: context.colors.textPrimary,
               fontSize: 22,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.3,
@@ -158,11 +158,11 @@ class _HeaderSection extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Subtitle
-          const Text(
+          Text(
             'Create a 4-digit PIN to prevent your child\nfrom exiting the game or changing settings.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppColors.slate500,
+              color: context.colors.textSecondary,
               fontSize: 13,
               height: 1.55,
             ),
@@ -212,15 +212,15 @@ class _PinDot extends StatelessWidget {
       height: filled ? 20 : 18,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: filled ? AppColors.brandBlue : Colors.transparent,
+        color: filled ? context.colors.brandBlue : Colors.transparent,
         border: Border.all(
-          color: filled ? AppColors.brandBlue : AppColors.slate300,
+          color: filled ? context.colors.brandBlue : context.colors.border,
           width: 2.2,
         ),
         boxShadow: filled
             ? [
                 BoxShadow(
-                  color: AppColors.brandBlue.withValues(alpha: 0.35),
+                  color: context.colors.brandBlue.withOpacity(0.35),
                   blurRadius: 8,
                   spreadRadius: 1,
                 ),
@@ -349,10 +349,10 @@ class _DigitButtonState extends State<_DigitButton>
           height: 72,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: context.colors.cardBackground,
             boxShadow: [
               BoxShadow(
-                color: AppColors.slate300.withValues(alpha: 0.6),
+                color: context.colors.border.withOpacity(0.6),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -361,10 +361,10 @@ class _DigitButtonState extends State<_DigitButton>
           alignment: Alignment.center,
           child: Text(
             widget.digit,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w700,
-              color: AppColors.slate900,
+              color: context.colors.textPrimary,
             ),
           ),
         ),
@@ -428,20 +428,20 @@ class _BackspaceButtonState extends State<_BackspaceButton>
           height: 72,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.brandRed.withValues(alpha: 0.10),
+            color: context.colors.brandRed.withOpacity(0.12),
             boxShadow: [
               BoxShadow(
-                color: AppColors.brandRed.withValues(alpha: 0.12),
+                color: context.colors.brandRed.withOpacity(0.12),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           alignment: Alignment.center,
-          child: const Icon(
+          child: Icon(
             Icons.backspace_rounded,
             size: 26,
-            color: AppColors.brandRed,
+            color: context.colors.brandRed,
           ),
         ),
       ),

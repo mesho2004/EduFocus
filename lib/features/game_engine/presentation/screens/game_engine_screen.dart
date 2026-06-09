@@ -5,6 +5,7 @@ import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import '../widgets/connect_letters_game.dart';
 import '../widgets/feedback_bar.dart';
 import '../widgets/reward_overlay.dart';
@@ -14,6 +15,8 @@ import '../widgets/sequence_game.dart';
 import '../widgets/sequencer_game.dart';
 import '../widgets/matcher_game.dart';
 import '../widgets/popper_game.dart';
+
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GameEngineScreen  –  Universal game shell
@@ -64,7 +67,8 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final LessonContent? injectedLesson = widget.lesson ??
+    final LessonContent? injectedLesson =
+        widget.lesson ??
         (ModalRoute.of(context)?.settings.arguments as LessonContent?);
 
     return BlocProvider(
@@ -84,10 +88,9 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
           }
 
           return Directionality(
-            textDirection:
-                lesson.isRtl ? TextDirection.rtl : TextDirection.ltr,
+            textDirection: lesson.isRtl ? TextDirection.rtl : TextDirection.ltr,
             child: Scaffold(
-              backgroundColor: const Color(0xFFFFF8F0),
+              backgroundColor: context.colors.background,
               body: SafeArea(
                 child: Stack(
                   children: [
@@ -108,8 +111,7 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
                         Expanded(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
-                            transitionBuilder: (child, anim) =>
-                                FadeTransition(
+                            transitionBuilder: (child, anim) => FadeTransition(
                               opacity: anim,
                               child: SlideTransition(
                                 position: Tween<Offset>(
@@ -127,15 +129,17 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
                         if (state is GameCorrectAnswerState ||
                             state is GameWrongAnswerState)
                           FeedbackBar(
-                            key: ValueKey('fb_${(state as GameInProgressState).questionIndex}_${state is GameCorrectAnswerState}'),
+                            key: ValueKey(
+                              'fb_${(state as GameInProgressState).questionIndex}_${state is GameCorrectAnswerState}',
+                            ),
                             isCorrect: state is GameCorrectAnswerState,
                             correctAnswerText: state is GameWrongAnswerState
                                 ? _correctAnswerLabel(state)
                                 : null,
                             onNext: () {
-                              context
-                                  .read<GameBloc>()
-                                  .add(const GameNextQuestionEvent());
+                              context.read<GameBloc>().add(
+                                const GameNextQuestionEvent(),
+                              );
                             },
                           ),
                       ],
@@ -168,37 +172,45 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
       switch (state.content.gameTemplate) {
         case GameTemplate.selector:
           return SelectorGame(
-              key: ValueKey('sel_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('sel_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.sorter:
           return SorterGame(
-              key: ValueKey('sort_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('sort_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.sequence:
           return SequenceGame(
-              key: ValueKey('seq_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('seq_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.sequencer:
           return SequencerGame(
-              key: ValueKey('seqr_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('seqr_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.matcher:
           return MatcherGame(
-              key: ValueKey('match_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('match_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.popper:
           return PopperGame(
-              key: ValueKey('pop_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('pop_${state.questionIndex}'),
+            gameState: state,
+          );
         case GameTemplate.connectLetters:
           return ConnectLettersGame(
-              key: ValueKey('conn_${state.questionIndex}'),
-              gameState: state);
+            key: ValueKey('conn_${state.questionIndex}'),
+            gameState: state,
+          );
       }
     }
 
     return const Center(
-        child: CircularProgressIndicator(color: Color(0xFF3B81B5)));
+      child: CircularProgressIndicator(color: Color(0xFF3B81B5)),
+    );
   }
 
   // ─────────────────────────────────────────────
@@ -210,19 +222,35 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
 
     if (state is GameCorrectAnswerState) {
       _rewardKey.currentState?.trigger();
-      _speak(_praiseInLang(lesson?.ttsLanguage ?? 'en-US'),
-          lesson?.ttsLanguage ?? 'en-US');
+      _speak(
+        _praiseInLang(lesson?.ttsLanguage ?? 'en-US'),
+        lesson?.ttsLanguage ?? 'en-US',
+      );
     } else if (state is GameWrongAnswerState) {
-      _speak(_tryAgainInLang(lesson?.ttsLanguage ?? 'en-US'),
-          lesson?.ttsLanguage ?? 'en-US');
+      _speak(
+        _tryAgainInLang(lesson?.ttsLanguage ?? 'en-US'),
+        lesson?.ttsLanguage ?? 'en-US',
+      );
     } else if (state is GameInProgressState &&
         state is! GameCorrectAnswerState &&
         state is! GameWrongAnswerState) {
       _speak(state.currentQuestion.question, lesson?.ttsLanguage ?? 'en-US');
     } else if (state is GameCompletedState) {
       _rewardKey.currentState?.trigger();
-      _speak(_completedInLang(lesson?.ttsLanguage ?? 'en-US', state.stars),
-          lesson?.ttsLanguage ?? 'en-US');
+      _speak(
+        _completedInLang(lesson?.ttsLanguage ?? 'en-US', state.stars),
+        lesson?.ttsLanguage ?? 'en-US',
+      );
+      if (lesson != null &&
+          lesson.rawSubjectType != null &&
+          lesson.unitId != null &&
+          lesson.lessonIndex != null) {
+        context.read<CurriculumCubit>().completeLesson(
+          subjectType: lesson.rawSubjectType!,
+          unitId: lesson.unitId!,
+          lessonIndex: lesson.lessonIndex!,
+        );
+      }
     }
   }
 
@@ -239,7 +267,10 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
   String _correctAnswerLabel(GameWrongAnswerState state) {
     final correct = state.currentQuestion.options.where((o) => o.isCorrect);
     if (correct.isEmpty) return '';
-    return correct.map((o) => o.text ?? '').where((t) => t.isNotEmpty).join(', ');
+    return correct
+        .map((o) => o.text ?? '')
+        .where((t) => t.isNotEmpty)
+        .join(', ');
   }
 
   String _praiseInLang(String lang) =>
@@ -262,6 +293,7 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
 class _BackgroundBlobs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if (context.isDarkMode) return const SizedBox.shrink();
     final size = MediaQuery.sizeOf(context);
     return Positioned.fill(
       child: Stack(
@@ -352,10 +384,10 @@ class _TopBar extends StatelessWidget {
               children: [
                 Text(
                   lesson.lessonTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    color: context.colors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -382,8 +414,9 @@ class _TopBar extends StatelessWidget {
                           borderRadius: BorderRadius.circular(999),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF4CAF50)
-                                  .withValues(alpha: 0.4),
+                              color: const Color(
+                                0xFF4CAF50,
+                              ).withValues(alpha: 0.4),
                               blurRadius: 6,
                             ),
                           ],
@@ -481,7 +514,7 @@ class _CompletedPanel extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.cardBackground,
             borderRadius: BorderRadius.circular(32),
             boxShadow: [
               BoxShadow(
@@ -496,20 +529,20 @@ class _CompletedPanel extends StatelessWidget {
             children: [
               const Text('🏆', style: TextStyle(fontSize: 72)),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Lesson Complete!',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w900,
-                  color: Color(0xFF0F172A),
+                  color: context.colors.textPrimary,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 'Score: ${state.score} / ${state.totalQuestions}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Color(0xFF475569),
+                  color: context.colors.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -572,8 +605,9 @@ class _GreenButton extends StatelessWidget {
           backgroundColor: const Color(0xFF4CAF50),
           foregroundColor: Colors.white,
           elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
         ),
         child: Text(
           label,

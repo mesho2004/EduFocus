@@ -1,6 +1,7 @@
 import 'dart:math' show Random;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/themes/app_theme.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
@@ -121,15 +122,15 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
     return Column(
       children: [
         // ── Instruction ─────────────────────────────────
-        const Padding(
-          padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
           child: Text(
             'Fill the Missing Letters',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF1E3A5F),
+              color: context.colors.textPrimary,
             ),
           ),
         ),
@@ -142,7 +143,7 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
-              color: const Color(0xFF64748B).withValues(alpha: 0.85),
+              color: context.colors.textSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -181,22 +182,22 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                             decoration: BoxDecoration(
                               color: isMatched
                                   ? color.withValues(alpha: 0.12)
-                                  : Colors.white,
+                                  : context.colors.cardBackground,
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(
                                 color: isSelected
-                                    ? const Color(0xFF3B81B5)
+                                    ? context.colors.primary
                                     : isMatched
                                         ? color
-                                        : const Color(0xFFE2E8F0),
+                                        : context.colors.border,
                                 width: isSelected ? 2.5 : 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: isSelected
-                                      ? const Color(0xFF3B81B5)
+                                      ? context.colors.primary
                                           .withValues(alpha: 0.2)
-                                      : Colors.black.withValues(alpha: 0.05),
+                                      : Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.05),
                                   blurRadius: isSelected ? 10 : 6,
                                   offset: const Offset(0, 3),
                                 ),
@@ -212,7 +213,7 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                       fontWeight: FontWeight.w900,
                                       color: isMatched
                                           ? color
-                                          : const Color(0xFF1E3A5F),
+                                          : context.colors.textPrimary,
                                       letterSpacing: 1,
                                     ),
                                   ),
@@ -221,8 +222,8 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                   Icon(Icons.check_circle_rounded,
                                       color: color, size: 22),
                                 if (isSelected)
-                                  const Icon(Icons.arrow_forward_rounded,
-                                      color: Color(0xFF3B81B5), size: 20),
+                                  Icon(Icons.arrow_forward_rounded,
+                                      color: context.colors.primary, size: 20),
                               ],
                             ),
                           ),
@@ -249,7 +250,7 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                           .firstOrNull;
                       final color = matchedLeftIdx != null
                           ? _colors[matchedLeftIdx % _colors.length]
-                          : const Color(0xFF3B81B5);
+                          : context.colors.primary;
 
                       return GestureDetector(
                         onTap: () => _tapRight(displayIdx),
@@ -263,19 +264,19 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                 : _wrongFlash
                                     ? const Color(0xFFEF5350)
                                         .withValues(alpha: 0.1)
-                                    : Colors.white,
+                                    : context.colors.cardBackground,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isMatched
                                   ? color
                                   : _wrongFlash
                                       ? const Color(0xFFEF5350)
-                                      : const Color(0xFFE2E8F0),
+                                      : context.colors.border,
                               width: 2.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.06),
+                                color: Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.06),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),
@@ -289,7 +290,7 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                 fontWeight: FontWeight.w900,
                                 color: isMatched
                                     ? color
-                                    : const Color(0xFF1E3A5F),
+                                    : context.colors.textPrimary,
                               ),
                             ),
                           ),

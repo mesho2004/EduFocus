@@ -1,5 +1,6 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SubjectCard extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SubjectCardState extends State<SubjectCard>
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.cardBackground,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: sub.color.withValues(alpha: 0.2),
@@ -74,7 +75,7 @@ class _SubjectCardState extends State<SubjectCard>
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: sub.colorLight,
+                    color: context.isDarkMode ? sub.color.withOpacity(0.15) : sub.colorLight,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Stack(
@@ -114,10 +115,10 @@ class _SubjectCardState extends State<SubjectCard>
               Text(
                 sub.title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.slate900,
+                  color: context.colors.textPrimary,
                 ),
               ),
               const SizedBox(height: 2),
@@ -151,7 +152,7 @@ class _SubjectCardState extends State<SubjectCard>
                 child: LinearProgressIndicator(
                   value: sub.overallProgress,
                   minHeight: 8,
-                  backgroundColor: AppColors.slate100,
+                  backgroundColor: context.colors.border,
                   valueColor: AlwaysStoppedAnimation<Color>(sub.color),
                 ),
               ),

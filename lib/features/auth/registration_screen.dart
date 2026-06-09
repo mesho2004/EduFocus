@@ -1,18 +1,13 @@
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/utils/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/features/auth/widgets/auth_primary_button.dart';
 import 'package:edufocus/features/auth/widgets/auth_footer_note.dart';
-
-// // ─────────────────────────────────────────────────────────────────────────────
-// // Avatar data: emoji + background colour pairs
-// // ─────────────────────────────────────────────────────────────────────────────
-// const _kAvatars = [
-//   (emoji: '🦁', bg: Color(0xFFFFF0C8)),
-//   (emoji: '🐸', bg: Color(0xFFD4F4DD)),
-//   (emoji: '🦄', bg: Color(0xFFF3E5FF)),
-//   (emoji: '🐼', bg: Color(0xFFE0F0FF)),
-// ];
+import 'package:edufocus/features/auth/cubit/auth_cubit.dart';
+import 'package:edufocus/features/auth/cubit/auth_state.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -35,214 +30,182 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _onStartLearning() {
-    Navigator.pushReplacementNamed(context, '/parent_pin_creation');
+    final name = _nameController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter your name'),
+          backgroundColor: context.colors.brandRed,
+        ),
+      );
+      return;
+    }
+    context.read<AuthCubit>().addChildProfile(
+      name: name,
+      age: _selectedAge ?? 6,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundLight,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'New Explorer',
-          style: TextStyle(
-            color: AppColors.slate900,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is ChildCreateSuccess) {
+          context.read<CurriculumCubit>().loadCurriculum();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Welcome, ${state.child.name}! Let\'s start learning! 🚀'),
+              backgroundColor: context.colors.brandGreen,
+            ),
+          );
+          Navigator.pushReplacementNamed(context, '/parent_pin_creation');
+        } else if (state is ChildCreateFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: context.colors.brandRed,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is ChildCreateLoading;
+        return Scaffold(
+          backgroundColor: context.colors.background,
+          appBar: AppBar(
+            backgroundColor: context.colors.background,
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              'New Explorer',
+              style: TextStyle(
+                color: context.colors.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            leading: Navigator.canPop(context)
+                ? IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: context.colors.textSecondary,
+                    ),
+                    onPressed: () => Navigator.maybePop(context),
+                  )
+                : null,
           ),
-        ),
-        leading: Navigator.canPop(context)
-            ? IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.slate700,
-                ),
-                onPressed: () => Navigator.maybePop(context),
-              )
-            : null,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Scrollable content ──────────────────────────────────────────
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // ── Scrollable content ──────────────────────────────────────────
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
 
-                    // ── Avatar row ─────────────────────────────────────────
-                    // Center(
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: List.generate(
-                    //       _kAvatars.length,
-                    //       (i) => _AvatarBubble(
-                    //         emoji: _kAvatars[i].emoji,
-                    //         bgColor: _kAvatars[i].bg,
-                    //         isSelected: i == _selectedAvatarIndex,
-                    //         onTap: () =>
-                    //             setState(() => _selectedAvatarIndex = i),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 20),
-
-                    // ── Heading ────────────────────────────────────────────
-                    const Center(
-                      child: Text(
-                        "Let's set up your profile!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.slate900,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.5,
+                        // ── Heading ────────────────────────────────────────────
+                        Center(
+                          child: Text(
+                            "Let's set up your profile!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: context.colors.textPrimary,
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 28),
+                        const SizedBox(height: 28),
 
-                    // ── Name field ─────────────────────────────────────────
-                    const Text(
-                      "What is your hero's name?",
-                      style: TextStyle(
-                        color: AppColors.slate700,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    CustomTextFormField(
-                      hintText: 'Type your name here...',
-                      controller: _nameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 28),
+                        // ── Name field ─────────────────────────────────────────
+                        Text(
+                          "What is your hero's name?",
+                          style: TextStyle(
+                            color: context.colors.textSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextFormField(
+                          hintText: 'Type your name here...',
+                          controller: _nameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 28),
 
-                    // ── Age selection ──────────────────────────────────────
-                    const Text(
-                      'How old are you?',
-                      style: TextStyle(
-                        color: AppColors.slate700,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _AgeChipRow(
-                      selectedAge: _selectedAge,
-                      onSelected: (age) => setState(() => _selectedAge = age),
-                    ),
-                    const SizedBox(height: 28),
+                        // ── Age selection ──────────────────────────────────────
+                        Text(
+                          'How old are you?',
+                          style: TextStyle(
+                            color: context.colors.textSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _AgeChipRow(
+                          selectedAge: _selectedAge,
+                          onSelected: (age) => setState(() => _selectedAge = age),
+                        ),
+                        const SizedBox(height: 28),
 
-                    // ── Control Method section ─────────────────────────────
-                    const Text(
-                      'Control Method',
-                      style: TextStyle(
-                        color: AppColors.slate700,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                        // ── Control Method section ─────────────────────────────
+                        Text(
+                          'Control Method',
+                          style: TextStyle(
+                            color: context.colors.textSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _EyeControlTile(
+                          value: _eyeControlEnabled,
+                          onChanged: (v) => setState(() => _eyeControlEnabled = v),
+                        ),
+                        const SizedBox(height: 28),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    _EyeControlTile(
-                      value: _eyeControlEnabled,
-                      onChanged: (v) => setState(() => _eyeControlEnabled = v),
-                    ),
-                    const SizedBox(height: 28),
-                  ],
+                  ),
                 ),
-              ),
-            ),
 
-            // ── Bottom action ───────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-              child: Column(
-                children: [
-                  AuthPrimaryButton(
-                    text: 'Start Learning',
-                    onPressed: _onStartLearning,
-                    trailingIcon: Icons.play_circle_fill_rounded,
-                    height: 64,
+                // ── Bottom action ───────────────────────────────────────────────
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  child: Column(
+                    children: [
+                      AuthPrimaryButton(
+                        text: 'Start Learning',
+                        onPressed: _onStartLearning,
+                        trailingIcon: Icons.play_circle_fill_rounded,
+                        height: 64,
+                        isLoading: isLoading,
+                      ),
+                      const SizedBox(height: 8),
+                      const AuthFooterNote(
+                        text: 'Parents: You can change these later in settings',
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  const AuthFooterNote(
-                    text: 'Parents: You can change these later in settings',
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// _AvatarBubble
-// ─────────────────────────────────────────────────────────────────────────────
-// class _AvatarBubble extends StatelessWidget {
-//   final String emoji;
-//   final Color bgColor;
-//   final bool isSelected;
-//   final VoidCallback onTap;
-
-//   const _AvatarBubble({
-//     required this.emoji,
-//     required this.bgColor,
-//     required this.isSelected,
-//     required this.onTap,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: AnimatedContainer(
-//         duration: const Duration(milliseconds: 200),
-//         margin: const EdgeInsets.symmetric(horizontal: 8),
-//         width: 64,
-//         height: 64,
-//         decoration: BoxDecoration(
-//           color: bgColor,
-//           shape: BoxShape.circle,
-//           border: Border.all(
-//             color: isSelected ? AppColors.brandBlue : Colors.transparent,
-//             width: 3,
-//           ),
-//           boxShadow: isSelected
-//               ? [
-//                   BoxShadow(
-//                     color: AppColors.brandBlue.withOpacity(0.3),
-//                     blurRadius: 10,
-//                     offset: const Offset(0, 4),
-//                   ),
-//                 ]
-//               : [],
-//         ),
-//         alignment: Alignment.center,
-//         child: Text(
-//           emoji,
-//           style: const TextStyle(fontSize: 30),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // _AgeChipRow  –  Wrap of ChoiceChips for ages 4–9+
@@ -273,19 +236,19 @@ class _AgeChipRow extends StatelessWidget {
           label: Text(
             a.label,
             style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.slate600,
+              color: isSelected ? Colors.white : context.colors.textSecondary,
               fontWeight: FontWeight.bold,
               fontSize: 15,
             ),
           ),
           selected: isSelected,
           onSelected: (_) => onSelected(a.value),
-          selectedColor: AppColors.brandGreen,
-          backgroundColor: AppColors.slate100.withValues(alpha: 0.3),
+          selectedColor: context.colors.brandGreen,
+          backgroundColor: context.colors.border.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
             side: BorderSide(
-              color: isSelected ? AppColors.brandGreen : AppColors.slate200,
+              color: isSelected ? context.colors.brandGreen : context.colors.border,
             ),
           ),
           showCheckmark: false,
@@ -309,26 +272,26 @@ class _EyeControlTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.slate100.withValues(alpha: 0.3),
+        color: context.colors.border.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.slate200),
+        border: Border.all(color: context.colors.border),
       ),
       child: SwitchListTile.adaptive(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        title: const Text(
+        title: Text(
           'Enable Eye Control',
           style: TextStyle(
-            color: AppColors.slate900,
+            color: context.colors.textPrimary,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: const Padding(
-          padding: EdgeInsets.only(top: 4),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
           child: Text(
             'For heroes with motor challenges. Uses camera to play games via eye movement.',
             style: TextStyle(
-              color: AppColors.slate500,
+              color: context.colors.textSecondary,
               fontSize: 12,
               height: 1.4,
             ),
@@ -336,19 +299,19 @@ class _EyeControlTile extends StatelessWidget {
         ),
         value: value,
         onChanged: onChanged,
-        activeColor: AppColors.brandGreen,
+        activeColor: context.colors.brandGreen,
         secondary: Container(
           width: 42,
           height: 42,
           decoration: BoxDecoration(
             color: value
-                ? AppColors.brandBlue.withOpacity(0.12)
-                : AppColors.slate200,
+                ? context.colors.brandBlue.withOpacity(0.12)
+                : context.colors.border,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             Icons.remove_red_eye_outlined,
-            color: value ? AppColors.brandGreen : AppColors.slate400,
+            color: value ? context.colors.brandGreen : context.colors.textTertiary,
             size: 22,
           ),
         ),

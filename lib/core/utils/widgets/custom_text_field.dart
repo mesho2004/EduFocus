@@ -1,3 +1,4 @@
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 typedef MyValidator = String? Function(String?);
@@ -31,10 +32,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
-      style: const TextStyle(
+      style:  TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: Colors.black,
+        color:context.colors.textSecondary,
         overflow: TextOverflow.ellipsis,
       ),
       obscureText: widget.obscureText,

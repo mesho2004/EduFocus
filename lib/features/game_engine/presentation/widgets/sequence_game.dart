@@ -4,6 +4,7 @@ import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// "Tap in Order" game — player must tap tokens in the correct sequence.
 /// Each token gets a number badge when tapped correctly.
@@ -37,7 +38,7 @@ class _SequenceGameState extends State<SequenceGame> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: Colors.white.withOpacity(0.9),
+            color: context.colors.textPrimary,
           ),
         ),
         const SizedBox(height: 24),
@@ -104,7 +105,7 @@ class _SeqQuestionBanner extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.92),
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -117,10 +118,10 @@ class _SeqQuestionBanner extends StatelessWidget {
           : Text(
               question.question,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0f172a),
+                color: context.colors.textPrimary,
               ),
             ),
     );
@@ -152,7 +153,7 @@ class _OrderProgressBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: done
                     ? const Color(0xFF65B88D)
-                    : Colors.white.withOpacity(0.3),
+                    : context.colors.border,
                 borderRadius: BorderRadius.circular(9999),
               ),
             ),
@@ -219,7 +220,7 @@ class _SequenceTokenState extends State<_SequenceToken>
   Color _borderColor() {
     if (widget.isWrong) return const Color(0xFFE55A54);
     if (widget.tapPosition != null) return const Color(0xFF65B88D);
-    return Colors.white.withOpacity(0.5);
+    return context.colors.border;
   }
 
   @override
@@ -239,7 +240,7 @@ class _SequenceTokenState extends State<_SequenceToken>
                 ? const Color(0xFF65B88D).withOpacity(0.25)
                 : widget.isWrong
                     ? const Color(0xFFE55A54).withOpacity(0.25)
-                    : Colors.white.withOpacity(0.9),
+                    : context.colors.cardBackground,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _borderColor(), width: 3),
             boxShadow: [
@@ -257,10 +258,10 @@ class _SequenceTokenState extends State<_SequenceToken>
                 child: Text(
                   widget.option.text ?? '',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF0f172a),
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ),

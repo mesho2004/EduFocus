@@ -5,6 +5,7 @@ import '../../data/models/lesson_content.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// Sequencer game — empty slots at the top, scrambled items at the bottom.
 /// Tap an item to place it into the next available slot.
@@ -57,12 +58,12 @@ class _SequencerGameState extends State<SequencerGame> {
                       decoration: BoxDecoration(
                         color: isFilled
                             ? const Color(0xFF65B88D).withOpacity(0.3)
-                            : Colors.white.withOpacity(0.1),
+                            : context.colors.cardBackground,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isFilled
                               ? const Color(0xFF65B88D)
-                              : Colors.white.withOpacity(0.3),
+                              : context.colors.border,
                           width: 2,
                         ),
                         boxShadow: isFilled
@@ -98,7 +99,7 @@ class _SequencerGameState extends State<SequencerGame> {
                             : Text(
                                 '${slotIndex + 1}',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.3),
+                                  color: context.colors.textTertiary,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -158,7 +159,7 @@ class _SequencerGameState extends State<SequencerGame> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.cardBackground,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -170,10 +171,10 @@ class _SequencerGameState extends State<SequencerGame> {
         ),
         child: Text(
           option.text ?? '',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF0F172A),
+            color: context.colors.textPrimary,
           ),
         ),
       ),
@@ -195,9 +196,9 @@ class _QuestionBanner extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+        border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -205,7 +206,7 @@ class _QuestionBanner extends StatelessWidget {
       child: Text(
         question.question,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1E3A5F), height: 1.4),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: context.colors.textPrimary, height: 1.4),
       ),
     );
   }

@@ -1,6 +1,16 @@
+import 'package:edufocus/core/caching/app_shared_pref.dart';
+import 'package:edufocus/core/caching/app_shared_pref_key.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
-import 'package:edufocus/widgets/custom_bottom_nav_bar.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/features/auth/cubit/auth_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_state.dart';
+import 'package:edufocus/core/utils/lego_character_helper.dart';
+import 'package:edufocus/core/utils/widgets/lego_character_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -10,23 +20,24 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _sfxEnabled = true;
-  bool _musicEnabled = true;
+  bool _trackEnabled = true;
+
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.colors.background,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'My Profile',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color: AppColors.slate900,
+            color: context.colors.textPrimary,
           ),
         ),
       ),
@@ -40,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               _buildSectionTitle('Achievements & Rewards'),
               const SizedBox(height: 16),
-              _buildAchievementsSection(),
+              _buildAchievementsSection(context),
               const SizedBox(height: 32),
               _buildSectionTitle('Adaptive Settings'),
               const SizedBox(height: 16),
@@ -53,220 +64,207 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-      bottomSheet: CustomBottomNavBar(
-        currentIndex: 2,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/subjects_grid_view');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/progress');
-          }
-        },
-      ),
     );
   }
 
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w800,
-        color: AppColors.slate900,
+        color: context.colors.textPrimary,
       ),
     );
   }
 
   Widget _buildUserCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.brandBlue, Color(0xFF5B9BD5)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.brandBlue.withOpacity(0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, state) {
+        final profile = state is CurriculumLoaded ? state.childProfile : null;
+        final name = profile?.name ?? 'Champ';
+        final age = profile?.age ?? 5;
+
+        return FutureBuilder<Map<String, dynamic>>(
+          future: LegoCharacterHelper.loadConfig(),
+          builder: (context, legoSnapshot) {
+            final config = legoSnapshot.data;
+            final headIndex = config?['headIndex'] ?? 1;
+            final hairIndex = config?['hairIndex'] ?? 1;
+            final bodyIndex = config?['bodyIndex'] ?? 1;
+            final legIndex = config?['legIndex'] ?? 1;
+            final hatIndex = config?['hatIndex'] ?? 0;
+            final torsoColor = config?['torsoColor'];
+            final pantsColor = config?['pantsColor'];
+            final hairColor = config?['hairColor'];
+
+            return Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [context.colors.brandBlue, const Color(0xFF5B9BD5)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: context.colors.brandBlue.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    height: 120,
+                    alignment: Alignment.center,
+                    child: LegoCharacterWidget(
+                      headIndex: headIndex,
+                      hairIndex: hairIndex,
+                      bodyIndex: bodyIndex,
+                      legIndex: legIndex,
+                      hatIndex: hatIndex,
+                      torsoColor: torsoColor,
+                      pantsColor: pantsColor,
+                      hairColor: hairColor,
+                      size: 64,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: context.colors.brandYellow,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Age: $age · Letter Hero',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.slate900,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildAchievementsSection(BuildContext context) {
+    final stars = context.watch<StarsCubit>().state;
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, state) {
+        int completedLessons = 0;
+        int streakDays = 0;
+        if (state is CurriculumLoaded) {
+          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          streakDays = state.progressModel?.streakDays ?? 0;
+        }
+
+        final firstWordUnlocked = completedLessons > 0;
+        final perfectScoreUnlocked = completedLessons >= 3;
+        final streakUnlocked = streakDays >= 3;
+        final puzzleMasterUnlocked = completedLessons >= 5;
+
+        return Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _buildAchievementCard(
+                    'Total Points',
+                    '$stars',
+                    Icons.stars_rounded,
+                    context.colors.brandYellow,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildAchievementCard(
+                    'Games Won',
+                    '$completedLessons',
+                    Icons.emoji_events_rounded,
+                    context.colors.brandOrange,
+                  ),
                 ),
               ],
             ),
-            child: CircleAvatar(
-              radius: 48,
-              backgroundColor: AppColors.slate100,
-              // Fallback to a fun icon if no image
-              child: const Text('🦁', style: TextStyle(fontSize: 50)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Youssef Ahmed',
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.brandYellow,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              'Level 5 - Letter Hero',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: AppColors.slate900,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 16),
 
-  Widget _buildAchievementsSection() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildAchievementCard(
-                'Total Points',
-                '1,250',
-                Icons.stars_rounded,
-                AppColors.brandYellow,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: context.colors.cardBackground,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: context.colors.border, width: 2),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildAchievementCard(
-                'Games Won',
-                '42',
-                Icons.emoji_events_rounded,
-                AppColors.brandOrange,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.slate200, width: 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    'Next Level Progress',
+                    'Badges',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.slate700,
+                      color: context.colors.textSecondary,
                     ),
                   ),
-                  Text(
-                    '80%',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.brandGreen,
-                    ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildBadge('🍎', 'First Word', firstWordUnlocked),
+                      _buildBadge('⭐', 'Perfect Score', perfectScoreUnlocked),
+                      _buildBadge('🔥', '3 Day Streak', streakUnlocked),
+                      _buildBadge('🧩', 'Puzzle Master', puzzleMasterUnlocked),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: 0.8,
-                  backgroundColor: AppColors.slate100,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.brandGreen,
-                  ),
-                  minHeight: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.slate200, width: 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Badges',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.slate700,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildBadge('🍎', 'First Word'),
-                  _buildBadge('⭐', 'Perfect Score'),
-                  _buildBadge('🔥', '3 Day Streak'),
-                  _buildBadge('🧩', 'Puzzle Master'),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildBadge(String emoji, String title) {
+  Widget _buildBadge(String emoji, String title, bool unlocked) {
     return Column(
       children: [
         Container(
           height: 56,
           width: 56,
           decoration: BoxDecoration(
-            color: AppColors.slate100,
+            color: unlocked 
+                ? context.colors.brandYellow.withValues(alpha: 0.15)
+                : context.colors.border.withValues(alpha: 0.3),
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.slate200, width: 2),
+            border: Border.all(
+              color: unlocked ? context.colors.brandYellow : context.colors.border,
+              width: 2,
+            ),
           ),
           child: Center(
-            child: Text(emoji, style: const TextStyle(fontSize: 28)),
+            child: Opacity(
+              opacity: unlocked ? 1.0 : 0.4,
+              child: Text(emoji, style: const TextStyle(fontSize: 28)),
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -275,10 +273,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: AppColors.slate500,
+              color: unlocked ? context.colors.textPrimary : context.colors.textTertiary,
             ),
           ),
         ),
@@ -287,13 +285,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildAchievementCard(
-      String title, String value, IconData icon, Color color) {
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.slate200, width: 2),
+        border: Border.all(color: context.colors.border, width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,18 +304,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w900,
-              color: AppColors.slate900,
+              color: context.colors.textPrimary,
             ),
           ),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.slate500,
+              color: context.colors.textTertiary,
             ),
           ),
         ],
@@ -324,73 +326,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildAdaptiveSettings() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.slate200, width: 2),
+        border: Border.all(color: context.colors.border, width: 2),
       ),
       child: Column(
         children: [
           _buildSettingsTile(
             icon: Icons.remove_red_eye_rounded,
-            title: 'Eye-Tracking Calibration',
-            subtitle: 'Recalibrate tracking precision',
-            iconColor: AppColors.brandPurple,
-            trailing: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.brandPurple.withOpacity(0.1),
-                foregroundColor: AppColors.brandPurple,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            title: 'Eye-Tracking mode',
+            subtitle: 'Enable Eye-Tracking Mode',
+            iconColor: context.colors.brandPurple,
+            trailing: Switch(
+              value: _trackEnabled,
+              activeColor: context.colors.brandPurple,
+              onChanged: (val) => setState(() => _trackEnabled = val),
+            ),
+          ),
+          Divider(height: 1, color: context.colors.border),
+          ValueListenableBuilder<bool>(
+            valueListenable: isDark,
+            builder: (context, darkEnabled, _) {
+              return _buildSettingsTile(
+                icon: Icons.dark_mode_rounded,
+                title: 'Dark mode',
+                iconColor: context.colors.brandPurple,
+                trailing: Switch(
+                  value: darkEnabled,
+                  activeColor: context.colors.brandPurple,
+                  onChanged: (val) async {
+                    isDark.value = val;
+                    await AppSharedPref.setPref(
+                      value: val,
+                      key: AppSharedPrefKey.themeKey,
+                    );
+                  },
                 ),
-              ),
-              child: const Text('Calibrate',
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-            ),
+              );
+            },
           ),
-          const Divider(height: 1, color: AppColors.slate200),
-          _buildSettingsTile(
-            icon: Icons.music_note_rounded,
-            title: 'Background Music',
-            iconColor: AppColors.brandCyan,
-            trailing: Switch(
-              value: _musicEnabled,
-              activeColor: AppColors.brandCyan,
-              onChanged: (val) => setState(() => _musicEnabled = val),
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.slate200),
-          _buildSettingsTile(
-            icon: Icons.volume_up_rounded,
-            title: 'Sound Effects',
-            iconColor: AppColors.brandOrange,
-            trailing: Switch(
-              value: _sfxEnabled,
-              activeColor: AppColors.brandOrange,
-              onChanged: (val) => setState(() => _sfxEnabled = val),
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.slate200),
+          Divider(height: 1, color: context.colors.border),
           _buildSettingsTile(
             icon: Icons.text_fields_rounded,
             title: 'Text & Icon Size',
             subtitle: 'Adjust for better visibility',
-            iconColor: AppColors.brandRed,
+            iconColor: context.colors.brandRed,
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.remove_circle_outline),
-                  color: AppColors.slate400,
+                  color: context.colors.textTertiary,
                   onPressed: () {},
                 ),
-                const Text('A',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  'A',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.textPrimary,
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(Icons.add_circle_outline),
-                  color: AppColors.slate400,
+                  color: context.colors.textTertiary,
                   onPressed: () {},
                 ),
               ],
@@ -404,39 +403,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildAccountSettings(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.slate200, width: 2),
+        border: Border.all(color: context.colors.border, width: 2),
       ),
       child: Column(
         children: [
           _buildSettingsTile(
             icon: Icons.edit_rounded,
             title: 'Edit Profile',
-            iconColor: AppColors.brandBlue,
-            onTap: () {},
-            trailing: const Icon(Icons.chevron_right_rounded,
-                color: AppColors.slate400),
+            iconColor: context.colors.brandBlue,
+            onTap: () async {
+              await Navigator.pushNamed(context, '/edit_profile');
+              setState(() {});
+            },
+            trailing: Icon(
+              Icons.chevron_right_rounded,
+              color: context.colors.textTertiary,
+            ),
           ),
-          const Divider(height: 1, color: AppColors.slate200),
+          Divider(height: 1, color: context.colors.border),
           _buildSettingsTile(
             icon: Icons.language_rounded,
             title: 'Change Language',
             subtitle: 'English',
-            iconColor: AppColors.brandGreen,
+            iconColor: context.colors.brandGreen,
             onTap: () {},
-            trailing: const Icon(Icons.chevron_right_rounded,
-                color: AppColors.slate400),
+            trailing: Icon(
+              Icons.chevron_right_rounded,
+              color: context.colors.textTertiary,
+            ),
           ),
-          const Divider(height: 1, color: AppColors.slate200),
+          Divider(height: 1, color: context.colors.border),
           _buildSettingsTile(
             icon: Icons.logout_rounded,
             title: 'Logout',
-            iconColor: AppColors.brandRed,
-            titleColor: AppColors.brandRed,
+            iconColor: context.colors.brandRed,
+            titleColor: context.colors.brandRed,
             onTap: () {
-              // Navigate back to splash or auth
-              Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false);
+              context.read<AuthCubit>().logout();
+              context.read<CurriculumCubit>().clearCurriculum();
+              context.read<StarsCubit>().setStars(0);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/parent_auth',
+                (r) => false,
+              );
             },
           ),
         ],
@@ -478,17 +490,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: titleColor ?? AppColors.slate700,
+                      color: titleColor ?? context.colors.textPrimary,
                     ),
                   ),
                   if (subtitle != null) ...[
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.slate500,
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   ],

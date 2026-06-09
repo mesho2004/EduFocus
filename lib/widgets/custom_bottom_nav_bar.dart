@@ -1,4 +1,5 @@
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -16,8 +17,8 @@ class CustomBottomNavBar extends StatelessWidget {
     return Container(
       height: 72,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        border: const Border(top: BorderSide(color: AppColors.slate200)),
+        color: context.colors.cardBackground.withOpacity(0.9),
+        border: Border(top: BorderSide(color: context.colors.border)),
       ),
       child: SafeArea(
         top: false,
@@ -27,18 +28,21 @@ class CustomBottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildBottomNav(
+                context,
                 Icons.home,
                 'Home',
                 currentIndex == 0,
                 () => onTap(0),
               ),
               _buildBottomNav(
+                context,
                 Icons.trending_up,
                 'Progress',
                 currentIndex == 1,
                 () => onTap(1),
               ),
               _buildBottomNav(
+                context,
                 Icons.person,
                 'Profile',
                 currentIndex == 2,
@@ -52,12 +56,13 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   Widget _buildBottomNav(
+    BuildContext context,
     IconData icon,
     String label,
     bool isActive,
     VoidCallback onTap,
   ) {
-    final color = isActive ? AppColors.primary : AppColors.slate400;
+    final color = isActive ? context.colors.primary : context.colors.textTertiary;
 
     return GestureDetector(
       onTap: onTap,

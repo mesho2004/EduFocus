@@ -1,5 +1,7 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:edufocus/core/bloc/stars_cubit.dart';
 
 class LessonPathHeader extends StatelessWidget {
   final SubjectData subject;
@@ -65,17 +67,17 @@ class LessonPathHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Stars earned
+                // Unit Stars earned
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 6),
+                      horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.star_rounded,
+                      const Icon(Icons.stars_rounded,
                           color: Color(0xFFF3C344), size: 18),
                       const SizedBox(width: 4),
                       Text(
@@ -83,11 +85,44 @@ class LessonPathHeader extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(width: 8),
+                // Global Coins
+                BlocBuilder<StarsCubit, int>(
+                  builder: (context, stars) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFFF3C344).withOpacity(0.5),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.star_rounded,
+                              color: Color(0xFFF3C344), size: 18),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$stars',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../../data/models/lesson_content.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
@@ -126,10 +127,10 @@ class _SelectorGameState extends State<SelectorGame>
                 ? 'What do you see?'
                 : _instructionFor(question),
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF1E3A5F),
+              color: context.colors.textPrimary,
             ),
           ),
         ),
@@ -198,7 +199,7 @@ class _QuestionImage extends StatelessWidget {
       height: 160,
       margin: const EdgeInsets.symmetric(horizontal: 48),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -260,7 +261,7 @@ class _CharacterBubble extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.cardBackground,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -281,10 +282,10 @@ class _CharacterBubble extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF1E3A5F),
+                  color: context.colors.textPrimary,
                 ),
               ),
             ),
@@ -353,7 +354,7 @@ class _OptionCardState extends State<_OptionCard>
 
   Color _bg() {
     if (!widget.answered || widget.selectedIndex != widget.index) {
-      return Colors.white;
+      return context.colors.cardBackground;
     }
     return widget.option.isCorrect
         ? const Color(0xFF4CAF50).withValues(alpha: 0.15)
@@ -361,10 +362,10 @@ class _OptionCardState extends State<_OptionCard>
   }
 
   Color _border() {
-    if (!widget.answered) return const Color(0xFFE2E8F0);
+    if (!widget.answered) return context.colors.border;
     if (widget.option.isCorrect) return const Color(0xFF4CAF50);
     if (widget.selectedIndex == widget.index) return const Color(0xFFEF5350);
-    return const Color(0xFFE2E8F0);
+    return context.colors.border;
   }
 
   @override
@@ -423,7 +424,7 @@ class _OptionCardState extends State<_OptionCard>
                               : widget.answered &&
                                       widget.selectedIndex == widget.index
                                   ? const Color(0xFFEF5350)
-                                  : const Color(0xFF1E3A5F),
+                                  : context.colors.textPrimary,
                         ),
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 
 /// A small muted footer text used below CTA buttons on auth screens.
 class AuthFooterNote extends StatelessWidget {
@@ -17,8 +18,8 @@ class AuthFooterNote extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: AppColors.slate400,
+        style: TextStyle(
+          color: context.colors.textTertiary,
           fontSize: 12,
         ),
       ),

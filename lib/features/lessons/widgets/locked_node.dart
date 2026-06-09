@@ -1,5 +1,6 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/features/lessons/widgets/node_label.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class LockedNode extends StatelessWidget {
               width: 76,
               height: 76,
               decoration: BoxDecoration(
-                color: AppColors.slate200,
+                color: context.colors.border,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -30,11 +31,11 @@ class LockedNode extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(Icons.lock_rounded,
-                  color: AppColors.slate400, size: 34),
+              child: Icon(Icons.lock_rounded,
+                  color: context.colors.textTertiary, size: 34),
             ),
             const SizedBox(height: 8),
-            NodeLabel(text: lesson.title, color: AppColors.slate400),
+            NodeLabel(text: lesson.title, color: context.colors.textTertiary),
           ],
         ),
       ),

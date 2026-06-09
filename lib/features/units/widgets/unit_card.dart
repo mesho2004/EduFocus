@@ -1,5 +1,6 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class UnitCard extends StatefulWidget {
@@ -64,7 +65,7 @@ class _UnitCardState extends State<UnitCard>
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.cardBackground,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: subject.color.withValues(alpha: 0.25),
@@ -86,22 +87,22 @@ class _UnitCardState extends State<UnitCard>
                   height: 56,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: subject.colorLight,
+                    color: context.isDarkMode ? subject.color.withOpacity(0.15) : subject.colorLight,
                     border: Border.all(
-                            color: subject.color.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
+                      color: subject.color.withValues(alpha: 0.3),
+                      width: 2,
+                    ),
                   ),
                   child: Center(
-                          child: Text(
-                            '${widget.index + 1}',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
-                              color: subject.color,
-                            ),
-                          ),
-                        ),
+                    child: Text(
+                      '${widget.index + 1}',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: subject.color,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 16),
 
@@ -126,7 +127,7 @@ class _UnitCardState extends State<UnitCard>
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.slate900,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -138,7 +139,7 @@ class _UnitCardState extends State<UnitCard>
                           child: LinearProgressIndicator(
                             value: unit.progress,
                             minHeight: 6,
-                            backgroundColor: AppColors.slate100,
+                            backgroundColor: context.colors.border,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               subject.color,
                             ),
@@ -157,9 +158,9 @@ class _UnitCardState extends State<UnitCard>
                         // ignore: dead_code
                         Text(
                           '🔒 أكمل الوحدة السابقة أولاً',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
-                            color: AppColors.slate400,
+                            color: context.colors.textTertiary,
                           ),
                         ),
                     ],
@@ -180,4 +181,4 @@ class _UnitCardState extends State<UnitCard>
       ),
     );
   }
-}
+}

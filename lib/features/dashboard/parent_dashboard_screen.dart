@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
+import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/widgets/custom_bottom_nav_bar.dart';
 
 class ParentDashboardScreen extends StatelessWidget {
@@ -8,13 +9,13 @@ class ParentDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
             // Header
             Container(
-              color: Colors.white.withOpacity(0.8),
+              color: context.colors.cardBackground.withOpacity(0.8),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24.0,
@@ -25,18 +26,18 @@ class ParentDashboardScreen extends StatelessWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: AppColors.slate100,
+                        color: context.colors.border,
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.menu, color: AppColors.slate600),
+                        icon: Icon(Icons.menu, color: context.colors.textSecondary),
                         onPressed: () {},
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Parent Dashboard',
                       style: TextStyle(
-                        color: AppColors.slate900,
+                        color: context.colors.textPrimary,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.5,
@@ -44,13 +45,13 @@ class ParentDashboardScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: AppColors.brandPurple.withOpacity(0.1),
+                        color: context.colors.brandPurple.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.account_circle,
-                          color: AppColors.brandPurple,
+                          color: context.colors.brandPurple,
                         ),
                         onPressed: () {},
                       ),
@@ -81,10 +82,10 @@ class ParentDashboardScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: AppColors.brandPurple,
+                                    color: context.colors.brandPurple,
                                     width: 4,
                                   ),
-                                  color: Colors.white,
+                                  color: context.colors.cardBackground,
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.1),
@@ -119,19 +120,19 @@ class ParentDashboardScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             "Alex's Progress",
                             style: TextStyle(
-                              color: AppColors.slate900,
+                              color: context.colors.textPrimary,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             'Keep up the great work! 🚀',
                             style: TextStyle(
-                              color: AppColors.slate500,
+                              color: context.colors.textSecondary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -146,6 +147,7 @@ class ParentDashboardScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: _buildStatCard(
+                              context,
                               title: 'Daily Streak',
                               value: '5 Days',
                               icon: Icons.local_fire_department,
@@ -155,6 +157,7 @@ class ParentDashboardScreen extends StatelessWidget {
                           const SizedBox(width: 16),
                           Expanded(
                             child: _buildStatCard(
+                              context,
                               title: 'Total Time',
                               value: '4.5 hrs',
                               icon: Icons.schedule,
@@ -170,9 +173,9 @@ class ParentDashboardScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.colors.cardBackground,
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: AppColors.slate100),
+                          border: Border.all(color: context.colors.border),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.02),
@@ -189,22 +192,22 @@ class ParentDashboardScreen extends StatelessWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Lessons Completed',
                                       style: TextStyle(
-                                        color: AppColors.slate500,
+                                        color: context.colors.textSecondary,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                       ),
                                     ),
                                     RichText(
-                                      text: const TextSpan(
-                                        style: TextStyle(fontFamily: 'Lexend'),
+                                      text: TextSpan(
+                                        style: const TextStyle(fontFamily: 'Lexend'),
                                         children: [
                                           TextSpan(
                                             text: '12 ',
                                             style: TextStyle(
-                                              color: AppColors.slate900,
+                                              color: context.colors.textPrimary,
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -212,7 +215,7 @@ class ParentDashboardScreen extends StatelessWidget {
                                           TextSpan(
                                             text: '/ 20',
                                             style: TextStyle(
-                                              color: AppColors.slate400,
+                                              color: context.colors.textTertiary,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -227,7 +230,7 @@ class ParentDashboardScreen extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.green.shade50,
+                                    color: Colors.green.shade50.withOpacity(context.isDarkMode ? 0.15 : 1.0),
                                     borderRadius: BorderRadius.circular(9999),
                                   ),
                                   child: Row(
@@ -235,13 +238,13 @@ class ParentDashboardScreen extends StatelessWidget {
                                       Icon(
                                         Icons.trending_up,
                                         size: 14,
-                                        color: Colors.green.shade600,
+                                        color: context.isDarkMode ? Colors.green.shade400 : Colors.green.shade600,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '20%',
                                         style: TextStyle(
-                                          color: Colors.green.shade600,
+                                          color: context.isDarkMode ? Colors.green.shade400 : Colors.green.shade600,
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -255,7 +258,7 @@ class ParentDashboardScreen extends StatelessWidget {
                             Container(
                               height: 12,
                               decoration: BoxDecoration(
-                                color: AppColors.slate100,
+                                color: context.colors.border,
                                 borderRadius: BorderRadius.circular(9999),
                               ),
                               child: FractionallySizedBox(
@@ -263,7 +266,7 @@ class ParentDashboardScreen extends StatelessWidget {
                                 widthFactor: 0.6,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: AppColors.brandGreen,
+                                    color: context.colors.brandGreen,
                                     borderRadius: BorderRadius.circular(9999),
                                   ),
                                 ),
@@ -282,17 +285,17 @@ class ParentDashboardScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                 'Weekly Activity',
                                 style: TextStyle(
-                                  color: AppColors.slate900,
+                                  color: context.colors.textPrimary,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextButton(
                                 style: TextButton.styleFrom(
-                                  foregroundColor: AppColors.brandBlue,
+                                  foregroundColor: context.colors.brandBlue,
                                   padding: EdgeInsets.zero,
                                   minimumSize: Size.zero,
                                   tapTargetSize:
@@ -310,9 +313,9 @@ class ParentDashboardScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: context.colors.cardBackground,
                               borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: AppColors.slate100),
+                              border: Border.all(color: context.colors.border),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.02),
@@ -325,13 +328,13 @@ class ParentDashboardScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                _buildBarChartCol('MON', 0.4, false),
-                                _buildBarChartCol('TUE', 0.65, false),
-                                _buildBarChartCol('WED', 0.55, false),
-                                _buildBarChartCol('THU', 0.9, true),
-                                _buildBarChartCol('FRI', 0.3, false),
-                                _buildBarChartCol('SAT', 0.2, false),
-                                _buildBarChartCol('SUN', 0.15, false),
+                                _buildBarChartCol(context, 'MON', 0.4, false),
+                                _buildBarChartCol(context, 'TUE', 0.65, false),
+                                _buildBarChartCol(context, 'WED', 0.55, false),
+                                _buildBarChartCol(context, 'THU', 0.9, true),
+                                _buildBarChartCol(context, 'FRI', 0.3, false),
+                                _buildBarChartCol(context, 'SAT', 0.2, false),
+                                _buildBarChartCol(context, 'SUN', 0.15, false),
                               ],
                             ),
                           ),
@@ -345,31 +348,33 @@ class ParentDashboardScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Recent Achievements',
                             style: TextStyle(
-                              color: AppColors.slate900,
+                              color: context.colors.textPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 16),
                           _buildAchievementCard(
+                            context,
                             title: 'Vocabulary Master',
                             desc: 'Completed 5 word puzzles perfectly',
                             time: '2h ago',
                             icon: Icons.emoji_events,
                             iconColor: Colors.amber.shade600,
-                            iconBgColor: Colors.amber.shade100,
+                            iconBgColor: Colors.amber.shade100.withOpacity(context.isDarkMode ? 0.25 : 1.0),
                           ),
                           const SizedBox(height: 12),
                           _buildAchievementCard(
+                            context,
                             title: 'Speed Reader',
                             desc: 'Read 3 stories in under 10 minutes',
                             time: 'Yesterday',
                             icon: Icons.auto_stories,
                             iconColor: Colors.blue.shade600,
-                            iconBgColor: Colors.blue.shade100,
+                            iconBgColor: Colors.blue.shade100.withOpacity(context.isDarkMode ? 0.25 : 1.0),
                           ),
                         ],
                       ),
@@ -398,7 +403,8 @@ class ParentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard({
+  Widget _buildStatCard(
+    BuildContext context, {
     required String title,
     required String value,
     required IconData icon,
@@ -407,9 +413,9 @@ class ParentDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.slate100),
+        border: Border.all(color: context.colors.border),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -429,29 +435,29 @@ class ParentDashboardScreen extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: progress,
                   strokeWidth: 6,
-                  backgroundColor: AppColors.slate100,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.brandGreen,
+                  backgroundColor: context.colors.border,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    context.colors.brandGreen,
                   ),
                   strokeCap: StrokeCap.round,
                 ),
               ),
-              Icon(icon, color: AppColors.brandPurple, size: 32),
+              Icon(icon, color: context.colors.brandPurple, size: 32),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             title,
-            style: const TextStyle(
-              color: AppColors.slate500,
+            style: TextStyle(
+              color: context.colors.textSecondary,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.slate900,
+            style: TextStyle(
+              color: context.colors.textPrimary,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -461,7 +467,7 @@ class ParentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBarChartCol(String label, double fillPct, bool isToday) {
+  Widget _buildBarChartCol(BuildContext context, String label, double fillPct, bool isToday) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -470,8 +476,8 @@ class ParentDashboardScreen extends StatelessWidget {
           height: 128 * fillPct,
           decoration: BoxDecoration(
             color: isToday
-                ? AppColors.brandGreen
-                : AppColors.brandGreen.withOpacity(0.2),
+                ? context.colors.brandGreen
+                : context.colors.brandGreen.withOpacity(0.2),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
           ),
         ),
@@ -479,7 +485,7 @@ class ParentDashboardScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: isToday ? AppColors.slate900 : AppColors.slate400,
+            color: isToday ? context.colors.textPrimary : context.colors.textTertiary,
             fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
@@ -488,7 +494,8 @@ class ParentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementCard({
+  Widget _buildAchievementCard(
+    BuildContext context, {
     required String title,
     required String desc,
     required String time,
@@ -499,9 +506,9 @@ class ParentDashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.slate100),
+        border: Border.all(color: context.colors.border),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -528,16 +535,16 @@ class ParentDashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    color: AppColors.slate900,
+                  style: TextStyle(
+                    color: context.colors.textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   desc,
-                  style: const TextStyle(
-                    color: AppColors.slate500,
+                  style: TextStyle(
+                    color: context.colors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -546,7 +553,7 @@ class ParentDashboardScreen extends StatelessWidget {
           ),
           Text(
             time,
-            style: const TextStyle(color: AppColors.slate400, fontSize: 12),
+            style: TextStyle(color: context.colors.textTertiary, fontSize: 12),
           ),
         ],
       ),

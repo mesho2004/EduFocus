@@ -19,6 +19,8 @@ import '../widgets/matcher_game.dart';
 import '../widgets/popper_game.dart';
 import '../widgets/connect_letters_game.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
+import '../../../../core/bloc/stars_cubit.dart';
+import '../../../../core/bloc/curriculum_cubit.dart';
 
 class CurriculumPlayerScreen extends StatelessWidget {
   const CurriculumPlayerScreen({super.key});
@@ -191,9 +193,19 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                               () {
                                 if (mounted) {
                                   _isAdvancing = false;
+                                  if (lesson.rawSubjectType != null &&
+                                      lesson.unitId != null &&
+                                      lesson.lessonIndex != null) {
+                                    context.read<CurriculumCubit>().completeLesson(
+                                          subjectType: lesson.rawSubjectType!,
+                                          unitId: lesson.unitId!,
+                                          lessonIndex: lesson.lessonIndex!,
+                                        );
+                                  }
                                   context
                                       .read<CurriculumSessionCubit>()
                                       .nextLesson();
+                                  context.read<StarsCubit>().addStars(5);
                                 }
                               },
                             );
@@ -455,13 +467,17 @@ class _CurriculumTopBar extends StatelessWidget {
                       size: 18,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      '${sessionState.score}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 16,
-                      ),
+                    BlocBuilder<StarsCubit, int>(
+                      builder: (context, stars) {
+                        return Text(
+                          '$stars',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
