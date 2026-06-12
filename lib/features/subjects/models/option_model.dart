@@ -1,8 +1,8 @@
 class OptionModel {
   final String? text;
   final bool? isCorrect;
-  final String? category; // Sorter template
-  final int? order;       // Sequencer template
+  final String? category;
+  final int? order;
   final String? imageHint;
   final String? imagePath;
   final String? audioPath;
@@ -30,12 +30,12 @@ class OptionModel {
   }
 
   Map<String, dynamic> toJson() => {
-        if (text != null) 'text': text,
-        if (isCorrect != null) 'isCorrect': isCorrect,
-        if (category != null) 'category': category,
-        if (order != null) 'order': order,
-        if (imageHint != null) 'imageHint': imageHint,
-        if (imagePath != null) 'imagePath': imagePath,
-        if (audioPath != null) 'audioPath': audioPath,
-      };
+    if (text != null) 'text': text,
+    if (isCorrect != null) 'isCorrect': isCorrect,
+    if (category != null) 'category': category,
+    if (order != null) 'order': order,
+    if (imageHint != null) 'imageHint': imageHint,
+    if (imagePath != null) 'imagePath': imagePath,
+    if (audioPath != null) 'audioPath': audioPath,
+  };
 }

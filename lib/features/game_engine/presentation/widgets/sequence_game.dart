@@ -6,8 +6,6 @@ import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// "Tap in Order" game — player must tap tokens in the correct sequence.
-/// Each token gets a number badge when tapped correctly.
 class SequenceGame extends StatefulWidget {
   final GameInProgressState gameState;
 
@@ -23,16 +21,15 @@ class _SequenceGameState extends State<SequenceGame> {
     final question = widget.gameState.currentQuestion;
     final options = question.options;
     final sequenceSoFar = widget.gameState.sequenceSoFar;
-    final answered = widget.gameState is GameCorrectAnswerState ||
+    final answered =
+        widget.gameState is GameCorrectAnswerState ||
         widget.gameState is GameWrongAnswerState;
 
     return Column(
       children: [
-        // ── Question ─────────────────────────────────────
         _SeqQuestionBanner(question: question),
         const SizedBox(height: 16),
 
-        // ── Instruction ──────────────────────────────────
         Text(
           'Tap them in the right order! 👆',
           style: TextStyle(
@@ -43,14 +40,9 @@ class _SequenceGameState extends State<SequenceGame> {
         ),
         const SizedBox(height: 24),
 
-        // ── Progress indicator ────────────────────────────
-        _OrderProgressBar(
-          current: sequenceSoFar.length,
-          total: options.length,
-        ),
+        _OrderProgressBar(current: sequenceSoFar.length, total: options.length),
         const SizedBox(height: 24),
 
-        // ── Token grid ────────────────────────────────────
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -66,7 +58,8 @@ class _SequenceGameState extends State<SequenceGame> {
                     option: options[i],
                     index: i,
                     tapPosition: isTapped ? tapPosition + 1 : null,
-                    isWrong: answered &&
+                    isWrong:
+                        answered &&
                         widget.gameState is GameWrongAnswerState &&
                         (widget.gameState as GameWrongAnswerState)
                                 .answeredOptionIndex ==
@@ -74,9 +67,9 @@ class _SequenceGameState extends State<SequenceGame> {
                     onTap: answered
                         ? null
                         : () {
-                            context
-                                .read<GameBloc>()
-                                .add(GameSequenceTappedEvent(i));
+                            context.read<GameBloc>().add(
+                              GameSequenceTappedEvent(i),
+                            );
                           },
                   );
                 }),
@@ -89,10 +82,6 @@ class _SequenceGameState extends State<SequenceGame> {
     );
   }
 }
-
-// ─────────────────────────────────────────────
-//  Question Banner (Sequence)
-// ─────────────────────────────────────────────
 
 class _SeqQuestionBanner extends StatelessWidget {
   final GameQuestion question;
@@ -108,13 +97,11 @@ class _SeqQuestionBanner extends StatelessWidget {
         color: context.colors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.07), blurRadius: 10),
+          BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 10),
         ],
       ),
       child: question.questionIsImage
-          ? Image.asset(question.question,
-              height: 100, fit: BoxFit.contain)
+          ? Image.asset(question.question, height: 100, fit: BoxFit.contain)
           : Text(
               question.question,
               textAlign: TextAlign.center,
@@ -127,10 +114,6 @@ class _SeqQuestionBanner extends StatelessWidget {
     );
   }
 }
-
-// ─────────────────────────────────────────────
-//  Order Progress Bar
-// ─────────────────────────────────────────────
 
 class _OrderProgressBar extends StatelessWidget {
   final int current;
@@ -151,9 +134,7 @@ class _OrderProgressBar extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 4),
               height: 10,
               decoration: BoxDecoration(
-                color: done
-                    ? const Color(0xFF65B88D)
-                    : context.colors.border,
+                color: done ? const Color(0xFF65B88D) : context.colors.border,
                 borderRadius: BorderRadius.circular(9999),
               ),
             ),
@@ -164,14 +145,10 @@ class _OrderProgressBar extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Sequence Token
-// ─────────────────────────────────────────────
-
 class _SequenceToken extends StatefulWidget {
   final GameOptionData option;
   final int index;
-  final int? tapPosition; // null = not yet tapped
+  final int? tapPosition;
   final bool isWrong;
   final VoidCallback? onTap;
 
@@ -200,7 +177,9 @@ class _SequenceTokenState extends State<_SequenceToken>
       duration: const Duration(milliseconds: 300),
     );
     _popAnim = CurvedAnimation(
-        parent: _popController, curve: Curves.elasticOut);
+      parent: _popController,
+      curve: Curves.elasticOut,
+    );
   }
 
   @override
@@ -239,8 +218,8 @@ class _SequenceTokenState extends State<_SequenceToken>
             color: widget.tapPosition != null
                 ? const Color(0xFF65B88D).withOpacity(0.25)
                 : widget.isWrong
-                    ? const Color(0xFFE55A54).withOpacity(0.25)
-                    : context.colors.cardBackground,
+                ? const Color(0xFFE55A54).withOpacity(0.25)
+                : context.colors.cardBackground,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _borderColor(), width: 3),
             boxShadow: [
@@ -253,7 +232,6 @@ class _SequenceTokenState extends State<_SequenceToken>
           ),
           child: Stack(
             children: [
-              // Main label
               Center(
                 child: Text(
                   widget.option.text ?? '',
@@ -265,7 +243,7 @@ class _SequenceTokenState extends State<_SequenceToken>
                   ),
                 ),
               ),
-              // Tap-order badge
+
               if (widget.tapPosition != null)
                 Positioned(
                   top: 6,

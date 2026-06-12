@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
 import 'package:edufocus/features/subjects/models/progress_model.dart';
-import 'package:edufocus/features/auth/models/child_model.dart';
+import 'package:edufocus/features/auth/data/models/child_model.dart';
 import 'curriculum_state.dart';
 
 class CurriculumCubit extends Cubit<CurriculumState> {
@@ -42,9 +43,13 @@ class CurriculumCubit extends Cubit<CurriculumState> {
           print('   totalLessons: ${progressModel.totalLessons}');
           print('   subjects count: ${progressModel.subjects.length}');
           for (final sp in progressModel.subjects) {
-            print('   Subject: ${sp.subjectType}, completed: ${sp.completedLessons}, units: ${sp.units.length}');
+            print(
+              '   Subject: ${sp.subjectType}, completed: ${sp.completedLessons}, units: ${sp.units.length}',
+            );
             for (final up in sp.units) {
-              print('     Unit ${up.unitId}: completed ${up.completedLessons}/${up.totalLessons}');
+              print(
+                '     Unit ${up.unitId}: completed ${up.completedLessons}/${up.totalLessons}',
+              );
             }
           }
           _starsCubit.setStars(progressModel.coins);
@@ -62,7 +67,6 @@ class CurriculumCubit extends Cubit<CurriculumState> {
         print('⚠️ No auth token found — skipping progress fetch');
       }
 
-      // Load completed lessons from storage
       final completedJson = await _secureStorage.read(key: 'completed_lessons');
       final Set<String> completedKeys = completedJson != null
           ? Set<String>.from(jsonDecode(completedJson))
@@ -77,9 +81,12 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       if (progressModel != null) {
         print('Merging API progress into subjects...');
         subjects = _mergeProgress(subjects, progressModel);
-        // Log merge result
+
         for (final s in subjects) {
-          final completed = s.units.fold<int>(0, (sum, u) => sum + u.completedLessons);
+          final completed = s.units.fold<int>(
+            0,
+            (sum, u) => sum + u.completedLessons,
+          );
           print('   After merge — ${s.id.name}: $completed completed');
         }
       } else {
@@ -106,6 +113,8 @@ class CurriculumCubit extends Cubit<CurriculumState> {
     required String subjectType,
     required int unitId,
     required int lessonIndex,
+    int? grade,
+    int? term,
   }) async {
     final token = await _secureStorage.read(key: 'auth_token');
 
@@ -114,18 +123,19 @@ class CurriculumCubit extends Cubit<CurriculumState> {
         final completeLessonModel = await _apiServices.completeLesson(
           subjectType: subjectType,
           unitId: unitId,
-          lessonIndex: lessonIndex,
-          grade: 1,
-          term: 1,
+          lessonIndex: lessonIndex + 1,
+          grade: grade ?? 1,
+          term: term ?? 2,
           token: token,
         );
-        _starsCubit.setStars(completeLessonModel.totalCoins);
+        if (completeLessonModel.totalCoins != null) {
+          _starsCubit.setStars(completeLessonModel.totalCoins!);
+        }
       } catch (e) {
         print('API completeLesson failed: $e');
       }
     }
 
-    // Always update locally and persist in secure storage
     try {
       final completedJson = await _secureStorage.read(key: 'completed_lessons');
       final Set<String> completedKeys = completedJson != null
@@ -191,9 +201,8 @@ class CurriculumCubit extends Cubit<CurriculumState> {
     ProgressModel progressModel,
   ) {
     return subjects.map((subject) {
-      final subjectProg = progressModel.subjects.firstWhere(
+      final subjectProg = progressModel.subjects.firstWhereOrNull(
         (sp) => CurriculumData.parseSubjectId(sp.subjectType) == subject.id,
-        orElse: () => null as dynamic,
       );
 
       if (subjectProg == null) return subject;
@@ -202,9 +211,8 @@ class CurriculumCubit extends Cubit<CurriculumState> {
         final parts = unit.id.split('_u');
         final unitId = parts.length > 1 ? int.tryParse(parts[1]) : null;
 
-        final unitProg = subjectProg.units.firstWhere(
+        final unitProg = subjectProg.units.firstWhereOrNull(
           (up) => up.unitId == unitId,
-          orElse: () => null as dynamic,
         );
 
         if (unitProg == null) return unit;

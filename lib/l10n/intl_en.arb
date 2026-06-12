@@ -39,5 +39,7 @@
     "editProfile":"Edit Profile",
     "changeLanguage":"Change Language",
     "English":"English",
-    "logOut":"Log Out"
+    "logOut":"Log Out",
+    "lessonNotFound":"Sorry, this lesson is not available yet. Please check back later.",
+    "lessonErrorLoading":"Sorry, there was an error loading this lesson. Please try again later."
 }

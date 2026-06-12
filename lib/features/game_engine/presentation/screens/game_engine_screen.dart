@@ -17,10 +17,9 @@ import '../widgets/matcher_game.dart';
 import '../widgets/popper_game.dart';
 
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/core/data/curriculum_data.dart';
+import 'package:edufocus/features/game_engine/data/services/curriculum_service.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GameEngineScreen  –  Universal game shell
-// ─────────────────────────────────────────────────────────────────────────────
 class GameEngineScreen extends StatefulWidget {
   final LessonContent? lesson;
 
@@ -61,10 +60,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
     super.dispose();
   }
 
-  // ─────────────────────────────────────────────
-  //  Build
-  // ─────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final LessonContent? injectedLesson =
@@ -94,20 +89,16 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
               body: SafeArea(
                 child: Stack(
                   children: [
-                    // ── Subtle decorative blobs ───────────────────────
                     _BackgroundBlobs(),
 
-                    // ── Main column ───────────────────────────────────
                     Column(
                       children: [
-                        // Top bar
                         _TopBar(
                           state: state,
                           lesson: lesson,
                           onBack: () => Navigator.pop(context),
                         ),
 
-                        // Game body
                         Expanded(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
@@ -125,7 +116,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
                           ),
                         ),
 
-                        // Feedback bar (slides in after answer)
                         if (state is GameCorrectAnswerState ||
                             state is GameWrongAnswerState)
                           FeedbackBar(
@@ -145,7 +135,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
                       ],
                     ),
 
-                    // ── Reward confetti overlay ───────────────────────
                     if (state is GameCorrectAnswerState ||
                         state is GameCompletedState)
                       RewardOverlay(key: _rewardKey),
@@ -158,10 +147,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
       ),
     );
   }
-
-  // ─────────────────────────────────────────────
-  //  Game body switcher
-  // ─────────────────────────────────────────────
 
   Widget _buildGameBody(GameState state) {
     if (state is GameCompletedState) {
@@ -213,10 +198,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  Listener
-  // ─────────────────────────────────────────────
-
   void _onStateChanged(BuildContext context, GameState state) {
     final lesson = _lessonFromState(state);
 
@@ -249,14 +230,12 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
           subjectType: lesson.rawSubjectType!,
           unitId: lesson.unitId!,
           lessonIndex: lesson.lessonIndex!,
+          grade: lesson.grade,
+          term: lesson.term,
         );
       }
     }
   }
-
-  // ─────────────────────────────────────────────
-  //  Helpers
-  // ─────────────────────────────────────────────
 
   LessonContent? _lessonFromState(GameState state) {
     if (state is GameInProgressState) return state.content;
@@ -287,9 +266,6 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _BackgroundBlobs  –  soft decorative pastel circles
-// ─────────────────────────────────────────────────────────────────────────────
 class _BackgroundBlobs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -330,9 +306,6 @@ class _BackgroundBlobs extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _TopBar  –  back button + progress bar + score badge
-// ─────────────────────────────────────────────────────────────────────────────
 class _TopBar extends StatelessWidget {
   final GameState state;
   final LessonContent lesson;
@@ -369,7 +342,6 @@ class _TopBar extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Back button
           _CircleIconBtn(
             icon: Icons.arrow_back_ios_new_rounded,
             onTap: onBack,
@@ -377,7 +349,6 @@ class _TopBar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Progress bar (pill)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,7 +402,6 @@ class _TopBar extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          // Score badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -466,9 +436,6 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _CircleIconBtn
-// ─────────────────────────────────────────────────────────────────────────────
 class _CircleIconBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
@@ -497,9 +464,6 @@ class _CircleIconBtn extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _CompletedPanel  –  trophy screen with stars
-// ─────────────────────────────────────────────────────────────────────────────
 class _CompletedPanel extends StatelessWidget {
   final GameCompletedState state;
 
@@ -564,9 +528,49 @@ class _CompletedPanel extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               _GreenButton(
-                label: '🔄  Play Again',
-                onTap: () =>
-                    context.read<GameBloc>().add(const GameResetEvent()),
+                label: '➡️  Next Lesson',
+                onTap: () async {
+                  final currentLesson = state.content;
+                  final subjectId = CurriculumData.parseSubjectId(
+                    currentLesson.rawSubjectType ?? '',
+                  );
+                  if (subjectId != null &&
+                      currentLesson.unitId != null &&
+                      currentLesson.lessonIndex != null) {
+                    final curriculumService = CurriculumService();
+                    final units = await curriculumService.loadCurriculum(
+                      subjectId,
+                    );
+
+                    final unitIdx = units.indexWhere(
+                      (u) => u.unitIndex == currentLesson.unitId,
+                    );
+                    if (unitIdx != -1) {
+                      final unit = units[unitIdx];
+                      final nextLessonIndex = currentLesson.lessonIndex! + 1;
+                      if (nextLessonIndex < unit.lessons.length) {
+                        final nextLessonContent = unit.lessons[nextLessonIndex];
+                        if (context.mounted) {
+                          context.read<GameBloc>().add(
+                            GameLoadEvent(nextLessonContent),
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      }
+                    } else {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    }
+                  } else {
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
               ),
               const SizedBox(height: 12),
               GestureDetector(

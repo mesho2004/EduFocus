@@ -6,7 +6,7 @@ typedef MyValidator = String? Function(String?);
 class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final String? hintText;
-  // Note: obscureText must be mutable for the password toggle to work
+
   bool obscureText;
   final bool isPassword;
   final TextEditingController controller;
@@ -32,10 +32,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
-      style:  TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color:context.colors.textSecondary,
+        color: context.colors.textSecondary,
         overflow: TextOverflow.ellipsis,
       ),
       obscureText: widget.obscureText,
@@ -55,8 +55,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                   color: const Color(0xff454A4F),
                   size: 24,
                 ),
-              onPressed: () {
-                  // Toggling the obscureText value requires setState to redraw
+                onPressed: () {
                   setState(() {
                     widget.obscureText = !widget.obscureText;
                   });

@@ -6,18 +6,23 @@ import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
+import 'package:edufocus/core/routes/app_routes.dart';
 
 class UnitsScreen extends StatelessWidget {
   const UnitsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final initialSubject = ModalRoute.of(context)!.settings.arguments as SubjectData;
+    final initialSubject =
+        ModalRoute.of(context)!.settings.arguments as SubjectData;
 
     return BlocBuilder<CurriculumCubit, CurriculumState>(
       builder: (context, state) {
         final subject = state is CurriculumLoaded
-            ? state.subjects.firstWhere((s) => s.id == initialSubject.id, orElse: () => initialSubject)
+            ? state.subjects.firstWhere(
+                (s) => s.id == initialSubject.id,
+                orElse: () => initialSubject,
+              )
             : initialSubject;
 
         return Directionality(
@@ -26,10 +31,8 @@ class UnitsScreen extends StatelessWidget {
             backgroundColor: context.colors.background,
             body: CustomScrollView(
               slivers: [
-                // ── Collapsible App Bar ───────────────────────
                 SubjectSliverHeader(subject: subject),
 
-                // ── Units list ────────────────────────────────
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
                   sliver: SliverList(
@@ -44,7 +47,7 @@ class UnitsScreen extends StatelessWidget {
                           subject: subject,
                           onTap: () => Navigator.pushNamed(
                             context,
-                            '/lessons_path',
+                            AppRoutes.lessonsPath,
                             arguments: {'subject': subject, 'unit': unit},
                           ),
                         ),
@@ -60,6 +63,3 @@ class UnitsScreen extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -1,5 +1,4 @@
 import 'package:edufocus/core/data/curriculum_data.dart';
-import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/features/lessons/widgets/node_label.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +30,11 @@ class LockedNode extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(Icons.lock_rounded,
-                  color: context.colors.textTertiary, size: 34),
+              child: Icon(
+                Icons.lock_rounded,
+                color: context.colors.textTertiary,
+                size: 34,
+              ),
             ),
             const SizedBox(height: 8),
             NodeLabel(text: lesson.title, color: context.colors.textTertiary),

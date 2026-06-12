@@ -4,22 +4,14 @@ import 'package:edufocus/core/di/di.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/features/subjects/models/curriculum_model.dart';
 
-// ─────────────────────────────────────────────
-//  Enums
-// ─────────────────────────────────────────────
-
 enum SubjectId { arabic, english, mathEn }
-
-// ─────────────────────────────────────────────
-//  Data Models
-// ─────────────────────────────────────────────
 
 class LessonData {
   final String id;
   final String title;
   final bool isCompleted;
   final bool isActive;
-  final int stars; // 0–3
+  final int stars;
 
   const LessonData({
     required this.id,
@@ -85,14 +77,14 @@ class UnitData {
 
 class SubjectData {
   final SubjectId id;
-  final String title; // displayed title (may be Arabic)
-  final String titleEn; // English subtitle / badge
+  final String title;
+  final String titleEn;
   final String emoji;
   final Color color;
   final Color colorLight;
   final IconData icon;
   final List<UnitData> units;
-  final bool isRtl; // true for Arabic-taught subjects
+  final bool isRtl;
 
   const SubjectData({
     required this.id,
@@ -141,10 +133,6 @@ class SubjectData {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Curriculum — Dynamic Data loader
-// ─────────────────────────────────────────────
-
 class CurriculumData {
   CurriculumData._();
 
@@ -155,7 +143,8 @@ class CurriculumData {
 
     try {
       final apiService = getIt<ApiServices>();
-      final List<CurriculumModel> curriculums = await apiService.getAllCurriculums();
+      final List<CurriculumModel> curriculums = await apiService
+          .getAllCurriculums();
       _cachedSubjects = parseCurriculums(curriculums, {});
       return _cachedSubjects!;
     } catch (e) {
@@ -165,7 +154,9 @@ class CurriculumData {
   }
 
   static List<SubjectData> parseCurriculums(
-      List<CurriculumModel> curriculums, Set<String> completedKeys) {
+    List<CurriculumModel> curriculums,
+    Set<String> completedKeys,
+  ) {
     final List<SubjectData> subjects = [];
     for (var model in curriculums) {
       final subjectId = parseSubjectId(model.subjectType);
@@ -231,17 +222,19 @@ class CurriculumData {
         );
       }).toList();
 
-      subjects.add(SubjectData(
-        id: subjectId,
-        title: title,
-        titleEn: titleEn,
-        emoji: emoji,
-        color: color,
-        colorLight: colorLight,
-        icon: icon,
-        isRtl: isRtl,
-        units: unitsData,
-      ));
+      subjects.add(
+        SubjectData(
+          id: subjectId,
+          title: title,
+          titleEn: titleEn,
+          emoji: emoji,
+          color: color,
+          colorLight: colorLight,
+          icon: icon,
+          isRtl: isRtl,
+          units: unitsData,
+        ),
+      );
     }
     return subjects;
   }

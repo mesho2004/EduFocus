@@ -8,8 +8,6 @@ import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// Matcher game — two columns of items; tap left then right to match pairs.
-/// Lines are drawn between matched pairs using [CustomPaint].
 class MatcherGame extends StatefulWidget {
   final GameInProgressState gameState;
   final FlutterTts? tts;
@@ -33,7 +31,6 @@ class _MatcherGameState extends State<MatcherGame> {
   List<_MatchLineData> _lines = [];
   bool _wrongFlash = false;
 
-  // Keys to compute line positions
   final GlobalKey _stackKey = GlobalKey();
   late List<GlobalKey> _leftKeys;
   late List<GlobalKey> _rightKeys;
@@ -56,8 +53,7 @@ class _MatcherGameState extends State<MatcherGame> {
   @override
   void didUpdateWidget(MatcherGame oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.gameState.questionIndex !=
-        widget.gameState.questionIndex) {
+    if (oldWidget.gameState.questionIndex != widget.gameState.questionIndex) {
       _initPairs();
     }
   }
@@ -89,7 +85,6 @@ class _MatcherGameState extends State<MatcherGame> {
     if (_matchedPairIndices.contains(rightOriginalIndex)) return;
 
     if (_selectedLeftIndex == rightOriginalIndex) {
-      // ✅ Match!
       setState(() {
         _matchedPairIndices.add(rightOriginalIndex);
         _selectedLeftIndex = null;
@@ -97,14 +92,13 @@ class _MatcherGameState extends State<MatcherGame> {
       _updateLinePositions();
       _checkCompletion();
     } else {
-      // ❌ Wrong
       setState(() {
         _wrongFlash = true;
         _selectedLeftIndex = null;
       });
-      context
-          .read<GameBloc>()
-          .add(GameWrongAttemptEvent(itemIndex: rightDisplayIndex));
+      context.read<GameBloc>().add(
+        GameWrongAttemptEvent(itemIndex: rightDisplayIndex),
+      );
       Future.delayed(const Duration(milliseconds: 600), () {
         if (mounted) setState(() => _wrongFlash = false);
       });
@@ -123,8 +117,9 @@ class _MatcherGameState extends State<MatcherGame> {
         final rightDispIdx = _shuffledRightIndices.indexOf(pairIdx);
         final leftRB =
             _leftKeys[pairIdx].currentContext?.findRenderObject() as RenderBox?;
-        final rightRB = _rightKeys[rightDispIdx].currentContext
-            ?.findRenderObject() as RenderBox?;
+        final rightRB =
+            _rightKeys[rightDispIdx].currentContext?.findRenderObject()
+                as RenderBox?;
 
         if (leftRB != null && rightRB != null) {
           final isRtl = Directionality.of(context) == TextDirection.rtl;
@@ -137,13 +132,14 @@ class _MatcherGameState extends State<MatcherGame> {
             Offset(isRtl ? rightRB.size.width : 0, rightRB.size.height / 2),
             ancestor: stackRB,
           );
-          newLines.add(_MatchLineData(
-            from: from,
-            to: to,
-            color: _pairColors[pairIdx % _pairColors.length],
-          ));
+          newLines.add(
+            _MatchLineData(
+              from: from,
+              to: to,
+              color: _pairColors[pairIdx % _pairColors.length],
+            ),
+          );
         }
-
       }
 
       if (mounted) setState(() => _lines = newLines);
@@ -164,7 +160,6 @@ class _MatcherGameState extends State<MatcherGame> {
 
     return Column(
       children: [
-        // ── Question banner ─────────────────────────────
         _MatcherQuestionBanner(question: question),
         const SizedBox(height: 8),
 
@@ -178,24 +173,20 @@ class _MatcherGameState extends State<MatcherGame> {
         ),
         const SizedBox(height: 16),
 
-        // ── Columns with lines ──────────────────────────
         Expanded(
           child: Stack(
             key: _stackKey,
             children: [
-              // Lines layer
               CustomPaint(
                 size: Size.infinite,
                 painter: _MatchLinePainter(lines: _lines),
               ),
 
-              // Columns
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Left column
                     Expanded(
                       child: Column(
                         children: List.generate(pairs.length, (i) {
@@ -214,16 +205,15 @@ class _MatcherGameState extends State<MatcherGame> {
                                 decoration: BoxDecoration(
                                   color: isMatched
                                       ? _pairColors[i % _pairColors.length]
-                                          .withOpacity(0.25)
+                                            .withOpacity(0.25)
                                       : context.colors.cardBackground,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: isSelected
                                         ? const Color(0xFF3B81B5)
                                         : isMatched
-                                            ? _pairColors[
-                                                i % _pairColors.length]
-                                            : context.colors.border,
+                                        ? _pairColors[i % _pairColors.length]
+                                        : context.colors.border,
                                     width: isSelected ? 3 : 2,
                                   ),
                                   boxShadow: [
@@ -243,17 +233,19 @@ class _MatcherGameState extends State<MatcherGame> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                           color: isMatched
-                                              ? _pairColors[
-                                                  i % _pairColors.length]
+                                              ? _pairColors[i %
+                                                    _pairColors.length]
                                               : context.colors.textPrimary,
                                         ),
                                       ),
                                     ),
                                     if (isMatched)
-                                      Icon(Icons.check_circle_rounded,
-                                          color: _pairColors[
-                                              i % _pairColors.length],
-                                          size: 22),
+                                      Icon(
+                                        Icons.check_circle_rounded,
+                                        color:
+                                            _pairColors[i % _pairColors.length],
+                                        size: 22,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -265,14 +257,13 @@ class _MatcherGameState extends State<MatcherGame> {
 
                     const SizedBox(width: 40),
 
-                    // Right column
                     Expanded(
                       child: Column(
                         children: List.generate(pairs.length, (displayIdx) {
-                          final originalIdx =
-                              _shuffledRightIndices[displayIdx];
-                          final isMatched =
-                              _matchedPairIndices.contains(originalIdx);
+                          final originalIdx = _shuffledRightIndices[displayIdx];
+                          final isMatched = _matchedPairIndices.contains(
+                            originalIdx,
+                          );
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: GestureDetector(
@@ -285,21 +276,22 @@ class _MatcherGameState extends State<MatcherGame> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isMatched
-                                      ? _pairColors[
-                                              originalIdx % _pairColors.length]
-                                          .withOpacity(0.25)
+                                      ? _pairColors[originalIdx %
+                                                _pairColors.length]
+                                            .withOpacity(0.25)
                                       : _wrongFlash
-                                          ? const Color(0xFFE55A54)
-                                              .withOpacity(0.15)
-                                          : context.colors.cardBackground,
+                                      ? const Color(
+                                          0xFFE55A54,
+                                        ).withOpacity(0.15)
+                                      : context.colors.cardBackground,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: isMatched
-                                        ? _pairColors[
-                                            originalIdx % _pairColors.length]
+                                        ? _pairColors[originalIdx %
+                                              _pairColors.length]
                                         : _wrongFlash
-                                            ? const Color(0xFFE55A54)
-                                            : context.colors.border,
+                                        ? const Color(0xFFE55A54)
+                                        : context.colors.border,
                                     width: 2,
                                   ),
                                   boxShadow: [
@@ -320,17 +312,19 @@ class _MatcherGameState extends State<MatcherGame> {
                                           fontWeight: FontWeight.w800,
                                           color: isMatched
                                               ? _pairColors[originalIdx %
-                                                  _pairColors.length]
+                                                    _pairColors.length]
                                               : context.colors.textPrimary,
                                         ),
                                       ),
                                     ),
                                     if (isMatched)
-                                      Icon(Icons.check_circle_rounded,
-                                          color: _pairColors[
-                                              originalIdx %
-                                                  _pairColors.length],
-                                          size: 22),
+                                      Icon(
+                                        Icons.check_circle_rounded,
+                                        color:
+                                            _pairColors[originalIdx %
+                                                _pairColors.length],
+                                        size: 22,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -350,10 +344,6 @@ class _MatcherGameState extends State<MatcherGame> {
     );
   }
 }
-
-// ─────────────────────────────────────────────
-//  Line data & painter
-// ─────────────────────────────────────────────
 
 class _MatchLineData {
   final Offset from;
@@ -383,13 +373,8 @@ class _MatchLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_MatchLinePainter old) =>
-      old.lines.length != lines.length;
+  bool shouldRepaint(_MatchLinePainter old) => old.lines.length != lines.length;
 }
-
-// ─────────────────────────────────────────────
-//  Question Banner (Matcher)
-// ─────────────────────────────────────────────
 
 class _MatcherQuestionBanner extends StatelessWidget {
   final GameQuestion question;
@@ -405,13 +390,22 @@ class _MatcherQuestionBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Text(
         question.question,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: context.colors.textPrimary, height: 1.4),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          color: context.colors.textPrimary,
+          height: 1.4,
+        ),
       ),
     );
   }

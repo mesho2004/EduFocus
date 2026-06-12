@@ -7,8 +7,11 @@ class LessonPathHeader extends StatelessWidget {
   final SubjectData subject;
   final UnitData unit;
 
-  const LessonPathHeader(
-      {super.key, required this.subject, required this.unit});
+  const LessonPathHeader({
+    super.key,
+    required this.subject,
+    required this.unit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +35,17 @@ class LessonPathHeader extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.fromLTRB(16, 12, 16, 20),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
         child: Column(
           children: [
-            // Back + title row
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white, size: 20),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Expanded(
@@ -67,18 +71,23 @@ class LessonPathHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Unit Stars earned
+
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 6),
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.stars_rounded,
-                          color: Color(0xFFF3C344), size: 18),
+                      const Icon(
+                        Icons.stars_rounded,
+                        color: Color(0xFFF3C344),
+                        size: 18,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${unit.lessons.fold<int>(0, (s, l) => s + l.stars)}',
@@ -92,12 +101,14 @@ class LessonPathHeader extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // Global Coins
+
                 BlocBuilder<StarsCubit, int>(
                   builder: (context, stars) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(16),
@@ -108,8 +119,7 @@ class LessonPathHeader extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.star_rounded,
-                              color: Color(0xFFF3C344), size: 18),
+                          const Text('🪙', style: TextStyle(fontSize: 16)),
                           const SizedBox(width: 4),
                           Text(
                             '$stars',
@@ -127,7 +137,7 @@ class LessonPathHeader extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Progress bar
+
             Row(
               children: [
                 Text(
@@ -157,7 +167,8 @@ class LessonPathHeader extends StatelessWidget {
                 minHeight: 10,
                 backgroundColor: Colors.white.withValues(alpha: 0.25),
                 valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFFF3C344)),
+                  Color(0xFFF3C344),
+                ),
               ),
             ),
           ],

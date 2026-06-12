@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 class MainNavigationScreen extends StatefulWidget {
   final int initialIndex;
 
-  const MainNavigationScreen({
-    super.key,
-    this.initialIndex = 0,
-  });
+  const MainNavigationScreen({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigationScreen> createState() => MainNavigationScreenState();
@@ -42,10 +39,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomSheet: CustomBottomNavBar(
         currentIndex: _currentIndex,
         onTap: setIndex,

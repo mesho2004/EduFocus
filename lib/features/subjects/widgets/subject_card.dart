@@ -71,17 +71,17 @@ class _SubjectCardState extends State<SubjectCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // ── Icon area ─────────────────────────
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: context.isDarkMode ? sub.color.withOpacity(0.15) : sub.colorLight,
+                    color: context.isDarkMode
+                        ? sub.color.withOpacity(0.15)
+                        : sub.colorLight,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Subtle radial glow
                       Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -111,7 +111,6 @@ class _SubjectCardState extends State<SubjectCard>
               ),
               const SizedBox(height: 12),
 
-              // ── Title ─────────────────────────────
               Text(
                 sub.title,
                 textAlign: TextAlign.center,
@@ -123,7 +122,6 @@ class _SubjectCardState extends State<SubjectCard>
               ),
               const SizedBox(height: 2),
 
-              // ── Unit count badge ──────────────────
               Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -146,7 +144,6 @@ class _SubjectCardState extends State<SubjectCard>
               ),
               const SizedBox(height: 10),
 
-              // ── Progress bar ──────────────────────
               ClipRRect(
                 borderRadius: BorderRadius.circular(9999),
                 child: LinearProgressIndicator(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// A circular icon avatar used at the top of auth screens for branding.
 class AuthIconAvatar extends StatelessWidget {
   final IconData icon;
   final double size;
@@ -29,11 +27,7 @@ class AuthIconAvatar extends StatelessWidget {
         color: backgroundColor ?? effectiveIconColor.withOpacity(0.15),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        size: iconSize,
-        color: effectiveIconColor,
-      ),
+      child: Icon(icon, size: iconSize, color: effectiveIconColor),
     );
   }
 }

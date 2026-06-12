@@ -6,11 +6,12 @@ import 'package:edufocus/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
-import 'package:edufocus/features/auth/cubit/auth_cubit.dart';
+import 'package:edufocus/features/auth/data/cubit/auth_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
 import 'package:edufocus/core/utils/lego_character_helper.dart';
 import 'package:edufocus/core/utils/widgets/lego_character_widget.dart';
+import 'package:edufocus/core/routes/app_routes.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,10 +21,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _trackEnabled = true;
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +91,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             final bodyIndex = config?['bodyIndex'] ?? 1;
             final legIndex = config?['legIndex'] ?? 1;
             final hatIndex = config?['hatIndex'] ?? 0;
-            final torsoColor = config?['torsoColor'];
-            final pantsColor = config?['pantsColor'];
-            final hairColor = config?['hairColor'];
 
             return Container(
               padding: const EdgeInsets.all(24),
@@ -126,9 +120,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       bodyIndex: bodyIndex,
                       legIndex: legIndex,
                       hatIndex: hatIndex,
-                      torsoColor: torsoColor,
-                      pantsColor: pantsColor,
-                      hairColor: hairColor,
                       size: 64,
                     ),
                   ),
@@ -143,7 +134,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: context.colors.brandYellow,
                       borderRadius: BorderRadius.circular(20),
@@ -173,7 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         int completedLessons = 0;
         int streakDays = 0;
         if (state is CurriculumLoaded) {
-          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          completedLessons = state.subjects.fold<int>(
+            0,
+            (s, sub) => s + sub.completedLessons,
+          );
           streakDays = state.progressModel?.streakDays ?? 0;
         }
 
@@ -188,10 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Expanded(
                   child: _buildAchievementCard(
-                    'Total Points',
+                    'Total Coins',
                     '$stars',
-                    Icons.stars_rounded,
-                    context.colors.brandYellow,
+                    const Text('🪙', style: TextStyle(fontSize: 32)),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -199,8 +195,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _buildAchievementCard(
                     'Games Won',
                     '$completedLessons',
-                    Icons.emoji_events_rounded,
-                    context.colors.brandOrange,
+                    Icon(
+                      Icons.emoji_events_rounded,
+                      color: context.colors.brandOrange,
+                      size: 32,
+                    ),
                   ),
                 ),
               ],
@@ -251,12 +250,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 56,
           width: 56,
           decoration: BoxDecoration(
-            color: unlocked 
+            color: unlocked
                 ? context.colors.brandYellow.withValues(alpha: 0.15)
                 : context.colors.border.withValues(alpha: 0.3),
             shape: BoxShape.circle,
             border: Border.all(
-              color: unlocked ? context.colors.brandYellow : context.colors.border,
+              color: unlocked
+                  ? context.colors.brandYellow
+                  : context.colors.border,
               width: 2,
             ),
           ),
@@ -276,7 +277,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: unlocked ? context.colors.textPrimary : context.colors.textTertiary,
+              color: unlocked
+                  ? context.colors.textPrimary
+                  : context.colors.textTertiary,
             ),
           ),
         ),
@@ -284,12 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAchievementCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildAchievementCard(String title, String value, Widget iconWidget) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -300,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 32),
+          iconWidget,
           const SizedBox(height: 12),
           Text(
             value,
@@ -332,16 +330,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
-          _buildSettingsTile(
-            icon: Icons.remove_red_eye_rounded,
-            title: 'Eye-Tracking mode',
-            subtitle: 'Enable Eye-Tracking Mode',
-            iconColor: context.colors.brandPurple,
-            trailing: Switch(
-              value: _trackEnabled,
-              activeColor: context.colors.brandPurple,
-              onChanged: (val) => setState(() => _trackEnabled = val),
-            ),
+          ValueListenableBuilder<bool>(
+            valueListenable: isEyeTrackingEnabled,
+            builder: (context, trackingEnabled, _) {
+              return _buildSettingsTile(
+                icon: Icons.remove_red_eye_rounded,
+                title: 'Eye-Tracking mode',
+                subtitle: 'Enable Eye-Tracking Mode',
+                iconColor: context.colors.brandPurple,
+                trailing: Switch(
+                  value: trackingEnabled,
+                  activeColor: context.colors.brandPurple,
+                  onChanged: (val) async {
+                    isEyeTrackingEnabled.value = val;
+                    await AppSharedPref.setPref(
+                      value: val,
+                      key: AppSharedPrefKey.eyeTrackingKey,
+                    );
+                  },
+                ),
+              );
+            },
           ),
           Divider(height: 1, color: context.colors.border),
           ValueListenableBuilder<bool>(
@@ -365,36 +374,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
             },
           ),
-          Divider(height: 1, color: context.colors.border),
-          _buildSettingsTile(
-            icon: Icons.text_fields_rounded,
-            title: 'Text & Icon Size',
-            subtitle: 'Adjust for better visibility',
-            iconColor: context.colors.brandRed,
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.remove_circle_outline),
-                  color: context.colors.textTertiary,
-                  onPressed: () {},
-                ),
-                Text(
-                  'A',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.textPrimary,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_circle_outline),
-                  color: context.colors.textTertiary,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -414,7 +393,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Edit Profile',
             iconColor: context.colors.brandBlue,
             onTap: () async {
-              await Navigator.pushNamed(context, '/edit_profile');
+              await Navigator.pushNamed(context, AppRoutes.editProfile);
               setState(() {});
             },
             trailing: Icon(
@@ -446,7 +425,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context.read<StarsCubit>().setStars(0);
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/parent_auth',
+                AppRoutes.parentAuth,
                 (r) => false,
               );
             },

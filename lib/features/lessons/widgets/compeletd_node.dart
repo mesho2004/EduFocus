@@ -9,10 +9,12 @@ class CompletedNode extends StatelessWidget {
   final double offset;
   final Color color;
 
-  const CompletedNode(
-      {super.key, required this.lesson,
-      required this.offset,
-      required this.color});
+  const CompletedNode({
+    super.key,
+    required this.lesson,
+    required this.offset,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,6 @@ class CompletedNode extends StatelessWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              // Glow ring
               Container(
                 width: 90,
                 height: 90,
@@ -33,7 +34,7 @@ class CompletedNode extends StatelessWidget {
                   color: AppColors.brandGreen.withValues(alpha: 0.15),
                 ),
               ),
-              // Main circle
+
               Container(
                 width: 76,
                 height: 76,
@@ -48,10 +49,13 @@ class CompletedNode extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.check_rounded,
-                    color: Colors.white, size: 38),
+                child: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.white,
+                  size: 38,
+                ),
               ),
-              // Stars
+
               Positioned(
                 top: -14,
                 right: -10,
@@ -76,4 +80,4 @@ class CompletedNode extends StatelessWidget {
       ),
     );
   }
-}
+}

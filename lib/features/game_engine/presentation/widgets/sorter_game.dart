@@ -7,10 +7,6 @@ import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// "Drag to Sort" game — items are draggable, buckets are drop targets.
-///
-/// For Primary 1 use-cases each question has exactly ONE correct option;
-/// the player drags it to the highlighted bucket.
 class SorterGame extends StatefulWidget {
   final GameInProgressState gameState;
   final FlutterTts? tts;
@@ -66,7 +62,6 @@ class _SorterGameState extends State<SorterGame> {
 
     return Column(
       children: [
-        // ── Question text ────────────────────────────────────────────────────
         if (question.question.isNotEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
@@ -78,24 +73,35 @@ class _SorterGameState extends State<SorterGame> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: context.colors.border, width: 1.5),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3)),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
                 ],
               ),
               child: Text(
                 question.question,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: context.colors.textPrimary),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: context.colors.textPrimary,
+                ),
               ),
             ),
           ),
 
-        // ── Instruction ─────────────────────────────────────────────────────
         const Padding(
           padding: EdgeInsets.fromLTRB(20, 10, 20, 4),
           child: Text(
             'Drag each item to the correct box!',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF64748B),
+            ),
           ),
         ),
         const SizedBox(height: 12),
@@ -105,7 +111,6 @@ class _SorterGameState extends State<SorterGame> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                // Draggable tokens row
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -124,7 +129,6 @@ class _SorterGameState extends State<SorterGame> {
                 ),
                 const SizedBox(height: 24),
 
-                // Drop bucket row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: displayCategories.map((catLabel) {
@@ -160,14 +164,15 @@ class _SorterGameState extends State<SorterGame> {
     if (option.category != null) {
       isCorrect = (option.category == bucketLabel);
     } else {
-      isCorrect = (option.isCorrect && bucketLabel == '✅ Correct') || 
-                  (!option.isCorrect && bucketLabel == '❌ Wrong');
+      isCorrect =
+          (option.isCorrect && bucketLabel == '✅ Correct') ||
+          (!option.isCorrect && bucketLabel == '❌ Wrong');
     }
 
     if (isCorrect) {
       setState(() {
         _sortedIndices.add(itemIndex);
-        // If all items placed, emit completion
+
         if (_sortedIndices.length ==
             widget.gameState.currentQuestion.options.length) {
           _answered = true;
@@ -179,11 +184,6 @@ class _SorterGameState extends State<SorterGame> {
     }
   }
 }
-
-
-// ─────────────────────────────────────────────
-//  Draggable Token
-// ─────────────────────────────────────────────
 
 class _DraggableToken extends StatelessWidget {
   final GameOptionData option;
@@ -240,10 +240,6 @@ class _DraggableToken extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Drop Bucket
-// ─────────────────────────────────────────────
-
 class _DropBucket extends StatelessWidget {
   final String label;
   final Color color;
@@ -277,8 +273,19 @@ class _DropBucket extends StatelessWidget {
               width: isHovered ? 3 : 2,
             ),
             boxShadow: isHovered
-                ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 14)]
-                : [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3))],
+                ? [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 14,
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
           ),
           child: Center(
             child: Text(

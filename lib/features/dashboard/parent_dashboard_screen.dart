@@ -13,7 +13,6 @@ class ParentDashboardScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             Container(
               color: context.colors.cardBackground.withOpacity(0.8),
               child: Padding(
@@ -30,7 +29,10 @@ class ParentDashboardScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.menu, color: context.colors.textSecondary),
+                        icon: Icon(
+                          Icons.menu,
+                          color: context.colors.textSecondary,
+                        ),
                         onPressed: () {},
                       ),
                     ),
@@ -63,12 +65,9 @@ class ParentDashboardScreen extends StatelessWidget {
 
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.only(
-                  bottom: 96,
-                ), // room for bottom nav
+                padding: const EdgeInsets.only(bottom: 96),
                 child: Column(
                   children: [
-                    // Profile Section
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
@@ -140,7 +139,6 @@ class ParentDashboardScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Main Stats Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Row(
@@ -202,7 +200,9 @@ class ParentDashboardScreen extends StatelessWidget {
                                     ),
                                     RichText(
                                       text: TextSpan(
-                                        style: const TextStyle(fontFamily: 'Lexend'),
+                                        style: const TextStyle(
+                                          fontFamily: 'Lexend',
+                                        ),
                                         children: [
                                           TextSpan(
                                             text: '12 ',
@@ -215,7 +215,8 @@ class ParentDashboardScreen extends StatelessWidget {
                                           TextSpan(
                                             text: '/ 20',
                                             style: TextStyle(
-                                              color: context.colors.textTertiary,
+                                              color:
+                                                  context.colors.textTertiary,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -230,7 +231,9 @@ class ParentDashboardScreen extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.green.shade50.withOpacity(context.isDarkMode ? 0.15 : 1.0),
+                                    color: Colors.green.shade50.withOpacity(
+                                      context.isDarkMode ? 0.15 : 1.0,
+                                    ),
                                     borderRadius: BorderRadius.circular(9999),
                                   ),
                                   child: Row(
@@ -238,13 +241,17 @@ class ParentDashboardScreen extends StatelessWidget {
                                       Icon(
                                         Icons.trending_up,
                                         size: 14,
-                                        color: context.isDarkMode ? Colors.green.shade400 : Colors.green.shade600,
+                                        color: context.isDarkMode
+                                            ? Colors.green.shade400
+                                            : Colors.green.shade600,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '20%',
                                         style: TextStyle(
-                                          color: context.isDarkMode ? Colors.green.shade400 : Colors.green.shade600,
+                                          color: context.isDarkMode
+                                              ? Colors.green.shade400
+                                              : Colors.green.shade600,
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -277,7 +284,6 @@ class ParentDashboardScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Weekly Activity
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
@@ -342,7 +348,6 @@ class ParentDashboardScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Recent Achievements
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Column(
@@ -364,7 +369,9 @@ class ParentDashboardScreen extends StatelessWidget {
                             time: '2h ago',
                             icon: Icons.emoji_events,
                             iconColor: Colors.amber.shade600,
-                            iconBgColor: Colors.amber.shade100.withOpacity(context.isDarkMode ? 0.25 : 1.0),
+                            iconBgColor: Colors.amber.shade100.withOpacity(
+                              context.isDarkMode ? 0.25 : 1.0,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           _buildAchievementCard(
@@ -374,7 +381,9 @@ class ParentDashboardScreen extends StatelessWidget {
                             time: 'Yesterday',
                             icon: Icons.auto_stories,
                             iconColor: Colors.blue.shade600,
-                            iconBgColor: Colors.blue.shade100.withOpacity(context.isDarkMode ? 0.25 : 1.0),
+                            iconBgColor: Colors.blue.shade100.withOpacity(
+                              context.isDarkMode ? 0.25 : 1.0,
+                            ),
                           ),
                         ],
                       ),
@@ -467,7 +476,12 @@ class ParentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBarChartCol(BuildContext context, String label, double fillPct, bool isToday) {
+  Widget _buildBarChartCol(
+    BuildContext context,
+    String label,
+    double fillPct,
+    bool isToday,
+  ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -485,7 +499,9 @@ class ParentDashboardScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: isToday ? context.colors.textPrimary : context.colors.textTertiary,
+            color: isToday
+                ? context.colors.textPrimary
+                : context.colors.textTertiary,
             fontSize: 10,
             fontWeight: FontWeight.bold,
           ),

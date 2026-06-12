@@ -9,8 +9,6 @@ import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 
-/// Popper game — floating bubbles drift across the screen.
-/// Tap the correct bubbles to pop them; wrong taps show a shake.
 class PopperGame extends StatefulWidget {
   final GameInProgressState gameState;
   final FlutterTts? tts;
@@ -41,7 +39,7 @@ class _PopperGameState extends State<PopperGame> {
 
   late List<_BubbleData> _bubbles;
   final Set<int> _poppedIndices = {};
-  final Set<int> _poppingIndices = {}; // Animating pop
+  final Set<int> _poppingIndices = {};
   int? _wrongShakeIndex;
   Timer? _moveTimer;
   double _maxWidth = 300;
@@ -58,8 +56,7 @@ class _PopperGameState extends State<PopperGame> {
   @override
   void didUpdateWidget(PopperGame oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.gameState.questionIndex !=
-        widget.gameState.questionIndex) {
+    if (oldWidget.gameState.questionIndex != widget.gameState.questionIndex) {
       _moveTimer?.cancel();
       _poppedIndices.clear();
       _poppingIndices.clear();
@@ -97,7 +94,6 @@ class _PopperGameState extends State<PopperGame> {
           _bubbles[i].x += _bubbles[i].dx;
           _bubbles[i].y += _bubbles[i].dy;
 
-          // Bounce off edges
           if (_bubbles[i].x < 0) {
             _bubbles[i].x = 0;
             _bubbles[i].dx = _bubbles[i].dx.abs();
@@ -128,7 +124,6 @@ class _PopperGameState extends State<PopperGame> {
 
     final option = widget.gameState.currentQuestion.options[index];
     if (option.isCorrect) {
-      // Pop it!
       setState(() => _poppingIndices.add(index));
       Future.delayed(const Duration(milliseconds: 350), () {
         if (!mounted) return;
@@ -139,11 +134,8 @@ class _PopperGameState extends State<PopperGame> {
         _checkCompletion();
       });
     } else {
-      // Wrong — shake
       setState(() => _wrongShakeIndex = index);
-      context
-          .read<GameBloc>()
-          .add(GameWrongAttemptEvent(itemIndex: index));
+      context.read<GameBloc>().add(GameWrongAttemptEvent(itemIndex: index));
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) setState(() => _wrongShakeIndex = null);
       });
@@ -154,8 +146,9 @@ class _PopperGameState extends State<PopperGame> {
     if (_completed) return;
     final options = widget.gameState.currentQuestion.options;
     final correctCount = options.where((o) => o.isCorrect).length;
-    final poppedCorrect =
-        _poppedIndices.where((i) => options[i].isCorrect).length;
+    final poppedCorrect = _poppedIndices
+        .where((i) => options[i].isCorrect)
+        .length;
     if (poppedCorrect >= correctCount) {
       _completed = true;
       _moveTimer?.cancel();
@@ -176,7 +169,6 @@ class _PopperGameState extends State<PopperGame> {
 
     return Column(
       children: [
-        // ── Question banner ─────────────────────────────
         _PopperQuestionBanner(question: question),
         const SizedBox(height: 12),
 
@@ -190,7 +182,6 @@ class _PopperGameState extends State<PopperGame> {
         ),
         const SizedBox(height: 8),
 
-        // ── Bubble area ─────────────────────────────────
         Expanded(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -229,10 +220,7 @@ class _PopperGameState extends State<PopperGame> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
-            colors: [
-              color.withOpacity(0.95),
-              color.withOpacity(0.6),
-            ],
+            colors: [color.withOpacity(0.95), color.withOpacity(0.6)],
             center: const Alignment(-0.3, -0.3),
           ),
           boxShadow: [
@@ -264,17 +252,14 @@ class _PopperGameState extends State<PopperGame> {
       ),
     );
 
-    // Pop animation
     bubble = TweenAnimationBuilder<double>(
       tween: Tween(end: isPopping ? 0.0 : 1.0),
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInBack,
-      builder: (_, scale, child) =>
-          Transform.scale(scale: scale, child: child),
+      builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
       child: bubble,
     );
 
-    // Shake animation
     if (isShaking) {
       bubble = TweenAnimationBuilder<double>(
         key: ValueKey('shake_$index'),
@@ -282,10 +267,7 @@ class _PopperGameState extends State<PopperGame> {
         duration: const Duration(milliseconds: 400),
         builder: (_, t, child) {
           final offset = sin(t * pi * 4) * 6 * (1 - t);
-          return Transform.translate(
-            offset: Offset(offset, 0),
-            child: child,
-          );
+          return Transform.translate(offset: Offset(offset, 0), child: child);
         },
         child: bubble,
       );
@@ -294,10 +276,6 @@ class _PopperGameState extends State<PopperGame> {
     return bubble;
   }
 }
-
-// ─────────────────────────────────────────────
-//  Bubble data
-// ─────────────────────────────────────────────
 
 class _BubbleData {
   double x;
@@ -312,10 +290,6 @@ class _BubbleData {
     required this.dy,
   });
 }
-
-// ─────────────────────────────────────────────
-//  Question Banner (Popper)
-// ─────────────────────────────────────────────
 
 class _PopperQuestionBanner extends StatelessWidget {
   final GameQuestion question;
@@ -332,7 +306,9 @@ class _PopperQuestionBanner extends StatelessWidget {
         border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.06),
+            color: Colors.black.withValues(
+              alpha: context.isDarkMode ? 0.2 : 0.06,
+            ),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

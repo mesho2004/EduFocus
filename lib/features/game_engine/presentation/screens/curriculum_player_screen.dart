@@ -50,9 +50,9 @@ class _CurriculumPlayerView extends StatefulWidget {
 class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
   final FlutterTts _tts = FlutterTts();
   bool _ttsReady = false;
-  // Placeholder for eye tracking logic / coordinates
+
   Offset? _eyeTrackingData;
-  // Guard flag: prevents scheduling nextLesson() more than once per lesson
+
   bool _isAdvancing = false;
 
   @override
@@ -83,7 +83,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Fallback base color
+      backgroundColor: const Color(0xFF0F172A),
       body: BlocConsumer<CurriculumSessionCubit, CurriculumSessionState>(
         listener: (context, sessionState) {
           if (sessionState is CurriculumUnitCompleted) {
@@ -170,7 +170,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                           ),
                         );
                       },
-                  // Use a Key that changes every lesson so AnimatedSwitcher triggers
+
                   child: KeyedSubtree(
                     key: ValueKey(
                       '${sessionState.currentUnitIndex}_${sessionState.currentLessonIndex}',
@@ -182,12 +182,12 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                           if (gameState is GameCorrectAnswerState &&
                               !_isAdvancing) {
                             _isAdvancing = true;
-                            // Praise audio
+
                             _speak(
                               'Excellent! Well done!',
                               langCode: lesson.ttsLanguage,
                             );
-                            // Auto advance (once per lesson)
+
                             Future.delayed(
                               const Duration(milliseconds: 1500),
                               () {
@@ -196,16 +196,19 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                                   if (lesson.rawSubjectType != null &&
                                       lesson.unitId != null &&
                                       lesson.lessonIndex != null) {
-                                    context.read<CurriculumCubit>().completeLesson(
+                                    context
+                                        .read<CurriculumCubit>()
+                                        .completeLesson(
                                           subjectType: lesson.rawSubjectType!,
                                           unitId: lesson.unitId!,
                                           lessonIndex: lesson.lessonIndex!,
+                                          grade: lesson.grade,
+                                          term: lesson.term,
                                         );
                                   }
                                   context
                                       .read<CurriculumSessionCubit>()
                                       .nextLesson();
-                                  context.read<StarsCubit>().addStars(5);
                                 }
                               },
                             );
@@ -214,7 +217,6 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                           } else if (gameState is GameInProgressState &&
                               gameState is! GameCorrectAnswerState &&
                               gameState is! GameWrongAnswerState) {
-                            // Read question aloud
                             _speak(
                               gameState.currentQuestion.question,
                               langCode: lesson.ttsLanguage,
@@ -225,9 +227,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                           if (gameState is GameInProgressState) {
                             return _buildTemplate(lesson, gameState);
                           }
-                          // Since our custom model has exactly 1 question, GameCompletedState
-                          // might be reached. We can safely ignore it because we already
-                          // called nextLesson() in GameCorrectAnswerState.
+
                           return const Center(
                             child: CircularProgressIndicator(
                               color: Colors.white,
@@ -302,11 +302,10 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Safe fallback Lottie URL or asset
             Expanded(
               child: Center(
                 child: Lottie.network(
-                  'https://assets9.lottiefiles.com/packages/lf20_touohxv0.json', // confetti lottie
+                  'https://assets9.lottiefiles.com/packages/lf20_touohxv0.json',
                   errorBuilder: (context, error, stackTrace) => const Icon(
                     Icons.emoji_events_rounded,
                     color: Color(0xFFF3C344),
@@ -382,9 +381,6 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Top Bar Custom for Curriculum
-// ─────────────────────────────────────────────
 class _CurriculumTopBar extends StatelessWidget {
   final CurriculumSessionLoaded sessionState;
 
@@ -461,11 +457,7 @@ class _CurriculumTopBar extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.star_rounded,
-                      color: Colors.white,
-                      size: 18,
-                    ),
+                    const Text('🪙', style: TextStyle(fontSize: 16)),
                     const SizedBox(width: 4),
                     BlocBuilder<StarsCubit, int>(
                       builder: (context, stars) {

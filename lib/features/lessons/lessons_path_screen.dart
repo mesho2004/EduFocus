@@ -20,13 +20,18 @@ class LessonsPathScreen extends StatelessWidget {
     return BlocBuilder<CurriculumCubit, CurriculumState>(
       builder: (context, state) {
         final subject = state is CurriculumLoaded
-            ? state.subjects.firstWhere((s) => s.id == initialSubject.id, orElse: () => initialSubject)
+            ? state.subjects.firstWhere(
+                (s) => s.id == initialSubject.id,
+                orElse: () => initialSubject,
+              )
             : initialSubject;
-        final unit = subject.units.firstWhere((u) => u.id == initialUnit.id, orElse: () => initialUnit);
+        final unit = subject.units.firstWhere(
+          (u) => u.id == initialUnit.id,
+          orElse: () => initialUnit,
+        );
 
         return Directionality(
-          textDirection:
-              subject.isRtl ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: subject.isRtl ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
             backgroundColor: context.colors.background,
             body: SafeArea(
@@ -34,11 +39,12 @@ class LessonsPathScreen extends StatelessWidget {
                 children: [
                   LessonPathHeader(subject: subject, unit: unit),
 
-                  // ── Winding path ──────────────────────────
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 32, horizontal: 24),
+                        vertical: 32,
+                        horizontal: 24,
+                      ),
                       child: LessonPath(
                         lessons: unit.lessons,
                         subject: subject,

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
+import 'package:edufocus/core/routes/app_routes.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
@@ -33,14 +34,7 @@ class ProgressScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildHeroSection(context),
-              // _buildSectionTitle(
-              //   context,
-              //   'Learning Map',
-              //   Icons.map_rounded,
-              //   context.colors.brandBlue,
-              // ),
-              // const SizedBox(height: 16),
-              // _buildLearningMap(context),
+
               const SizedBox(height: 32),
               _buildSectionTitle(
                 context,
@@ -57,7 +51,12 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title, IconData icon, Color color) {
+  Widget _buildSectionTitle(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -91,8 +90,14 @@ class ProgressScreen extends StatelessWidget {
         int streakDays = 0;
 
         if (state is CurriculumLoaded) {
-          totalLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.totalLessons);
-          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          totalLessons = state.subjects.fold<int>(
+            0,
+            (s, sub) => s + sub.totalLessons,
+          );
+          completedLessons = state.subjects.fold<int>(
+            0,
+            (s, sub) => s + sub.completedLessons,
+          );
           progress = totalLessons == 0 ? 0.0 : completedLessons / totalLessons;
           if (state.progressModel != null) {
             streakDays = state.progressModel!.streakDays;
@@ -135,7 +140,7 @@ class ProgressScreen extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.2),
                   ),
                   _buildHeroStat(
-                    icon: '⭐',
+                    icon: '🪙',
                     label: 'Coins',
                     value: '$stars',
                     color: context.colors.brandYellow,
@@ -243,7 +248,6 @@ class ProgressScreen extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Path line
           Positioned.fill(
             child: Align(
               alignment: Alignment.center,
@@ -260,7 +264,7 @@ class ProgressScreen extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: FractionallySizedBox(
-                heightFactor: 0.65, // filled up to the current active node
+                heightFactor: 0.65,
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: 8,
@@ -272,7 +276,7 @@ class ProgressScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Nodes
+
           Column(
             children: [
               _buildMapNode(
@@ -397,11 +401,18 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNodeLabel(BuildContext context, String title, bool isActive, Color color) {
+  Widget _buildNodeLabel(
+    BuildContext context,
+    String title,
+    bool isActive,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: isActive ? color.withOpacity(0.1) : context.colors.cardBackground,
+        color: isActive
+            ? color.withOpacity(0.1)
+            : context.colors.cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isActive ? color : context.colors.border,
@@ -425,7 +436,10 @@ class ProgressScreen extends StatelessWidget {
         int completedLessons = 0;
         int streakDays = 0;
         if (state is CurriculumLoaded) {
-          completedLessons = state.subjects.fold<int>(0, (s, sub) => s + sub.completedLessons);
+          completedLessons = state.subjects.fold<int>(
+            0,
+            (s, sub) => s + sub.completedLessons,
+          );
           streakDays = state.progressModel?.streakDays ?? 0;
         }
 
@@ -471,7 +485,12 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTrophyBadge(BuildContext context, String title, String emoji, bool unlocked) {
+  Widget _buildTrophyBadge(
+    BuildContext context,
+    String title,
+    String emoji,
+    bool unlocked,
+  ) {
     return Column(
       children: [
         Expanded(
@@ -482,7 +501,9 @@ class ProgressScreen extends StatelessWidget {
                   : context.colors.border.withOpacity(0.5),
               shape: BoxShape.circle,
               border: Border.all(
-                color: unlocked ? context.colors.brandYellow : context.colors.border,
+                color: unlocked
+                    ? context.colors.brandYellow
+                    : context.colors.border,
                 width: 3,
               ),
               boxShadow: unlocked
@@ -511,7 +532,9 @@ class ProgressScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: unlocked ? context.colors.textSecondary : context.colors.textTertiary,
+            color: unlocked
+                ? context.colors.textSecondary
+                : context.colors.textTertiary,
           ),
         ),
       ],
@@ -576,14 +599,14 @@ class ProgressScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigate back to home or the specific lesson
-                      final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+                      final mainNavState = context
+                          .findAncestorStateOfType<MainNavigationScreenState>();
                       if (mainNavState != null) {
                         mainNavState.setIndex(0);
                       } else {
                         Navigator.pushReplacementNamed(
                           context,
-                          '/subjects_grid_view',
+                          AppRoutes.subjectsGridView,
                         );
                       }
                     },

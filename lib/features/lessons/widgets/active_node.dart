@@ -32,8 +32,10 @@ class _ActiveNodeState extends State<ActiveNode>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _scaleAnim = Tween(begin: 1.0, end: 1.15).animate(
-        CurvedAnimation(parent: _pulse, curve: Curves.easeInOut));
+    _scaleAnim = Tween(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(parent: _pulse, curve: Curves.easeInOut));
   }
 
   @override
@@ -53,7 +55,6 @@ class _ActiveNodeState extends State<ActiveNode>
             Stack(
               alignment: Alignment.center,
               children: [
-                // Pulsing outer ring
                 AnimatedBuilder(
                   animation: _scaleAnim,
                   builder: (_, __) => Transform.scale(
@@ -68,7 +69,7 @@ class _ActiveNodeState extends State<ActiveNode>
                     ),
                   ),
                 ),
-                // Main circle
+
                 Container(
                   width: 82,
                   height: 82,
@@ -83,17 +84,24 @@ class _ActiveNodeState extends State<ActiveNode>
                       ),
                     ],
                     border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        width: 4),
+                      color: Colors.white.withValues(alpha: 0.4),
+                      width: 4,
+                    ),
                   ),
-                  child: const Icon(Icons.play_arrow_rounded,
-                      color: Colors.white, size: 44),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 44,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            NodeLabel(text: widget.lesson.title, color: widget.color,
-                isActive: true),
+            NodeLabel(
+              text: widget.lesson.title,
+              color: widget.color,
+              isActive: true,
+            ),
           ],
         ),
       ),

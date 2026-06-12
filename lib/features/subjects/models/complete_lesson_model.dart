@@ -1,149 +1,249 @@
+int? _toInt(dynamic val) {
+  if (val == null) return null;
+  if (val is int) return val;
+  if (val is double) return val.toInt();
+  if (val is String) return int.tryParse(val);
+  return null;
+}
+
+double? _toDouble(dynamic val) {
+  if (val == null) return null;
+  if (val is num) return val.toDouble();
+  if (val is String) return double.tryParse(val);
+  return null;
+}
+
 class CompleteLessonModel {
-  final String message;
-  final int coinsAdded;
-  final int totalCoins;
-  final OverallProgressModel overallProgress;
-  final SubjectProgressModel subjectProgress;
-  final UnitProgressModel unitProgress;
-  final CompletedLessonModel completedLesson;
+  String? message;
+  int? coinsAdded;
+  int? starsAdded;
+  int? totalCoins;
+  int? totalStars;
+  OverallProgress? overallProgress;
+  SubjectProgress? subjectProgress;
+  UnitProgress? unitProgress;
+  CompletedLesson? completedLesson;
 
   CompleteLessonModel({
-    required this.message,
-    required this.coinsAdded,
-    required this.totalCoins,
-    required this.overallProgress,
-    required this.subjectProgress,
-    required this.unitProgress,
-    required this.completedLesson,
+    this.message,
+    this.coinsAdded,
+    this.starsAdded,
+    this.totalCoins,
+    this.totalStars,
+    this.overallProgress,
+    this.subjectProgress,
+    this.unitProgress,
+    this.completedLesson,
   });
 
-  factory CompleteLessonModel.fromJson(Map<String, dynamic> json) {
-    return CompleteLessonModel(
-      message: json['message'] as String,
-      coinsAdded: json['coins_added'] as int,
-      totalCoins: json['total_coins'] as int,
-      overallProgress: OverallProgressModel.fromJson(
-        json['overall_progress'] as Map<String, dynamic>,
-      ),
-      subjectProgress: SubjectProgressModel.fromJson(
-        json['subject_progress'] as Map<String, dynamic>,
-      ),
-      unitProgress: UnitProgressModel.fromJson(
-        json['unit_progress'] as Map<String, dynamic>,
-      ),
-      completedLesson: CompletedLessonModel.fromJson(
-        json['completed_lesson'] as Map<String, dynamic>,
-      ),
-    );
+  CompleteLessonModel.fromJson(Map<String, dynamic> json) {
+    message = json['message']?.toString();
+    coinsAdded = _toInt(json['coins_added']);
+    starsAdded = _toInt(json['stars_added']);
+    totalCoins = _toInt(json['total_coins'] ?? json['coins']);
+    totalStars = _toInt(json['total_stars']);
+    overallProgress =
+        json['overall_progress'] != null && json['overall_progress'] is Map
+        ? OverallProgress.fromJson(
+            Map<String, dynamic>.from(json['overall_progress'] as Map),
+          )
+        : (json['overall_progress'] != null && json['overall_progress'] is num
+              ? OverallProgress(
+                  overallProgress: _toDouble(json['overall_progress']),
+                )
+              : null);
+    subjectProgress =
+        json['subject_progress'] != null && json['subject_progress'] is Map
+        ? SubjectProgress.fromJson(
+            Map<String, dynamic>.from(json['subject_progress'] as Map),
+          )
+        : null;
+    unitProgress = json['unit_progress'] != null && json['unit_progress'] is Map
+        ? UnitProgress.fromJson(
+            Map<String, dynamic>.from(json['unit_progress'] as Map),
+          )
+        : null;
+    completedLesson =
+        json['completed_lesson'] != null && json['completed_lesson'] is Map
+        ? CompletedLesson.fromJson(
+            Map<String, dynamic>.from(json['completed_lesson'] as Map),
+          )
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['coins_added'] = coinsAdded;
+    data['stars_added'] = starsAdded;
+    data['total_coins'] = totalCoins;
+    data['total_stars'] = totalStars;
+    if (overallProgress != null) {
+      data['overall_progress'] = overallProgress!.toJson();
+    }
+    if (subjectProgress != null) {
+      data['subject_progress'] = subjectProgress!.toJson();
+    }
+    if (unitProgress != null) {
+      data['unit_progress'] = unitProgress!.toJson();
+    }
+    if (completedLesson != null) {
+      data['completed_lesson'] = completedLesson!.toJson();
+    }
+    return data;
   }
 }
 
-class OverallProgressModel {
-  final double overallProgress;
-  final int completedLessons;
-  final int totalLessons;
+class OverallProgress {
+  double? overallProgress;
+  int? completedLessons;
+  int? totalLessons;
 
-  OverallProgressModel({
-    required this.overallProgress,
-    required this.completedLessons,
-    required this.totalLessons,
+  OverallProgress({
+    this.overallProgress,
+    this.completedLessons,
+    this.totalLessons,
   });
 
-  factory OverallProgressModel.fromJson(Map<String, dynamic> json) {
-    return OverallProgressModel(
-      overallProgress: (json['overall_progress'] as num).toDouble(),
-      completedLessons: json['completed_lessons'] as int,
-      totalLessons: json['total_lessons'] as int,
-    );
+  OverallProgress.fromJson(Map<String, dynamic> json) {
+    overallProgress = _toDouble(json['overall_progress']);
+    completedLessons = _toInt(json['completed_lessons']);
+    totalLessons = _toInt(json['total_lessons']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['overall_progress'] = overallProgress;
+    data['completed_lessons'] = completedLessons;
+    data['total_lessons'] = totalLessons;
+    return data;
   }
 }
 
-class SubjectProgressModel {
-  final String subjectType;
-  final int grade;
-  final int term;
-  final int totalLessons;
-  final int completedLessons;
-  final double progress;
+class SubjectProgress {
+  String? subjectType;
+  int? grade;
+  int? term;
+  int? totalLessons;
+  int? completedLessons;
+  double? progress;
 
-  SubjectProgressModel({
-    required this.subjectType,
-    required this.grade,
-    required this.term,
-    required this.totalLessons,
-    required this.completedLessons,
-    required this.progress,
+  SubjectProgress({
+    this.subjectType,
+    this.grade,
+    this.term,
+    this.totalLessons,
+    this.completedLessons,
+    this.progress,
   });
 
-  factory SubjectProgressModel.fromJson(Map<String, dynamic> json) {
-    return SubjectProgressModel(
-      subjectType: json['subjectType'] as String,
-      grade: json['grade'] as int,
-      term: json['term'] as int,
-      totalLessons: json['total_lessons'] as int,
-      completedLessons: json['completed_lessons'] as int,
-      progress: (json['progress'] as num).toDouble(),
-    );
+  SubjectProgress.fromJson(Map<String, dynamic> json) {
+    subjectType =
+        json['subjectType']?.toString() ?? json['subject_type']?.toString();
+    grade = _toInt(json['grade']);
+    term = _toInt(json['term']);
+    totalLessons = _toInt(json['total_lessons']);
+    completedLessons = _toInt(json['completed_lessons']);
+    progress = _toDouble(json['progress']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subjectType'] = subjectType;
+    data['grade'] = grade;
+    data['term'] = term;
+    data['total_lessons'] = totalLessons;
+    data['completed_lessons'] = completedLessons;
+    data['progress'] = progress;
+    return data;
   }
 }
 
-class UnitProgressModel {
-  final int unitId;
-  final String unitTitle;
-  final int totalLessons;
-  final int completedLessons;
-  final double progress;
+class UnitProgress {
+  int? unitId;
+  String? unitTitle;
+  int? totalLessons;
+  int? completedLessons;
+  double? progress;
 
-  UnitProgressModel({
-    required this.unitId,
-    required this.unitTitle,
-    required this.totalLessons,
-    required this.completedLessons,
-    required this.progress,
+  UnitProgress({
+    this.unitId,
+    this.unitTitle,
+    this.totalLessons,
+    this.completedLessons,
+    this.progress,
   });
 
-  factory UnitProgressModel.fromJson(Map<String, dynamic> json) {
-    return UnitProgressModel(
-      unitId: json['unit_id'] as int,
-      unitTitle: json['unit_title'] as String,
-      totalLessons: json['total_lessons'] as int,
-      completedLessons: json['completed_lessons'] as int,
-      progress: (json['progress'] as num).toDouble(),
-    );
+  UnitProgress.fromJson(Map<String, dynamic> json) {
+    unitId = _toInt(json['unit_id'] ?? json['unitId']);
+    unitTitle = json['unit_title']?.toString() ?? json['unitTitle']?.toString();
+    totalLessons = _toInt(json['total_lessons']);
+    completedLessons = _toInt(json['completed_lessons']);
+    progress = _toDouble(json['progress']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unit_id'] = unitId;
+    data['unit_title'] = unitTitle;
+    data['total_lessons'] = totalLessons;
+    data['completed_lessons'] = completedLessons;
+    data['progress'] = progress;
+    return data;
   }
 }
 
-class CompletedLessonModel {
-  final String subjectType;
-  final int grade;
-  final int term;
-  final int unitId;
-  final String unitTitle;
-  final int lessonIndex;
-  final String lessonType;
-  final String lessonTopic;
+class CompletedLesson {
+  String? subjectType;
+  int? grade;
+  int? term;
+  int? unitId;
+  String? unitTitle;
+  int? lessonNumber;
+  String? lessonType;
+  String? lessonTitle;
+  String? lessonTopic;
 
-  CompletedLessonModel({
-    required this.subjectType,
-    required this.grade,
-    required this.term,
-    required this.unitId,
-    required this.unitTitle,
-    required this.lessonIndex,
-    required this.lessonType,
-    required this.lessonTopic,
+  CompletedLesson({
+    this.subjectType,
+    this.grade,
+    this.term,
+    this.unitId,
+    this.unitTitle,
+    this.lessonNumber,
+    this.lessonType,
+    this.lessonTitle,
+    this.lessonTopic,
   });
 
-  factory CompletedLessonModel.fromJson(Map<String, dynamic> json) {
-    return CompletedLessonModel(
-      subjectType: json['subjectType'] as String,
-      grade: json['grade'] as int,
-      term: json['term'] as int,
-      unitId: json['unit_id'] as int,
-      unitTitle: json['unit_title'] as String,
-      lessonIndex: json['lesson_index'] as int,
-      lessonType: json['lesson_type'] as String,
-      lessonTopic: json['lesson_topic'] as String,
+  CompletedLesson.fromJson(Map<String, dynamic> json) {
+    subjectType =
+        json['subjectType']?.toString() ?? json['subject_type']?.toString();
+    grade = _toInt(json['grade']);
+    term = _toInt(json['term']);
+    unitId = _toInt(json['unit_id'] ?? json['unitId']);
+    unitTitle = json['unit_title']?.toString() ?? json['unitTitle']?.toString();
+    lessonNumber = _toInt(
+      json['lesson_number'] ?? json['lesson_index'] ?? json['lessonIndex'],
     );
+    lessonType =
+        json['lesson_type']?.toString() ?? json['lessonType']?.toString();
+    lessonTitle = json['lesson_title']?.toString();
+    lessonTopic =
+        json['lesson_topic']?.toString() ?? json['lessonTopic']?.toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subjectType'] = subjectType;
+    data['grade'] = grade;
+    data['term'] = term;
+    data['unit_id'] = unitId;
+    data['unit_title'] = unitTitle;
+    data['lesson_number'] = lessonNumber;
+    data['lesson_type'] = lessonType;
+    data['lesson_title'] = lessonTitle;
+    data['lesson_topic'] = lessonTopic;
+    return data;
   }
 }

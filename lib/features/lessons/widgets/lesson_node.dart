@@ -11,6 +11,7 @@ class LessonNode extends StatelessWidget {
   final VoidCallback? onTap;
 
   const LessonNode({
+    super.key,
     required this.lesson,
     required this.index,
     required this.offset,
@@ -22,13 +23,17 @@ class LessonNode extends StatelessWidget {
   Widget build(BuildContext context) {
     if (lesson.isCompleted) {
       return CompletedNode(
-          lesson: lesson, offset: offset, color: subject.color);
+        lesson: lesson,
+        offset: offset,
+        color: subject.color,
+      );
     } else {
       return ActiveNode(
-          lesson: lesson,
-          offset: offset,
-          color: subject.color,
-          onTap: onTap!);
+        lesson: lesson,
+        offset: offset,
+        color: subject.color,
+        onTap: onTap!,
+      );
     }
   }
 }

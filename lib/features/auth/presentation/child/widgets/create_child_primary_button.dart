@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// A full-width primary action button used across auth screens.
-/// Supports a trailing icon and customisable height/color.
-class AuthPrimaryButton extends StatelessWidget {
+class CreateChildPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final IconData? trailingIcon;
@@ -12,7 +9,7 @@ class AuthPrimaryButton extends StatelessWidget {
   final Color? backgroundColor;
   final bool isLoading;
 
-  const AuthPrimaryButton({
+  const CreateChildPrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,

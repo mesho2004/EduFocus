@@ -9,7 +9,8 @@ class UnitCard extends StatefulWidget {
   final SubjectData subject;
   final VoidCallback? onTap;
 
-  const UnitCard({super.key, 
+  const UnitCard({
+    super.key,
     required this.unit,
     required this.index,
     required this.subject,
@@ -48,7 +49,7 @@ class _UnitCardState extends State<UnitCard>
   Widget build(BuildContext context) {
     final unit = widget.unit;
     final subject = widget.subject;
-    final locked = false; // OVERRIDE to unlock everything
+    final locked = false;
     final pct = (unit.progress * 100).round();
 
     return GestureDetector(
@@ -81,13 +82,14 @@ class _UnitCardState extends State<UnitCard>
             ),
             child: Row(
               children: [
-                // ── Unit number circle ─────────────────
                 Container(
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: context.isDarkMode ? subject.color.withOpacity(0.15) : subject.colorLight,
+                    color: context.isDarkMode
+                        ? subject.color.withOpacity(0.15)
+                        : subject.colorLight,
                     border: Border.all(
                       color: subject.color.withValues(alpha: 0.3),
                       width: 2,
@@ -106,12 +108,10 @@ class _UnitCardState extends State<UnitCard>
                 ),
                 const SizedBox(width: 16),
 
-                // ── Unit info ──────────────────────────
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Unit label + subtitle
                       Text(
                         unit.title,
                         style: TextStyle(
@@ -132,7 +132,6 @@ class _UnitCardState extends State<UnitCard>
                       ),
                       const SizedBox(height: 8),
 
-                      // Lesson progress bar
                       if (!locked) ...[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(9999),
@@ -155,7 +154,6 @@ class _UnitCardState extends State<UnitCard>
                           ),
                         ),
                       ] else
-                        // ignore: dead_code
                         Text(
                           '🔒 أكمل الوحدة السابقة أولاً',
                           style: TextStyle(
@@ -167,7 +165,6 @@ class _UnitCardState extends State<UnitCard>
                   ),
                 ),
 
-                // ── Arrow ──────────────────────────────
                 if (!locked)
                   Icon(
                     Icons.arrow_forward_ios_rounded,
@@ -181,4 +178,4 @@ class _UnitCardState extends State<UnitCard>
       ),
     );
   }
-}
+}

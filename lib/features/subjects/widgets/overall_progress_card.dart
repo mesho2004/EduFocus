@@ -7,7 +7,8 @@ class OverallProgressCard extends StatelessWidget {
   final int completed;
   final int total;
 
-  const OverallProgressCard({super.key, 
+  const OverallProgressCard({
+    super.key,
     required this.progress,
     required this.pct,
     required this.completed,

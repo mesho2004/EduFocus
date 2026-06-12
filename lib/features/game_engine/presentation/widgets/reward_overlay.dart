@@ -2,10 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-/// Fullscreen overlay that fires a confetti/star explosion from the center
-/// when triggered. Wrap the game screen in a [Stack] and place this on top.
 class RewardOverlay extends StatefulWidget {
-  /// Called when the overlay has finished its animation (≈ 2 seconds).
   final VoidCallback? onComplete;
 
   const RewardOverlay({super.key, this.onComplete});
@@ -45,7 +42,6 @@ class RewardOverlayState extends State<RewardOverlay>
     super.dispose();
   }
 
-  /// Call this to trigger the reward explosion.
   void trigger() {
     setState(() => _visible = true);
     _confettiController.play();
@@ -68,15 +64,13 @@ class RewardOverlayState extends State<RewardOverlay>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // ── Semi-transparent flash ────────────────────
             Container(color: Colors.white.withOpacity(0.15)),
 
-            // ── Confetti from top-center ──────────────────
             Align(
               alignment: Alignment.topCenter,
               child: ConfettiWidget(
                 confettiController: _confettiController,
-                blastDirection: math.pi / 2, // downward
+                blastDirection: math.pi / 2,
                 emissionFrequency: 0.08,
                 numberOfParticles: 25,
                 gravity: 0.3,
@@ -91,12 +85,13 @@ class RewardOverlayState extends State<RewardOverlay>
               ),
             ),
 
-            // ── Central "⭐ Excellent!" badge ─────────────
             ScaleTransition(
               scale: _scaleAnim,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 32, vertical: 20),
+                  horizontal: 32,
+                  vertical: 20,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(32),
@@ -137,7 +132,6 @@ class RewardOverlayState extends State<RewardOverlay>
     );
   }
 
-  /// Draws a simple 5-pointed star path for confetti particles.
   Path _starPath(Size size) {
     final path = Path();
     final cx = size.width / 2;

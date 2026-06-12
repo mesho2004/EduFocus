@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-// ─────────────────────────────────────────────
-//  Enums
-// ─────────────────────────────────────────────
-
 enum SubjectType { arabic, english, math }
 
-enum GameTemplate { selector, sorter, sequence, sequencer, matcher, popper, connectLetters }
+enum GameTemplate {
+  selector,
+  sorter,
+  sequence,
+  sequencer,
+  matcher,
+  popper,
+  connectLetters,
+}
 
 enum GameTheme { beach, jungle, space }
-
-// ─────────────────────────────────────────────
-//  Game Option Data
-// ─────────────────────────────────────────────
 
 class GameOptionData {
   final String? text;
@@ -21,7 +21,6 @@ class GameOptionData {
   final bool isCorrect;
   final String? category;
 
-  /// Used by SequenceGame — the 1-based position this item should appear in.
   final int? sequenceOrder;
 
   const GameOptionData({
@@ -45,18 +44,14 @@ class GameOptionData {
   }
 
   Map<String, dynamic> toJson() => {
-        'text': text,
-        'imagePath': imagePath,
-        'audioPath': audioPath,
-        'isCorrect': isCorrect,
-        'sequenceOrder': sequenceOrder,
-        'category': category,
-      };
+    'text': text,
+    'imagePath': imagePath,
+    'audioPath': audioPath,
+    'isCorrect': isCorrect,
+    'sequenceOrder': sequenceOrder,
+    'category': category,
+  };
 }
-
-// ─────────────────────────────────────────────
-//  Match Pair (used by MatcherGame)
-// ─────────────────────────────────────────────
 
 class MatchPair {
   final String left;
@@ -72,12 +67,7 @@ class MatchPair {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Single Question
-// ─────────────────────────────────────────────
-
 class GameQuestion {
-  /// The question prompt — either plain text or a path to an image asset.
   final String question;
   final bool questionIsImage;
   final List<GameOptionData> options;
@@ -106,10 +96,6 @@ class GameQuestion {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Lesson Content  (root model, injected into engine)
-// ─────────────────────────────────────────────
-
 class LessonContent {
   final String lessonTitle;
   final SubjectType subjectType;
@@ -135,8 +121,6 @@ class LessonContent {
     this.rawSubjectType,
   });
 
-  // ── JSON parsing ────────────────────────────
-
   factory LessonContent.fromJson(Map<String, dynamic> json) {
     return LessonContent(
       lessonTitle: json['lessonTitle'] as String? ?? '',
@@ -154,19 +138,13 @@ class LessonContent {
     );
   }
 
-  /// Convenience constructor that accepts a raw JSON string.
   factory LessonContent.fromJsonString(String raw) {
-    return LessonContent.fromJson(
-        jsonDecode(raw) as Map<String, dynamic>);
+    return LessonContent.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 
-  // ── Helpers ─────────────────────────────────
-
-  /// Returns true when the layout should be right-to-left.
   bool get isRtl =>
       subjectType == SubjectType.arabic || subjectType == SubjectType.math;
 
-  /// Returns the TTS language code for this lesson.
   String get ttsLanguage {
     switch (subjectType) {
       case SubjectType.arabic:
@@ -174,11 +152,9 @@ class LessonContent {
       case SubjectType.english:
         return 'en-US';
       case SubjectType.math:
-        return 'ar-EG'; // Maths in Egyptian curriculum is taught in Arabic
+        return 'ar-EG';
     }
   }
-
-  // ── Private helpers ──────────────────────────
 
   static SubjectType _parseSubject(String raw) {
     final lower = raw.toLowerCase();

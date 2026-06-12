@@ -25,9 +25,9 @@ class UnitModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'theme': theme,
-        'lessons': lessons.map((l) => l.toJson()).toList(),
-      };
+    'id': id,
+    'title': title,
+    'theme': theme,
+    'lessons': lessons.map((l) => l.toJson()).toList(),
+  };
 }

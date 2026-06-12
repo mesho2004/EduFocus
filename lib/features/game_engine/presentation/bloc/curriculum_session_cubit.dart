@@ -6,10 +6,9 @@ import 'curriculum_session_state.dart';
 class CurriculumSessionCubit extends Cubit<CurriculumSessionState> {
   final CurriculumService _curriculumService;
 
-  CurriculumSessionCubit({
-    required CurriculumService curriculumService,
-  })  : _curriculumService = curriculumService,
-        super(CurriculumSessionInitial());
+  CurriculumSessionCubit({required CurriculumService curriculumService})
+    : _curriculumService = curriculumService,
+      super(CurriculumSessionInitial());
 
   List<CurriculumUnit> _cachedCurriculum = [];
 
@@ -18,16 +17,22 @@ class CurriculumSessionCubit extends Cubit<CurriculumSessionState> {
     try {
       final units = await _curriculumService.loadCurriculum(subjectId);
       if (units.isEmpty) {
-        emit(const CurriculumSessionError('Failed to load curriculum or it is empty.'));
+        emit(
+          const CurriculumSessionError(
+            'Failed to load curriculum or it is empty.',
+          ),
+        );
         return;
       }
       _cachedCurriculum = units;
-      emit(CurriculumSessionLoaded(
-        curriculum: units,
-        currentUnitIndex: 0,
-        currentLessonIndex: 0,
-        score: 0,
-      ));
+      emit(
+        CurriculumSessionLoaded(
+          curriculum: units,
+          currentUnitIndex: 0,
+          currentLessonIndex: 0,
+          score: 0,
+        ),
+      );
     } catch (e) {
       emit(CurriculumSessionError(e.toString()));
     }
@@ -39,17 +44,19 @@ class CurriculumSessionCubit extends Cubit<CurriculumSessionState> {
       final newScore = currentState.score + scoreIncrement;
 
       if (currentState.isLastLessonInUnit) {
-        // Unit complete
-        emit(CurriculumUnitCompleted(
-          completedUnit: currentState.currentUnit,
-          score: newScore,
-        ));
+        emit(
+          CurriculumUnitCompleted(
+            completedUnit: currentState.currentUnit,
+            score: newScore,
+          ),
+        );
       } else {
-        // Next lesson in the same unit
-        emit(currentState.copyWith(
-          currentLessonIndex: currentState.currentLessonIndex + 1,
-          score: newScore,
-        ));
+        emit(
+          currentState.copyWith(
+            currentLessonIndex: currentState.currentLessonIndex + 1,
+            score: newScore,
+          ),
+        );
       }
     }
   }
@@ -57,19 +64,21 @@ class CurriculumSessionCubit extends Cubit<CurriculumSessionState> {
   void continueToNextUnit() {
     if (state is CurriculumUnitCompleted) {
       final completedState = state as CurriculumUnitCompleted;
-      final completedUnitIndex = _cachedCurriculum.indexOf(completedState.completedUnit);
+      final completedUnitIndex = _cachedCurriculum.indexOf(
+        completedState.completedUnit,
+      );
 
       if (completedUnitIndex == _cachedCurriculum.length - 1) {
-        // All units finished
         emit(CurriculumAllUnitsCompleted(totalScore: completedState.score));
       } else {
-        // Proceed to next unit
-        emit(CurriculumSessionLoaded(
-          curriculum: _cachedCurriculum,
-          currentUnitIndex: completedUnitIndex + 1,
-          currentLessonIndex: 0,
-          score: completedState.score,
-        ));
+        emit(
+          CurriculumSessionLoaded(
+            curriculum: _cachedCurriculum,
+            currentUnitIndex: completedUnitIndex + 1,
+            currentLessonIndex: 0,
+            score: completedState.score,
+          ),
+        );
       }
     }
   }
@@ -78,13 +87,15 @@ class CurriculumSessionCubit extends Cubit<CurriculumSessionState> {
     if (state is CurriculumUnitCompleted) {
       final completedState = state as CurriculumUnitCompleted;
       final unitIndex = _cachedCurriculum.indexOf(completedState.completedUnit);
-      
-      emit(CurriculumSessionLoaded(
-        curriculum: _cachedCurriculum,
-        currentUnitIndex: unitIndex,
-        currentLessonIndex: 0,
-        score: completedState.score, // Or reset to 0 based on rules
-      ));
+
+      emit(
+        CurriculumSessionLoaded(
+          curriculum: _cachedCurriculum,
+          currentUnitIndex: unitIndex,
+          currentLessonIndex: 0,
+          score: completedState.score,
+        ),
+      );
     }
   }
 }

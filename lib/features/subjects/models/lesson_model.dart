@@ -13,10 +13,7 @@ class MatchPairModel {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'left': left,
-        'right': right,
-      };
+  Map<String, dynamic> toJson() => {'left': left, 'right': right};
 }
 
 class LessonModel {
@@ -45,7 +42,8 @@ class LessonModel {
       gameTemplate: json['gameTemplate'] as String? ?? '',
       question: json['question'] as String? ?? '',
       questionIsImage: json['questionIsImage'] as bool? ?? false,
-      options: (json['options'] as List<dynamic>?)
+      options:
+          (json['options'] as List<dynamic>?)
               ?.map((e) => OptionModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -56,12 +54,12 @@ class LessonModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'type': type,
-        'topic': topic,
-        'gameTemplate': gameTemplate,
-        'question': question,
-        'questionIsImage': questionIsImage,
-        'options': options.map((o) => o.toJson()).toList(),
-        if (pairs != null) 'pairs': pairs!.map((p) => p.toJson()).toList(),
-      };
+    'type': type,
+    'topic': topic,
+    'gameTemplate': gameTemplate,
+    'question': question,
+    'questionIsImage': questionIsImage,
+    'options': options.map((o) => o.toJson()).toList(),
+    if (pairs != null) 'pairs': pairs!.map((p) => p.toJson()).toList(),
+  };
 }

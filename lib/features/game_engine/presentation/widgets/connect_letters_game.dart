@@ -6,40 +6,18 @@ import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ConnectLettersGame  (Type A)
-//
-// A two-column matching UI:
-//   Left  column — word items with a missing letter placeholder (e.g. "C_t")
-//   Right column — shuffled individual letter choices
-//
-// The player taps a left item first (highlights it blue), then taps the
-// letter they believe fills the blank. If correct → the pair is highlighted
-// green and locked. If wrong → brief red flash.
-//
-// JSON shape expected:
-//   gameTemplate: "matcher"       ← reuse the existing matcher template
-//   question.pairs: [
-//     { "left": "C_t", "right": "a" },   // letter to fill
-//     { "left": "D_g", "right": "o" },
-//     ...
-//   ]
-// ─────────────────────────────────────────────────────────────────────────────
 class ConnectLettersGame extends StatefulWidget {
   final GameInProgressState gameState;
 
-  const ConnectLettersGame({
-    super.key,
-    required this.gameState,
-  });
+  const ConnectLettersGame({super.key, required this.gameState});
 
   @override
   State<ConnectLettersGame> createState() => _ConnectLettersGameState();
 }
 
 class _ConnectLettersGameState extends State<ConnectLettersGame> {
-  int? _selectedLeft; // index of the currently selected word
-  final Map<int, int> _matches = {}; // leftIndex → rightDisplayIndex
+  int? _selectedLeft;
+  final Map<int, int> _matches = {};
   late List<int> _shuffledRightIndices;
   bool _wrongFlash = false;
 
@@ -67,15 +45,15 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
 
   void _init() {
     final pairs = widget.gameState.currentQuestion.pairs;
-    _shuffledRightIndices =
-        List.generate(pairs.length, (i) => i)..shuffle(Random());
+    _shuffledRightIndices = List.generate(pairs.length, (i) => i)
+      ..shuffle(Random());
     _matches.clear();
     _selectedLeft = null;
     _wrongFlash = false;
   }
 
   void _tapLeft(int index) {
-    if (_matches.containsKey(index)) return; // already matched
+    if (_matches.containsKey(index)) return;
     setState(() {
       _selectedLeft = index;
       _wrongFlash = false;
@@ -86,11 +64,9 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
     if (_selectedLeft == null) return;
     final originalRightIndex = _shuffledRightIndices[displayIndex];
 
-    // Already matched right item?
     if (_matches.values.contains(displayIndex)) return;
 
     if (_selectedLeft == originalRightIndex) {
-      // ✅ Correct match
       setState(() {
         _matches[_selectedLeft!] = displayIndex;
         _selectedLeft = null;
@@ -99,16 +75,14 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
         context.read<GameBloc>().add(const GameStepCompleteEvent());
       }
     } else {
-      // ❌ Wrong
       setState(() {
         _wrongFlash = true;
         _selectedLeft = null;
       });
-      context
-          .read<GameBloc>()
-          .add(GameWrongAttemptEvent(itemIndex: displayIndex));
-      Future.delayed(const Duration(milliseconds: 600),
-          () {
+      context.read<GameBloc>().add(
+        GameWrongAttemptEvent(itemIndex: displayIndex),
+      );
+      Future.delayed(const Duration(milliseconds: 600), () {
         if (mounted) setState(() => _wrongFlash = false);
       });
     }
@@ -121,7 +95,6 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
 
     return Column(
       children: [
-        // ── Instruction ─────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
           child: Text(
@@ -150,24 +123,21 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
         ),
         const SizedBox(height: 14),
 
-        // ── Two columns ─────────────────────────────────
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Left: word items
                 Expanded(
                   child: Column(
                     children: List.generate(pairs.length, (i) {
                       final isMatched = _matches.containsKey(i);
                       final isSelected = _selectedLeft == i;
                       final color = _colors[i % _colors.length];
-                      // Show the completed word when matched
+
                       final displayText = isMatched
-                          ? pairs[i].left.replaceFirst(
-                              '_', pairs[i].right)
+                          ? pairs[i].left.replaceFirst('_', pairs[i].right)
                           : pairs[i].left;
 
                       return Padding(
@@ -178,7 +148,9 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                             duration: const Duration(milliseconds: 250),
                             curve: Curves.easeOut,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 16),
+                              horizontal: 14,
+                              vertical: 16,
+                            ),
                             decoration: BoxDecoration(
                               color: isMatched
                                   ? color.withValues(alpha: 0.12)
@@ -188,16 +160,21 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                 color: isSelected
                                     ? context.colors.primary
                                     : isMatched
-                                        ? color
-                                        : context.colors.border,
+                                    ? color
+                                    : context.colors.border,
                                 width: isSelected ? 2.5 : 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: isSelected
-                                      ? context.colors.primary
-                                          .withValues(alpha: 0.2)
-                                      : Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.05),
+                                      ? context.colors.primary.withValues(
+                                          alpha: 0.2,
+                                        )
+                                      : Colors.black.withValues(
+                                          alpha: context.isDarkMode
+                                              ? 0.2
+                                              : 0.05,
+                                        ),
                                   blurRadius: isSelected ? 10 : 6,
                                   offset: const Offset(0, 3),
                                 ),
@@ -219,11 +196,17 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                                   ),
                                 ),
                                 if (isMatched)
-                                  Icon(Icons.check_circle_rounded,
-                                      color: color, size: 22),
+                                  Icon(
+                                    Icons.check_circle_rounded,
+                                    color: color,
+                                    size: 22,
+                                  ),
                                 if (isSelected)
-                                  Icon(Icons.arrow_forward_rounded,
-                                      color: context.colors.primary, size: 20),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: context.colors.primary,
+                                    size: 20,
+                                  ),
                               ],
                             ),
                           ),
@@ -235,7 +218,6 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
 
                 const SizedBox(width: 14),
 
-                // Right: letter tiles (shuffled)
                 Expanded(
                   child: Wrap(
                     spacing: 10,
@@ -262,21 +244,22 @@ class _ConnectLettersGameState extends State<ConnectLettersGame> {
                             color: isMatched
                                 ? color.withValues(alpha: 0.15)
                                 : _wrongFlash
-                                    ? const Color(0xFFEF5350)
-                                        .withValues(alpha: 0.1)
-                                    : context.colors.cardBackground,
+                                ? const Color(0xFFEF5350).withValues(alpha: 0.1)
+                                : context.colors.cardBackground,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isMatched
                                   ? color
                                   : _wrongFlash
-                                      ? const Color(0xFFEF5350)
-                                      : context.colors.border,
+                                  ? const Color(0xFFEF5350)
+                                  : context.colors.border,
                               width: 2.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.06),
+                                color: Colors.black.withValues(
+                                  alpha: context.isDarkMode ? 0.2 : 0.06,
+                                ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),

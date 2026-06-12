@@ -10,8 +10,9 @@ class ParentModel {
     message = json['message'];
     accessToken = json['access_token'];
     tokenType = json['token_type'];
-    parent =
-        json['parent'] != null ? new Parent.fromJson(json['parent']) : null;
+    parent = json['parent'] != null
+        ? new Parent.fromJson(json['parent'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

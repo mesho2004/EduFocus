@@ -2,24 +2,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EduFocusLogo
-//
-// Animated bouncing-letter logo used on both the SplashScreen and the
-// ParentAuthScreen. Pass [animate: false] for a static version.
-// ─────────────────────────────────────────────────────────────────────────────
 class EduFocusLogo extends StatefulWidget {
-  /// Font size for each letter. Defaults to 48 (splash size).
   final double fontSize;
 
-  /// When false the letters are rendered without any bounce animation.
   final bool animate;
 
-  const EduFocusLogo({
-    super.key,
-    this.fontSize = 48,
-    this.animate = true,
-  });
+  const EduFocusLogo({super.key, this.fontSize = 48, this.animate = true});
 
   @override
   State<EduFocusLogo> createState() => _EduFocusLogoState();
@@ -76,9 +64,6 @@ class _EduFocusLogoState extends State<EduFocusLogo>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// _AnimatedLetter  (private helper)
-// ─────────────────────────────────────────────────────────────────────────────
 class _AnimatedLetter extends StatelessWidget {
   final String letter;
   final Color color;
@@ -117,10 +102,7 @@ class _AnimatedLetter extends StatelessWidget {
         final waveOffset = index * (math.pi / 4);
         final jump = math.sin(t - waveOffset);
         final yOffset = jump > 0 ? -jump * 20.0 : 0.0;
-        return Transform.translate(
-          offset: Offset(0, yOffset),
-          child: child,
-        );
+        return Transform.translate(offset: Offset(0, yOffset), child: child);
       },
       child: letterWidget,
     );

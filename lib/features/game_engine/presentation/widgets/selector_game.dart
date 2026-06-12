@@ -7,18 +7,6 @@ import '../bloc/game_bloc.dart';
 import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SelectorGame
-//
-// Handles two sub-layouts automatically:
-//   • If any option has an imagePath  →  image-MCQ  (Type B)
-//   • If the question itself has a non-image avatar text  →  text-MCQ (Type C)
-//   • Otherwise                       →  standard text grid
-//
-// A centered character avatar (brain emoji) with a speech bubble is shown
-// for text-only questions (Type C). An enlarged image is shown for image
-// questions (Type B).
-// ─────────────────────────────────────────────────────────────────────────────
 class SelectorGame extends StatefulWidget {
   final GameInProgressState gameState;
   final FlutterTts? tts;
@@ -40,7 +28,6 @@ class _SelectorGameState extends State<SelectorGame>
   int? _selectedIndex;
   bool _answered = false;
 
-  // Scale animations per option card
   late List<AnimationController> _scaleControllers;
   late List<Animation<double>> _scaleAnims;
 
@@ -105,10 +92,6 @@ class _SelectorGameState extends State<SelectorGame>
     });
   }
 
-  // ─────────────────────────────────────────────
-  //  Build
-  // ─────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final question = widget.gameState.currentQuestion;
@@ -119,7 +102,6 @@ class _SelectorGameState extends State<SelectorGame>
 
     return Column(
       children: [
-        // ── Instruction label ──────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
           child: Text(
@@ -136,7 +118,6 @@ class _SelectorGameState extends State<SelectorGame>
         ),
         const SizedBox(height: 12),
 
-        // ── Central visual (image or avatar) ──────────
         if (question.questionIsImage)
           _QuestionImage(path: question.question)
         else
@@ -144,7 +125,6 @@ class _SelectorGameState extends State<SelectorGame>
 
         const SizedBox(height: 16),
 
-        // ── MCQ options grid ───────────────────────────
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -179,15 +159,11 @@ class _SelectorGameState extends State<SelectorGame>
   }
 
   String _instructionFor(GameQuestion q) {
-    // Heuristic: if question text looks like a word/phrase show translation prompt
     if (q.question.length < 30) return 'Choose the correct translation';
     return q.question;
   }
 }
 
-// ─────────────────────────────────────────────
-// _QuestionImage  –  Type B centre image
-// ─────────────────────────────────────────────
 class _QuestionImage extends StatelessWidget {
   final String path;
 
@@ -222,9 +198,6 @@ class _QuestionImage extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// _CharacterBubble  –  Type C brain avatar + speech bubble
-// ─────────────────────────────────────────────
 class _CharacterBubble extends StatelessWidget {
   final String text;
 
@@ -238,7 +211,6 @@ class _CharacterBubble extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // Brain mascot
           Column(
             children: [
               Text('🧠', style: const TextStyle(fontSize: 52)),
@@ -255,11 +227,9 @@ class _CharacterBubble extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Speech bubble
           Flexible(
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
               decoration: BoxDecoration(
                 color: context.colors.cardBackground,
                 borderRadius: const BorderRadius.only(
@@ -276,8 +246,9 @@ class _CharacterBubble extends StatelessWidget {
                   ),
                 ],
                 border: Border.all(
-                    color: const Color(0xFF8B59A7).withValues(alpha: 0.2),
-                    width: 1.5),
+                  color: const Color(0xFF8B59A7).withValues(alpha: 0.2),
+                  width: 1.5,
+                ),
               ),
               child: Text(
                 text,
@@ -296,9 +267,6 @@ class _CharacterBubble extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// _OptionCard  –  individual MCQ choice button
-// ─────────────────────────────────────────────
 class _OptionCard extends StatefulWidget {
   final GameOptionData option;
   final int index;
@@ -326,8 +294,10 @@ class _OptionCardState extends State<_OptionCard>
   @override
   void initState() {
     super.initState();
-    _shakeCtrl =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
     _shakeAnim = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0, end: -10), weight: 1),
       TweenSequenceItem(tween: Tween(begin: -10, end: 10), weight: 2),
@@ -405,8 +375,11 @@ class _OptionCardState extends State<_OptionCard>
                       child: Image.asset(
                         widget.option.imagePath!,
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) =>
-                            const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.broken_image,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   if (widget.option.text != null &&
@@ -422,9 +395,9 @@ class _OptionCardState extends State<_OptionCard>
                           color: widget.answered && widget.option.isCorrect
                               ? const Color(0xFF4CAF50)
                               : widget.answered &&
-                                      widget.selectedIndex == widget.index
-                                  ? const Color(0xFFEF5350)
-                                  : context.colors.textPrimary,
+                                    widget.selectedIndex == widget.index
+                              ? const Color(0xFFEF5350)
+                              : context.colors.textPrimary,
                         ),
                       ),
                     ),

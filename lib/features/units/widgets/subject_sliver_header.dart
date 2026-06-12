@@ -25,26 +25,32 @@ class SubjectSliverHeader extends StatelessWidget {
           child: Center(
             child: BlocBuilder<StarsCubit, int>(
               builder: (context, stars) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star_rounded, color: Color(0xFFF3C344), size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$stars',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 14,
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('🪙', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$stars',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -63,7 +69,6 @@ class SubjectSliverHeader extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              // Decorative circles
               Positioned(
                 top: -30,
                 right: -30,
@@ -88,14 +93,13 @@ class SubjectSliverHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              // Content
+
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // Big emoji
                       Container(
                         width: 80,
                         height: 80,
@@ -133,7 +137,7 @@ class SubjectSliverHeader extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            // Progress bar
+
                             ClipRRect(
                               borderRadius: BorderRadius.circular(9999),
                               child: LinearProgressIndicator(

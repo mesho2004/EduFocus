@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
+import 'package:edufocus/core/routes/app_routes.dart';
 
 class SubjectsGridViewScreen extends StatelessWidget {
   const SubjectsGridViewScreen({super.key});
@@ -37,7 +38,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
 
         final subjects = (state as CurriculumLoaded).subjects;
 
-        // Overall progress across all subjects
         final totalLessons = subjects.fold<int>(
           0,
           (s, sub) => s + sub.totalLessons,
@@ -58,7 +58,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
               children: [
                 SubjectScreenHeader(),
 
-                // ── Scrollable content ────────────────────────
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 80),
@@ -67,7 +66,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 16),
 
-                        // ── Overall progress card ───────────────
                         OverallProgressCard(
                           progress: overallProgress,
                           pct: overallPct,
@@ -76,7 +74,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 28),
 
-                        // ── Section label ───────────────────────
                         Text(
                           "Let's start playing",
                           textAlign: TextAlign.right,
@@ -89,7 +86,6 @@ class SubjectsGridViewScreen extends StatelessWidget {
 
                         const SizedBox(height: 16),
 
-                        // ── Subject cards — 2 × 2 grid ──────────
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -107,7 +103,7 @@ class SubjectsGridViewScreen extends StatelessWidget {
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  '/units',
+                                  AppRoutes.units,
                                   arguments: subjects[i],
                                 );
                               },
@@ -126,6 +122,3 @@ class SubjectsGridViewScreen extends StatelessWidget {
     );
   }
 }
-
-
-

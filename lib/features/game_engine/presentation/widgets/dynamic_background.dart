@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../data/models/lesson_content.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// Renders a fullscreen animated background that matches the lesson theme.
 class DynamicBackground extends StatefulWidget {
   final GameTheme theme;
   final Widget child;
@@ -48,7 +47,6 @@ class _DynamicBackgroundState extends State<DynamicBackground>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // ── Gradient background ───────────────────────────
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -57,10 +55,8 @@ class _DynamicBackgroundState extends State<DynamicBackground>
           ),
         ),
 
-        // ── Decorative floating elements ─────────────────
         ..._buildFloatingElements(widget.theme),
 
-        // ── Content ──────────────────────────────────────
         Positioned.fill(child: widget.child),
       ],
     );
@@ -74,12 +70,20 @@ class _DynamicBackgroundState extends State<DynamicBackground>
             ? const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF0F2537)],
+                colors: [
+                  Color(0xFF0F172A),
+                  Color(0xFF1E293B),
+                  Color(0xFF0F2537),
+                ],
               )
             : const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF87CEEB), Color(0xFF98D8C8), Color(0xFFFFE0A3)],
+                colors: [
+                  Color(0xFF87CEEB),
+                  Color(0xFF98D8C8),
+                  Color(0xFFFFE0A3),
+                ],
                 stops: [0.0, 0.6, 1.0],
               );
       case GameTheme.jungle:
@@ -87,12 +91,20 @@ class _DynamicBackgroundState extends State<DynamicBackground>
             ? const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF041A06), Color(0xFF0C2B0E), Color(0xFF031404)],
+                colors: [
+                  Color(0xFF041A06),
+                  Color(0xFF0C2B0E),
+                  Color(0xFF031404),
+                ],
               )
             : const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF1B5E20), Color(0xFF2E7D32), Color(0xFF388E3C)],
+                colors: [
+                  Color(0xFF1B5E20),
+                  Color(0xFF2E7D32),
+                  Color(0xFF388E3C),
+                ],
                 stops: [0.0, 0.5, 1.0],
               );
       case GameTheme.space:
@@ -100,12 +112,20 @@ class _DynamicBackgroundState extends State<DynamicBackground>
             ? const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF02000A), Color(0xFF0A0520), Color(0xFF04122C)],
+                colors: [
+                  Color(0xFF02000A),
+                  Color(0xFF0A0520),
+                  Color(0xFF04122C),
+                ],
               )
             : const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF0D0630), Color(0xFF1A1060), Color(0xFF0D47A1)],
+                colors: [
+                  Color(0xFF0D0630),
+                  Color(0xFF1A1060),
+                  Color(0xFF0D47A1),
+                ],
                 stops: [0.0, 0.6, 1.0],
               );
     }
@@ -150,7 +170,8 @@ class _DynamicBackgroundState extends State<DynamicBackground>
       return AnimatedBuilder(
         animation: _floatController,
         builder: (context, _) {
-          final offset = math.sin(_floatController.value * math.pi * 2 + i * 0.7) * 10;
+          final offset =
+              math.sin(_floatController.value * math.pi * 2 + i * 0.7) * 10;
           return Positioned(
             left: MediaQuery.of(context).size.width * x - 20,
             top: 30 + i * 70.0 + offset,
@@ -173,7 +194,8 @@ class _DynamicBackgroundState extends State<DynamicBackground>
       return AnimatedBuilder(
         animation: _twinkleController,
         builder: (context, _) {
-          final opacity = 0.3 + 0.7 * math.sin(_twinkleController.value * math.pi + i);
+          final opacity =
+              0.3 + 0.7 * math.sin(_twinkleController.value * math.pi + i);
           return Positioned(
             left: MediaQuery.of(context).size.width * x,
             top: MediaQuery.of(context).size.height * y,

@@ -8,9 +8,6 @@ class LegoCharacterWidget extends StatefulWidget {
   final int bodyIndex;
   final int legIndex;
   final int hatIndex;
-  final Color? torsoColor;
-  final Color? pantsColor;
-  final Color? hairColor;
   final double size;
 
   const LegoCharacterWidget({
@@ -21,9 +18,6 @@ class LegoCharacterWidget extends StatefulWidget {
     required this.legIndex,
     required this.hatIndex,
     required this.size,
-    this.torsoColor,
-    this.pantsColor,
-    this.hairColor,
   });
 
   @override
@@ -85,7 +79,9 @@ class _LegoCharacterWidgetState extends State<LegoCharacterWidget> {
           );
         }
 
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.length < 5) {
+        if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!.length < 5) {
           return SizedBox(
             width: widget.size,
             height: height,
@@ -103,78 +99,53 @@ class _LegoCharacterWidgetState extends State<LegoCharacterWidget> {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              // 1. Pants layer
               Positioned(
                 left: 1.0 * scale,
                 top: 83.0 * scale,
                 width: 90.0 * scale,
                 height: 90.0 * scale,
-                child: Image.memory(
-                  layers[0],
-                  fit: BoxFit.contain,
-                  color: widget.pantsColor,
-                  colorBlendMode: widget.pantsColor != null ? BlendMode.modulate : null,
-                ),
+                child: Image.memory(layers[0], fit: BoxFit.contain),
               ),
-              // 2. Torso/Shirt layer
+
               Positioned(
                 left: 1.0 * scale,
                 top: 38.0 * scale,
                 width: 90.0 * scale,
                 height: 90.0 * scale,
-                child: Image.memory(
-                  layers[1],
-                  fit: BoxFit.contain,
-                  color: widget.torsoColor,
-                  colorBlendMode: widget.torsoColor != null ? BlendMode.modulate : null,
-                ),
+                child: Image.memory(layers[1], fit: BoxFit.contain),
               ),
-              // 3. Hands layer
+
               Positioned(
                 left: 1.0 * scale,
                 top: 38.0 * scale,
                 width: 90.0 * scale,
                 height: 90.0 * scale,
-                child: Image.memory(
-                  layers[2],
-                  fit: BoxFit.contain,
-                ),
+                child: Image.memory(layers[2], fit: BoxFit.contain),
               ),
-              // 4. Head layer
+
               Positioned(
                 left: 1.0 * scale,
                 top: 3.0 * scale,
                 width: 90.0 * scale,
                 height: 90.0 * scale,
-                child: Image.memory(
-                  layers[3],
-                  fit: BoxFit.contain,
-                ),
+                child: Image.memory(layers[3], fit: BoxFit.contain),
               ),
-              // 5. Hair layer
+
               Positioned(
                 left: 0.0 * scale,
                 top: 0.0 * scale,
                 width: 90.0 * scale,
                 height: 90.0 * scale,
-                child: Image.memory(
-                  layers[4],
-                  fit: BoxFit.contain,
-                  color: widget.hairColor,
-                  colorBlendMode: widget.hairColor != null ? BlendMode.color : null,
-                ),
+                child: Image.memory(layers[4], fit: BoxFit.contain),
               ),
-              // 6. Hat layer (optional)
+
               if (widget.hatIndex > 0 && layers.length > 5)
                 Positioned(
                   left: 0.0 * scale,
                   top: 0.0 * scale,
                   width: 90.0 * scale,
                   height: 90.0 * scale,
-                  child: Image.memory(
-                    layers[5],
-                    fit: BoxFit.contain,
-                  ),
+                  child: Image.memory(layers[5], fit: BoxFit.contain),
                 ),
             ],
           ),

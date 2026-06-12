@@ -60,6 +60,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "homeDescription": MessageLookupByLibrary.simpleMessage(
       "Choose your subject and start playing!",
     ),
+    "lessonErrorLoading": MessageLookupByLibrary.simpleMessage(
+      "Sorry, there was an error loading this lesson. Please try again later.",
+    ),
+    "lessonNotFound": MessageLookupByLibrary.simpleMessage(
+      "Sorry, this lesson is not available yet. Please check back later.",
+    ),
     "lessons": MessageLookupByLibrary.simpleMessage("Lessons"),
     "letsStartPlaying": MessageLookupByLibrary.simpleMessage(
       "Let\'s start playing!",

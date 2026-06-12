@@ -62,7 +62,9 @@ class CustomBottomNavBar extends StatelessWidget {
     bool isActive,
     VoidCallback onTap,
   ) {
-    final color = isActive ? context.colors.primary : context.colors.textTertiary;
+    final color = isActive
+        ? context.colors.primary
+        : context.colors.textTertiary;
 
     return GestureDetector(
       onTap: onTap,

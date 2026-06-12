@@ -18,8 +18,11 @@ class CurriculumUnit {
 }
 
 class CurriculumService {
-  /// Retrieves a specific lesson content dynamically.
-  Future<LessonContent?> getLessonContent(SubjectId subjectId, int unitIndex, int lessonIndex) async {
+  Future<LessonContent?> getLessonContent(
+    SubjectId subjectId,
+    int unitIndex,
+    int lessonIndex,
+  ) async {
     final unitsList = await loadCurriculum(subjectId);
     if (unitIndex >= 0 && unitIndex < unitsList.length) {
       final unit = unitsList[unitIndex];
@@ -30,7 +33,6 @@ class CurriculumService {
     return null;
   }
 
-  /// Loads the curriculum from the backend API.
   Future<List<CurriculumUnit>> loadCurriculum(SubjectId subjectId) async {
     try {
       String subjectTypeStr;
@@ -42,7 +44,7 @@ class CurriculumService {
           subjectTypeStr = 'English';
           break;
         case SubjectId.mathEn:
-          subjectTypeStr = 'Math';
+          subjectTypeStr = 'Math_EN';
           break;
       }
 
@@ -67,43 +69,46 @@ class CurriculumService {
             question: lesson.question,
             questionIsImage: lesson.questionIsImage,
             options: lesson.options
-                .map((o) => GameOptionData(
-                      text: o.text,
-                      isCorrect: o.isCorrect ?? false,
-                      category: o.category,
-                      sequenceOrder: o.order,
-                      imagePath: o.imagePath ?? o.imageHint,
-                      audioPath: o.audioPath,
-                    ))
+                .map(
+                  (o) => GameOptionData(
+                    text: o.text,
+                    isCorrect: o.isCorrect ?? false,
+                    category: o.category,
+                    sequenceOrder: o.order,
+                    imagePath: o.imagePath ?? o.imageHint,
+                    audioPath: o.audioPath,
+                  ),
+                )
                 .toList(),
             pairs: (lesson.pairs ?? [])
-                .map((p) => MatchPair(
-                      left: p.left,
-                      right: p.right,
-                    ))
+                .map((p) => MatchPair(left: p.left, right: p.right))
                 .toList(),
           );
 
-          parsedLessons.add(LessonContent(
-            lessonTitle: '$title - $topic',
-            subjectType: subjectType,
-            gameTemplate: gameTemplate,
-            theme: theme,
-            questions: [questionObj],
-            unitId: unitIndex,
-            lessonIndex: i,
-            grade: curriculum.grade,
-            term: curriculum.term,
-            rawSubjectType: curriculum.subjectType,
-          ));
+          parsedLessons.add(
+            LessonContent(
+              lessonTitle: '$title - $topic',
+              subjectType: subjectType,
+              gameTemplate: gameTemplate,
+              theme: theme,
+              questions: [questionObj],
+              unitId: unitIndex,
+              lessonIndex: i,
+              grade: curriculum.grade,
+              term: curriculum.term,
+              rawSubjectType: curriculum.subjectType,
+            ),
+          );
         }
 
-        unitsList.add(CurriculumUnit(
-          unitIndex: unitIndex,
-          title: title,
-          theme: theme,
-          lessons: parsedLessons,
-        ));
+        unitsList.add(
+          CurriculumUnit(
+            unitIndex: unitIndex,
+            title: title,
+            theme: theme,
+            lessons: parsedLessons,
+          ),
+        );
       }
 
       return unitsList;
@@ -114,13 +119,13 @@ class CurriculumService {
   }
 
   static SubjectType _parseSubject(String raw) {
-    switch (raw.toLowerCase()) {
-      case 'arabic':
-        return SubjectType.arabic;
-      case 'math':
-        return SubjectType.math;
-      default:
-        return SubjectType.english;
+    final lower = raw.toLowerCase();
+    if (lower.contains('arabic')) {
+      return SubjectType.arabic;
+    } else if (lower.contains('math')) {
+      return SubjectType.math;
+    } else {
+      return SubjectType.english;
     }
   }
 

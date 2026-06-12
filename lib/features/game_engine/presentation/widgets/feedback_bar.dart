@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FeedbackBar
-//
-// Slides up from the bottom after an answer is submitted.
-//   - Correct  → soft green (#4CAF50) with "Amazing! 🎉"
-//   - Incorrect → soft red  (#EF5350) with "Incorrect. Correct answer: X"
-// ─────────────────────────────────────────────────────────────────────────────
 class FeedbackBar extends StatefulWidget {
   final bool isCorrect;
   final String? correctAnswerText;
@@ -42,7 +35,9 @@ class _FeedbackBarState extends State<FeedbackBar>
     ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
     _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-          parent: _ctrl, curve: const Interval(0, 0.6, curve: Curves.easeOut)),
+        parent: _ctrl,
+        curve: const Interval(0, 0.6, curve: Curves.easeOut),
+      ),
     );
     _ctrl.forward();
   }
@@ -56,12 +51,15 @@ class _FeedbackBarState extends State<FeedbackBar>
   @override
   Widget build(BuildContext context) {
     final isCorrect = widget.isCorrect;
-    final bgColor =
-        isCorrect ? const Color(0xFF4CAF50) : const Color(0xFFEF5350);
-    final lightBg =
-        isCorrect ? const Color(0xFFE8F5E9) : const Color(0xFFFFEBEE);
-    final iconData =
-        isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded;
+    final bgColor = isCorrect
+        ? const Color(0xFF4CAF50)
+        : const Color(0xFFEF5350);
+    final lightBg = isCorrect
+        ? const Color(0xFFE8F5E9)
+        : const Color(0xFFFFEBEE);
+    final iconData = isCorrect
+        ? Icons.check_circle_rounded
+        : Icons.cancel_rounded;
 
     return SlideTransition(
       position: _slideAnim,
@@ -70,8 +68,7 @@ class _FeedbackBarState extends State<FeedbackBar>
         child: Container(
           decoration: BoxDecoration(
             color: lightBg,
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
             boxShadow: [
               BoxShadow(
                 color: bgColor.withValues(alpha: 0.25),
@@ -80,13 +77,11 @@ class _FeedbackBarState extends State<FeedbackBar>
               ),
             ],
           ),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Status row ──────────────────────────────
               Row(
                 children: [
                   Icon(iconData, color: bgColor, size: 30),
@@ -102,7 +97,6 @@ class _FeedbackBarState extends State<FeedbackBar>
                 ],
               ),
 
-              // ── Wrong: show correct answer hint ─────────
               if (!isCorrect && widget.correctAnswerText != null) ...[
                 const SizedBox(height: 6),
                 Text(
@@ -116,7 +110,9 @@ class _FeedbackBarState extends State<FeedbackBar>
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: bgColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
@@ -134,7 +130,6 @@ class _FeedbackBarState extends State<FeedbackBar>
 
               const SizedBox(height: 16),
 
-              // ── Next button ────────────────────────────
               SizedBox(
                 width: double.infinity,
                 height: 56,

@@ -7,9 +7,6 @@ import '../bloc/game_event.dart';
 import '../bloc/game_state.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 
-/// Sequencer game — empty slots at the top, scrambled items at the bottom.
-/// Tap an item to place it into the next available slot.
-/// Uses [GameSequenceTappedEvent] for order validation via the GameBloc.
 class SequencerGame extends StatefulWidget {
   final GameInProgressState gameState;
   final FlutterTts? tts;
@@ -35,11 +32,9 @@ class _SequencerGameState extends State<SequencerGame> {
 
     return Column(
       children: [
-        // ── Question banner ─────────────────────────────
         _QuestionBanner(question: question),
         const SizedBox(height: 24),
 
-        // ── Slots row ───────────────────────────────────
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -69,8 +64,9 @@ class _SequencerGameState extends State<SequencerGame> {
                         boxShadow: isFilled
                             ? [
                                 BoxShadow(
-                                  color:
-                                      const Color(0xFF65B88D).withOpacity(0.3),
+                                  color: const Color(
+                                    0xFF65B88D,
+                                  ).withOpacity(0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -84,8 +80,7 @@ class _SequencerGameState extends State<SequencerGame> {
                                 duration: const Duration(milliseconds: 400),
                                 curve: Curves.elasticOut,
                                 builder: (context, scale, child) =>
-                                    Transform.scale(
-                                        scale: scale, child: child),
+                                    Transform.scale(scale: scale, child: child),
                                 child: Text(
                                   optionData?.text ?? '',
                                   textAlign: TextAlign.center,
@@ -115,9 +110,11 @@ class _SequencerGameState extends State<SequencerGame> {
 
         const SizedBox(height: 24),
 
-        // ── Direction hint ──────────────────────────────
-        Icon(Icons.arrow_upward_rounded,
-            color: const Color(0xFF64748B).withValues(alpha: 0.5), size: 28),
+        Icon(
+          Icons.arrow_upward_rounded,
+          color: const Color(0xFF64748B).withValues(alpha: 0.5),
+          size: 28,
+        ),
         const SizedBox(height: 4),
         Text(
           'Tap to place!',
@@ -129,7 +126,6 @@ class _SequencerGameState extends State<SequencerGame> {
         ),
         const SizedBox(height: 16),
 
-        // ── Available items ─────────────────────────────
         Expanded(
           child: Center(
             child: Padding(
@@ -182,10 +178,6 @@ class _SequencerGameState extends State<SequencerGame> {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Question Banner
-// ─────────────────────────────────────────────
-
 class _QuestionBanner extends StatelessWidget {
   final GameQuestion question;
   const _QuestionBanner({required this.question});
@@ -200,13 +192,22 @@ class _QuestionBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: context.colors.border, width: 1.5),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Text(
         question.question,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: context.colors.textPrimary, height: 1.4),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          color: context.colors.textPrimary,
+          height: 1.4,
+        ),
       ),
     );
   }

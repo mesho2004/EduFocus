@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/features/subjects/models/progress_model.dart';
-import 'package:edufocus/features/auth/models/child_model.dart';
+import 'package:edufocus/features/auth/data/models/child_model.dart';
 
 abstract class CurriculumState extends Equatable {
   const CurriculumState();
@@ -19,7 +19,11 @@ class CurriculumLoaded extends CurriculumState {
   final ProgressModel? progressModel;
   final ChildModel? childProfile;
 
-  const CurriculumLoaded(this.subjects, {this.progressModel, this.childProfile});
+  const CurriculumLoaded(
+    this.subjects, {
+    this.progressModel,
+    this.childProfile,
+  });
 
   @override
   List<Object?> get props => [subjects, progressModel, childProfile];

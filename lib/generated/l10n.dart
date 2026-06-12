@@ -393,6 +393,26 @@ class S {
   String get logOut {
     return Intl.message('Log Out', name: 'logOut', desc: '', args: []);
   }
+
+  /// `Sorry, this lesson is not available yet. Please check back later.`
+  String get lessonNotFound {
+    return Intl.message(
+      'Sorry, this lesson is not available yet. Please check back later.',
+      name: 'lessonNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sorry, there was an error loading this lesson. Please try again later.`
+  String get lessonErrorLoading {
+    return Intl.message(
+      'Sorry, there was an error loading this lesson. Please try again later.',
+      name: 'lessonErrorLoading',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

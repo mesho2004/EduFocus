@@ -6,7 +6,9 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 final getIt = GetIt.instance;
 
 void setupGetIt() {
-  final dio = Dio(BaseOptions(baseUrl: "http://edufocus.us-east-1.elasticbeanstalk.com/"));
+  final dio = Dio(
+    BaseOptions(baseUrl: "http://edufocus.us-east-1.elasticbeanstalk.com/"),
+  );
   dio.interceptors.add(
     PrettyDioLogger(
       requestHeader: true,
@@ -21,4 +23,3 @@ void setupGetIt() {
   getIt.registerLazySingleton<Dio>(() => dio);
   getIt.registerLazySingleton<ApiServices>(() => ApiServices(getIt<Dio>()));
 }
-

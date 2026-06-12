@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
-import 'package:edufocus/features/auth/cubit/auth_cubit.dart';
-import 'package:edufocus/features/auth/cubit/auth_state.dart';
+import 'package:edufocus/features/auth/data/cubit/auth_cubit.dart';
+import 'package:edufocus/features/auth/data/cubit/auth_state.dart';
+import 'package:edufocus/core/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,12 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
       _navigationHandled = true;
       if (state is AuthSuccess) {
         if (state.hasChild) {
-          Navigator.pushReplacementNamed(context, '/subjects_grid_view');
+          Navigator.pushReplacementNamed(context, AppRoutes.subjectsGridView);
         } else {
-          Navigator.pushReplacementNamed(context, '/registration');
+          Navigator.pushReplacementNamed(context, AppRoutes.registration);
         }
       } else {
-        Navigator.pushReplacementNamed(context, '/parent_auth');
+        Navigator.pushReplacementNamed(context, AppRoutes.parentAuth);
       }
     }
   }
@@ -57,7 +58,6 @@ class _SplashScreenState extends State<SplashScreen> {
         backgroundColor: context.colors.background,
         body: Stack(
           children: [
-            // Background Decorative Elements
             Positioned(
               top: 50,
               left: -40,
@@ -99,7 +99,6 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            // Main Content
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +122,6 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
 
   Widget _buildFloatingCircle({required double size, required Color color}) {
     return Container(

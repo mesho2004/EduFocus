@@ -7,13 +7,11 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color background;
   final Color cardBackground;
   final Color border;
-  
-  // Text colors
+
   final Color textPrimary;
   final Color textSecondary;
   final Color textTertiary;
-  
-  // Brand/Childish colors
+
   final Color brandRed;
   final Color brandOrange;
   final Color brandYellow;
@@ -59,11 +57,11 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   static final dark = AppColorsExtension(
     primary: AppColors.primary,
     background: AppColors.backgroundDark,
-    cardBackground: const Color(0xFF1E293B), // slate 800
-    border: const Color(0xFF334155), // slate 700
+    cardBackground: const Color(0xFF1E293B),
+    border: const Color(0xFF334155),
     textPrimary: Colors.white,
-    textSecondary: const Color(0xFFCBD5E1), // slate 300
-    textTertiary: const Color(0xFF64748B), // slate 500
+    textSecondary: const Color(0xFFCBD5E1),
+    textTertiary: const Color(0xFF64748B),
     brandRed: const Color(0xFFEF4444),
     brandOrange: const Color(0xFFF97316),
     brandYellow: const Color(0xFFFBBF24),
@@ -136,7 +134,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 }
 
 extension AppThemeContext on BuildContext {
-  AppColorsExtension get colors => Theme.of(this).extension<AppColorsExtension>()!;
+  AppColorsExtension get colors =>
+      Theme.of(this).extension<AppColorsExtension>()!;
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 }
 

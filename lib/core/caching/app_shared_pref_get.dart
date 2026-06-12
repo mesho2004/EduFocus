@@ -1,7 +1,6 @@
 import 'package:edufocus/core/caching/app_shared_pref.dart';
 import 'package:edufocus/core/caching/app_shared_pref_key.dart';
 
-
 class AppSharedPrefGet {
   static bool getLang() {
     final lang = AppSharedPref.getData(key: AppSharedPrefKey.langKey);
@@ -31,5 +30,11 @@ class AppSharedPrefGet {
     final email = AppSharedPref.getData(key: AppSharedPrefKey.profileEmailKey);
     if (email is String) return email;
     return '';
+  }
+
+  static bool getEyeTracking() {
+    final enabled = AppSharedPref.getData(key: AppSharedPrefKey.eyeTrackingKey);
+    if (enabled is bool) return enabled;
+    return false;
   }
 }

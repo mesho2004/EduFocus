@@ -39,9 +39,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         bodyIndex: map['bodyIndex'] ?? 1,
         legIndex: map['legIndex'] ?? 1,
         hatIndex: map['hatIndex'] ?? 0,
-        torsoColor: map['torsoColor'],
-        pantsColor: map['pantsColor'],
-        hairColor: map['hairColor'],
       );
     });
   }
@@ -75,9 +72,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final age = int.parse(_ageCtrl.text.trim());
 
       await context.read<CurriculumCubit>().updateChildProfile(
-            name: name,
-            age: age,
-          );
+        name: name,
+        age: age,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -85,7 +82,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             content: const Text('Profile updated successfully! ✨'),
             backgroundColor: context.colors.brandGreen,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
         Navigator.pop(context);
@@ -97,7 +96,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             content: Text('Error updating profile: $e 😢'),
             backgroundColor: context.colors.brandRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
       }
@@ -116,7 +117,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: context.colors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.colors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: context.colors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
@@ -137,7 +141,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Fun Avatar Display
                 GestureDetector(
                   onTap: () async {
                     if (_legoConfig == null) return;
@@ -145,9 +148,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       context,
                       MaterialPageRoute(
                         fullscreenDialog: true,
-                        builder: (context) => LegoAvatarEditorDialog(
-                          initialConfig: _legoConfig!,
-                        ),
+                        builder: (context) =>
+                            LegoAvatarEditorDialog(initialConfig: _legoConfig!),
                       ),
                     );
                     if (newConfig != null) {
@@ -175,18 +177,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           child: CircleAvatar(
                             radius: 54,
-                            backgroundColor: context.colors.brandBlue.withValues(alpha: 0.1),
+                            backgroundColor: context.colors.brandBlue
+                                .withValues(alpha: 0.1),
                             child: _legoConfig == null
-                                ? const Center(child: CircularProgressIndicator())
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
                                 : LegoCharacterWidget(
                                     headIndex: _legoConfig!.headIndex,
                                     hairIndex: _legoConfig!.hairIndex,
                                     bodyIndex: _legoConfig!.bodyIndex,
                                     legIndex: _legoConfig!.legIndex,
                                     hatIndex: _legoConfig!.hatIndex,
-                                    torsoColor: _legoConfig!.torsoColor,
-                                    pantsColor: _legoConfig!.pantsColor,
-                                    hairColor: _legoConfig!.hairColor,
                                     size: 56,
                                   ),
                           ),
@@ -197,7 +199,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             color: context.colors.brandBlue,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.edit_rounded, color: Colors.white, size: 18),
+                          child: const Icon(
+                            Icons.edit_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
                       ],
                     ),
@@ -205,7 +211,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 36),
 
-                // Name Input
                 Text(
                   "Child's Name",
                   style: TextStyle(
@@ -217,7 +222,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _nameCtrl,
-                  style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
+                  style: TextStyle(
+                    color: context.colors.textPrimary,
+                    fontSize: 16,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Enter name',
                     hintStyle: TextStyle(color: context.colors.textTertiary),
@@ -226,29 +234,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     contentPadding: const EdgeInsets.all(16),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.border, width: 1.5),
+                      borderSide: BorderSide(
+                        color: context.colors.border,
+                        width: 1.5,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandBlue, width: 2),
+                      borderSide: BorderSide(
+                        color: context.colors.brandBlue,
+                        width: 2,
+                      ),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandRed, width: 1.5),
+                      borderSide: BorderSide(
+                        color: context.colors.brandRed,
+                        width: 1.5,
+                      ),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandRed, width: 2),
+                      borderSide: BorderSide(
+                        color: context.colors.brandRed,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Name cannot be empty';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Name cannot be empty';
                     return null;
                   },
                 ),
                 const SizedBox(height: 24),
 
-                // Age Input
                 Text(
                   "Child's Age",
                   style: TextStyle(
@@ -261,7 +281,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 TextFormField(
                   controller: _ageCtrl,
                   keyboardType: TextInputType.number,
-                  style: TextStyle(color: context.colors.textPrimary, fontSize: 16),
+                  style: TextStyle(
+                    color: context.colors.textPrimary,
+                    fontSize: 16,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Enter age',
                     hintStyle: TextStyle(color: context.colors.textTertiary),
@@ -270,31 +293,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     contentPadding: const EdgeInsets.all(16),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.border, width: 1.5),
+                      borderSide: BorderSide(
+                        color: context.colors.border,
+                        width: 1.5,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandBlue, width: 2),
+                      borderSide: BorderSide(
+                        color: context.colors.brandBlue,
+                        width: 2,
+                      ),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandRed, width: 1.5),
+                      borderSide: BorderSide(
+                        color: context.colors.brandRed,
+                        width: 1.5,
+                      ),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: context.colors.brandRed, width: 2),
+                      borderSide: BorderSide(
+                        color: context.colors.brandRed,
+                        width: 2,
+                      ),
                     ),
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Age cannot be empty';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Age cannot be empty';
                     final age = int.tryParse(v.trim());
-                    if (age == null || age <= 0) return 'Enter a valid positive age';
+                    if (age == null || age <= 0)
+                      return 'Enter a valid positive age';
                     return null;
                   },
                 ),
                 const SizedBox(height: 48),
 
-                // Save button
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
@@ -303,7 +339,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       backgroundColor: context.colors.brandBlue,
                       foregroundColor: Colors.white,
                       elevation: 4,
-                      shadowColor: context.colors.brandBlue.withValues(alpha: 0.35),
+                      shadowColor: context.colors.brandBlue.withValues(
+                        alpha: 0.35,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
@@ -312,11 +350,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ? const SizedBox(
                             width: 24,
                             height: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
                           )
                         : const Text(
                             'Save Changes',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                   ),
                 ),

@@ -18,9 +18,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
         );
         emit(mode);
       }
-    } catch (_) {
-      // Fallback silently if shared preferences fails
-    }
+    } catch (_) {}
   }
 
   Future<void> setTheme(ThemeMode mode) async {
@@ -28,8 +26,6 @@ class ThemeCubit extends Cubit<ThemeMode> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_themeKey, mode.toString());
-    } catch (_) {
-      // Ignore write errors
-    }
+    } catch (_) {}
   }
 }

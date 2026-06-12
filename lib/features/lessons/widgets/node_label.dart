@@ -7,18 +7,21 @@ class NodeLabel extends StatelessWidget {
   final Color color;
   final bool isActive;
 
-  const NodeLabel(
-      {super.key,
-      required this.text,
-      required this.color,
-      this.isActive = false});
+  const NodeLabel({
+    super.key,
+    required this.text,
+    required this.color,
+    this.isActive = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
       decoration: BoxDecoration(
-        color: isActive ? color.withValues(alpha: 0.12) : context.colors.cardBackground,
+        color: isActive
+            ? color.withValues(alpha: 0.12)
+            : context.colors.cardBackground,
         borderRadius: BorderRadius.circular(9999),
         border: isActive
             ? Border.all(color: color.withValues(alpha: 0.3))
@@ -27,8 +30,9 @@ class NodeLabel extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 4)
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 4,
+                ),
               ],
       ),
       child: Text(

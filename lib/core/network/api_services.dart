@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:edufocus/features/auth/models/child_model.dart';
-import 'package:edufocus/features/auth/models/parent_model.dart';
+import 'package:edufocus/features/auth/data/models/child_model.dart';
+import 'package:edufocus/features/auth/data/models/parent_model.dart';
 import 'package:edufocus/features/subjects/models/complete_lesson_model.dart';
 import 'package:edufocus/features/subjects/models/curriculum_model.dart';
 import 'package:edufocus/features/subjects/models/progress_model.dart';
+import 'package:edufocus/features/subjects/models/avatar_shop_model.dart';
 
 class ApiServices {
   final Dio _dio;
@@ -259,7 +260,7 @@ class ApiServices {
         'coins/me',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      // handle both { "coins": 50 } and a bare number
+
       if (response.data is int) return response.data as int;
       if (response.data is Map) {
         return (response.data['coins'] ??
@@ -299,7 +300,9 @@ class ApiServices {
         'progress/me',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      print('=== getMyProgress RAW response type: ${response.data.runtimeType} ===');
+      print(
+        '=== getMyProgress RAW response type: ${response.data.runtimeType} ===',
+      );
       print('=== getMyProgress RAW response: ${response.data} ===');
 
       Map<String, dynamic> jsonData;
@@ -311,7 +314,6 @@ class ApiServices {
         throw 'Unexpected response type: ${response.data.runtimeType}';
       }
 
-      // Some APIs wrap the progress in a 'data' or 'progress' key
       if (jsonData.containsKey('data') && jsonData['data'] is Map) {
         jsonData = Map<String, dynamic>.from(jsonData['data'] as Map);
       }
@@ -429,5 +431,193 @@ class ApiServices {
     }
     throw 'No child profile data found or invalid structure';
   }
-}
 
+  Future<AvatarShopModel> getAvatarShop(String token) async {
+    try {
+      final response = await _dio.get(
+        'avatar/shop',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      return AvatarShopModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      String errorMessage = "An error occurred";
+      if (e.response != null) {
+        if (e.response!.data is Map) {
+          final data = e.response!.data as Map;
+          if (data['error'] != null) {
+            errorMessage = data['error'].toString();
+          } else if (data['message'] != null) {
+            errorMessage = data['message'].toString();
+          } else if (data['detail'] != null) {
+            errorMessage = data['detail'].toString();
+          } else {
+            errorMessage = e.response!.statusMessage ?? "Server Error";
+          }
+        } else {
+          errorMessage = e.response!.statusMessage ?? "Server Error";
+        }
+      } else {
+        errorMessage = e.message ?? "Connection Error";
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> buyAvatarItem(String itemId, String token) async {
+    try {
+      await _dio.post(
+        'avatar/purchase',
+        data: {'avatar_item_id': itemId},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      String errorMessage = "An error occurred";
+      if (e.response != null) {
+        if (e.response!.data is Map) {
+          final data = e.response!.data as Map;
+          if (data['error'] != null) {
+            errorMessage = data['error'].toString();
+          } else if (data['message'] != null) {
+            errorMessage = data['message'].toString();
+          } else if (data['detail'] != null) {
+            errorMessage = data['detail'].toString();
+          } else {
+            errorMessage = e.response!.statusMessage ?? "Server Error";
+          }
+        } else {
+          errorMessage = e.response!.statusMessage ?? "Server Error";
+        }
+      } else {
+        errorMessage = e.message ?? "Connection Error";
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> equipAvatar({
+    required int headIndex,
+    required int hairIndex,
+    required int bodyIndex,
+    required int legIndex,
+    required int hatIndex,
+    required String token,
+  }) async {
+    try {
+      await _dio.post(
+        'avatar/equip',
+        data: {
+          'head_index': headIndex,
+          'hair_index': hairIndex,
+          'body_index': bodyIndex,
+          'leg_index': legIndex,
+          'hat_index': hatIndex,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      String errorMessage = "An error occurred";
+      if (e.response != null) {
+        if (e.response!.data is Map) {
+          final data = e.response!.data as Map;
+          if (data['error'] != null) {
+            errorMessage = data['error'].toString();
+          } else if (data['message'] != null) {
+            errorMessage = data['message'].toString();
+          } else if (data['detail'] != null) {
+            errorMessage = data['detail'].toString();
+          } else {
+            errorMessage = e.response!.statusMessage ?? "Server Error";
+          }
+        } else {
+          errorMessage = e.response!.statusMessage ?? "Server Error";
+        }
+      } else {
+        errorMessage = e.message ?? "Connection Error";
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Map<String, dynamic>> forgotPassword(String email) async {
+    try {
+      final response = await _dio.post(
+        'auth/forgot-password',
+        data: {'email': email},
+      );
+      if (response.data is Map) {
+        return Map<String, dynamic>.from(response.data as Map);
+      }
+      return {'message': 'Password reset code created successfully'};
+    } on DioException catch (e) {
+      String errorMessage = "An error occurred";
+      if (e.response != null) {
+        if (e.response!.data is Map) {
+          final data = e.response!.data as Map;
+          if (data['error'] != null) {
+            errorMessage = data['error'].toString();
+          } else if (data['message'] != null) {
+            errorMessage = data['message'].toString();
+          } else if (data['detail'] != null) {
+            errorMessage = data['detail'].toString();
+          } else {
+            errorMessage = e.response!.statusMessage ?? "Server Error";
+          }
+        } else {
+          errorMessage = e.response!.statusMessage ?? "Server Error";
+        }
+      } else {
+        errorMessage = e.message ?? "Connection Error";
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<String> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _dio.post(
+        'auth/reset-password',
+        data: {'email': email, 'code': code, 'new_password': newPassword},
+      );
+      if (response.data is Map) {
+        final data = response.data as Map;
+        return data['message']?.toString() ?? 'Password reset successfully';
+      }
+      return 'Password reset successfully';
+    } on DioException catch (e) {
+      String errorMessage = "An error occurred";
+      if (e.response != null) {
+        if (e.response!.data is Map) {
+          final data = e.response!.data as Map;
+          if (data['error'] != null) {
+            errorMessage = data['error'].toString();
+          } else if (data['message'] != null) {
+            errorMessage = data['message'].toString();
+          } else if (data['detail'] != null) {
+            errorMessage = data['detail'].toString();
+          } else {
+            errorMessage = e.response!.statusMessage ?? "Server Error";
+          }
+        } else {
+          errorMessage = e.response!.statusMessage ?? "Server Error";
+        }
+      } else {
+        errorMessage = e.message ?? "Connection Error";
+      }
+      throw errorMessage;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+}

@@ -28,12 +28,18 @@ class CurriculumSessionLoaded extends CurriculumSessionState {
 
   CurriculumUnit get currentUnit => curriculum[currentUnitIndex];
   LessonContent get currentLesson => currentUnit.lessons[currentLessonIndex];
-  
-  bool get isLastLessonInUnit => currentLessonIndex == currentUnit.lessons.length - 1;
+
+  bool get isLastLessonInUnit =>
+      currentLessonIndex == currentUnit.lessons.length - 1;
   bool get isLastUnit => currentUnitIndex == curriculum.length - 1;
 
   @override
-  List<Object?> get props => [curriculum, currentUnitIndex, currentLessonIndex, score];
+  List<Object?> get props => [
+    curriculum,
+    currentUnitIndex,
+    currentLessonIndex,
+    score,
+  ];
 
   CurriculumSessionLoaded copyWith({
     List<CurriculumUnit>? curriculum,

@@ -17,15 +17,37 @@ class ProgressModel {
 
   factory ProgressModel.fromJson(Map<String, dynamic> json) {
     return ProgressModel(
-      overallProgress: double.tryParse((json['overall_progress'] ?? json['overallProgress'])?.toString() ?? '') ?? 0.0,
-      completedLessons: int.tryParse((json['completed_lessons'] ?? json['completedLessons'])?.toString() ?? '') ?? 0,
-      totalLessons: int.tryParse((json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '') ?? 0,
+      overallProgress:
+          double.tryParse(
+            (json['overall_progress'] ?? json['overallProgress'])?.toString() ??
+                '',
+          ) ??
+          0.0,
+      completedLessons:
+          int.tryParse(
+            (json['completed_lessons'] ?? json['completedLessons'])
+                    ?.toString() ??
+                '',
+          ) ??
+          0,
+      totalLessons:
+          int.tryParse(
+            (json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '',
+          ) ??
+          0,
       coins: int.tryParse(json['coins']?.toString() ?? '') ?? 0,
-      streakDays: int.tryParse((json['streak_days'] ?? json['streakDays'])?.toString() ?? '') ?? 0,
+      streakDays:
+          int.tryParse(
+            (json['streak_days'] ?? json['streakDays'])?.toString() ?? '',
+          ) ??
+          0,
       subjects: json['subjects'] is List
           ? (json['subjects'] as List)
-              .map((e) => SubjectProgressModel.fromJson(e as Map<String, dynamic>))
-              .toList()
+                .map(
+                  (e) =>
+                      SubjectProgressModel.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : [],
     );
   }
@@ -70,16 +92,33 @@ class SubjectProgressModel {
 
   factory SubjectProgressModel.fromJson(Map<String, dynamic> json) {
     return SubjectProgressModel(
-      subjectType: (json['subject_type'] ?? json['subjectType'] ?? '').toString(),
+      subjectType: (json['subject_type'] ?? json['subjectType'] ?? '')
+          .toString(),
       grade: int.tryParse(json['grade']?.toString() ?? '') ?? 0,
       term: int.tryParse(json['term']?.toString() ?? '') ?? 0,
-      totalLessons: int.tryParse((json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '') ?? 0,
-      completedLessons: int.tryParse((json['completed_lessons'] ?? json['completedLessons'])?.toString() ?? '') ?? 0,
-      progress: double.tryParse((json['progress'] ?? json['overall_progress'])?.toString() ?? '') ?? 0.0,
+      totalLessons:
+          int.tryParse(
+            (json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '',
+          ) ??
+          0,
+      completedLessons:
+          int.tryParse(
+            (json['completed_lessons'] ?? json['completedLessons'])
+                    ?.toString() ??
+                '',
+          ) ??
+          0,
+      progress:
+          double.tryParse(
+            (json['progress'] ?? json['overall_progress'])?.toString() ?? '',
+          ) ??
+          0.0,
       units: json['units'] is List
           ? (json['units'] as List)
-              .map((e) => UnitProgressModel.fromJson(e as Map<String, dynamic>))
-              .toList()
+                .map(
+                  (e) => UnitProgressModel.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : [],
     );
   }
@@ -102,10 +141,22 @@ class UnitProgressModel {
 
   factory UnitProgressModel.fromJson(Map<String, dynamic> json) {
     return UnitProgressModel(
-      unitId: int.tryParse((json['unit_id'] ?? json['unitId'])?.toString() ?? '') ?? 0,
+      unitId:
+          int.tryParse((json['unit_id'] ?? json['unitId'])?.toString() ?? '') ??
+          0,
       unitTitle: (json['unit_title'] ?? json['unitTitle'] ?? '').toString(),
-      totalLessons: int.tryParse((json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '') ?? 0,
-      completedLessons: int.tryParse((json['completed_lessons'] ?? json['completedLessons'])?.toString() ?? '') ?? 0,
+      totalLessons:
+          int.tryParse(
+            (json['total_lessons'] ?? json['totalLessons'])?.toString() ?? '',
+          ) ??
+          0,
+      completedLessons:
+          int.tryParse(
+            (json['completed_lessons'] ?? json['completedLessons'])
+                    ?.toString() ??
+                '',
+          ) ??
+          0,
       progress: double.tryParse(json['progress']?.toString() ?? '') ?? 0.0,
     );
   }

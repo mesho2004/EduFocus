@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:edufocus/features/auth/models/parent_model.dart';
-import 'package:edufocus/features/auth/models/child_model.dart';
+import 'package:edufocus/features/auth/data/models/parent_model.dart';
+import 'package:edufocus/features/auth/data/models/child_model.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -18,7 +18,11 @@ class AuthSuccess extends AuthState {
   final String token;
   final bool hasChild;
 
-  const AuthSuccess({required this.parent, required this.token, this.hasChild = false});
+  const AuthSuccess({
+    required this.parent,
+    required this.token,
+    this.hasChild = false,
+  });
 
   @override
   List<Object?> get props => [parent, token, hasChild];

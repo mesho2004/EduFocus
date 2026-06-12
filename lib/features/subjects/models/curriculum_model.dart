@@ -31,11 +31,11 @@ class CurriculumModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'subjectType': subjectType,
-        'term': term,
-        'grade': grade,
-        'totalUnits': totalUnits,
-        'units': units.map((u) => u.toJson()).toList(),
-      };
+    'id': id,
+    'subjectType': subjectType,
+    'term': term,
+    'grade': grade,
+    'totalUnits': totalUnits,
+    'units': units.map((u) => u.toJson()).toList(),
+  };
 }
