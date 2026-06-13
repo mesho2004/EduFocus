@@ -7,6 +7,7 @@ import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class SubjectsGridViewScreen extends StatelessWidget {
   const SubjectsGridViewScreen({super.key});
@@ -75,7 +76,7 @@ class SubjectsGridViewScreen extends StatelessWidget {
                         const SizedBox(height: 28),
 
                         Text(
-                          "Let's start playing",
+                          S.of(context).letsStartPlaying,
                           textAlign: TextAlign.right,
                           style: TextStyle(
                             fontSize: 16,

@@ -7,6 +7,7 @@ import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/core/di/di.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -29,13 +30,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
+      return S.of(context).emailRequired;
     }
 
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (!emailRegex.hasMatch(value.trim())) {
-      return 'Enter a valid email address';
+      return S.of(context).emailInvalid;
     }
 
     return null;

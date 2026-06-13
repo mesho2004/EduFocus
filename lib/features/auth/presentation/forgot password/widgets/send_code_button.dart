@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class SendCodeButton extends StatelessWidget {
   const SendCodeButton({
@@ -35,9 +36,9 @@ class SendCodeButton extends StatelessWidget {
                   strokeWidth: 2.5,
                 ),
               )
-            : const Text(
-                'Send Code',
-                style: TextStyle(
+            : Text(
+                S.of(context).sendCode,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,

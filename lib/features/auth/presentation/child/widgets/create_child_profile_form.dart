@@ -1,6 +1,7 @@
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/utils/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CreateChildProfileForm extends StatelessWidget {
   const CreateChildProfileForm({super.key, required this.controller});
@@ -13,7 +14,7 @@ class CreateChildProfileForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "What is your hero's name?",
+          S.of(context).heroName,
           style: TextStyle(
             color: context.colors.textSecondary,
             fontSize: 16,
@@ -22,11 +23,11 @@ class CreateChildProfileForm extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         CustomTextFormField(
-          hintText: 'Type your name here...',
+          hintText: S.of(context).typeYourNameHint,
           controller: controller,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your name';
+              return S.of(context).enterNameError;
             }
             return null;
           },

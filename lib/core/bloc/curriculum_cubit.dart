@@ -6,6 +6,7 @@ import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
 import 'package:edufocus/features/subjects/models/progress_model.dart';
+import 'package:edufocus/features/subjects/models/avatar_shop_model.dart';
 import 'package:edufocus/features/auth/data/models/child_model.dart';
 import 'curriculum_state.dart';
 
@@ -291,6 +292,21 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       } catch (e) {
         print('Failed to update child profile: $e');
         rethrow;
+      }
+    }
+  }
+
+  void updateChildAvatar(EquippedAvatar avatar) {
+    if (state is CurriculumLoaded) {
+      final loaded = state as CurriculumLoaded;
+      if (loaded.childProfile != null) {
+        emit(
+          CurriculumLoaded(
+            loaded.subjects,
+            progressModel: loaded.progressModel,
+            childProfile: loaded.childProfile!.copyWith(equippedAvatar: avatar),
+          ),
+        );
       }
     }
   }

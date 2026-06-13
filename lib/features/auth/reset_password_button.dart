@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class ResetPasswordButton extends StatelessWidget {
   const ResetPasswordButton({
@@ -35,9 +36,9 @@ class ResetPasswordButton extends StatelessWidget {
                   strokeWidth: 2.5,
                 ),
               )
-            : const Text(
-                'Reset Password',
-                style: TextStyle(
+            : Text(
+                S.of(context).resetPasswordTitle,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,

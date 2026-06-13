@@ -2,7 +2,6 @@ class AppRoutes {
   static const String splash = '/';
   static const String registration = '/registration';
   static const String parentAuth = '/parent_auth';
-  static const String parentDashboard = '/parent_dashboard';
   static const String subjectsGridView = '/subjects_grid_view';
   static const String units = '/units';
   static const String lessonsPath = '/lessons_path';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class OtpHeader extends StatelessWidget {
   const OtpHeader({super.key});
@@ -16,7 +17,7 @@ class OtpHeader extends StatelessWidget {
         const SizedBox(height: 28),
 
         Text(
-          'Reset Password',
+          S.of(context).resetPasswordTitle,
           style: TextStyle(
             color: context.colors.textPrimary,
             fontSize: 26,
@@ -28,7 +29,7 @@ class OtpHeader extends StatelessWidget {
         const SizedBox(height: 8),
 
         Text(
-          'Enter the reset code sent to your email and choose a new password.',
+          S.of(context).resetPasswordDescription,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: context.colors.textSecondary,

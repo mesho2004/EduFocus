@@ -21,6 +21,7 @@ import '../widgets/connect_letters_game.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
 import '../../../../core/bloc/stars_cubit.dart';
 import '../../../../core/bloc/curriculum_cubit.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CurriculumPlayerScreen extends StatelessWidget {
   const CurriculumPlayerScreen({super.key});
@@ -88,7 +89,8 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
         listener: (context, sessionState) {
           if (sessionState is CurriculumUnitCompleted) {
             _speak(
-              'Great job! You finished ${sessionState.completedUnit.title}!',
+              S.of(context).finishedUnit(sessionState.completedUnit.title),
+              langCode: Localizations.localeOf(context).languageCode,
             );
           }
         },
@@ -112,7 +114,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
           if (sessionState is CurriculumAllUnitsCompleted) {
             return Center(
               child: Text(
-                'All Units Conquered! Score: ${sessionState.totalScore}',
+                S.of(context).allUnitsConquered(sessionState.totalScore),
                 style: const TextStyle(color: Colors.white, fontSize: 24),
               ),
             );
@@ -184,7 +186,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                             _isAdvancing = true;
 
                             _speak(
-                              'Excellent! Well done!',
+                              lesson.ttsLanguage.startsWith('ar') ? 'أحسنت! إجابة صحيحة!' : 'Excellent! Well done!',
                               langCode: lesson.ttsLanguage,
                             );
 
@@ -213,7 +215,10 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                               },
                             );
                           } else if (gameState is GameWrongAnswerState) {
-                            _speak('Try again!', langCode: lesson.ttsLanguage);
+                            _speak(
+                              lesson.ttsLanguage.startsWith('ar') ? 'حاول مرة أخرى!' : 'Try again!',
+                              langCode: lesson.ttsLanguage,
+                            );
                           } else if (gameState is GameInProgressState &&
                               gameState is! GameCorrectAnswerState &&
                               gameState is! GameWrongAnswerState) {
@@ -315,7 +320,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
               ),
             ),
             Text(
-              '${sessionState.completedUnit.title} Completed!',
+              S.of(context).unitCompleted(sessionState.completedUnit.title),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -325,7 +330,7 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Amazing progress!\nTotal Score: ${sessionState.score}',
+              S.of(context).amazingProgress(sessionState.score),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.8),
                 fontSize: 18,
@@ -352,19 +357,19 @@ class _CurriculumPlayerViewState extends State<_CurriculumPlayerView> {
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Next Unit',
-                      style: TextStyle(
+                      S.of(context).nextUnit,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(
+                    const SizedBox(width: 8),
+                    const Icon(
                       Icons.arrow_forward_rounded,
                       color: Colors.white,
                       size: 24,
@@ -480,7 +485,7 @@ class _CurriculumTopBar extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Lesson $currentL / $totalL',
+                S.of(context).lessonFractionPrefix(currentL, totalL),
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.9),
                   fontSize: 12,

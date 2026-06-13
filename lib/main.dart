@@ -2,6 +2,8 @@ import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/caching/app_shared_pref.dart';
 import 'package:edufocus/core/caching/app_shared_pref_get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:edufocus/generated/l10n.dart';
 import 'core/bloc/stars_cubit.dart';
 import 'core/bloc/curriculum_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,14 +49,27 @@ class EdufocusApp extends StatelessWidget {
         child: ValueListenableBuilder<bool>(
           valueListenable: isDark,
           builder: (context, darkEnabled, _) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: darkEnabled ? ThemeMode.dark : ThemeMode.light,
-              initialRoute: AppRoutes.splash,
-              builder: (context, child) => GazeWrapper(child: child!),
-              routes: AppRouter.routes,
+            return ValueListenableBuilder<bool>(
+              valueListenable: isArabic,
+              builder: (context, arabicEnabled, _) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  themeMode: darkEnabled ? ThemeMode.dark : ThemeMode.light,
+                  locale: arabicEnabled ? const Locale('ar') : const Locale('en'),
+                  supportedLocales: S.delegate.supportedLocales,
+                  localizationsDelegates: const [
+                    S.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  initialRoute: AppRoutes.splash,
+                  builder: (context, child) => GazeWrapper(child: child!),
+                  routes: AppRouter.routes,
+                );
+              },
             );
           },
         ),

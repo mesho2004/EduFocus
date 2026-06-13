@@ -5,6 +5,8 @@ import 'package:edufocus/core/widgets/edufocus_logo.dart';
 import 'package:edufocus/features/auth/data/cubit/auth_cubit.dart';
 import 'package:edufocus/features/auth/data/cubit/auth_state.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/core/caching/app_shared_pref.dart';
+import 'package:edufocus/core/caching/app_shared_pref_key.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -36,6 +38,14 @@ class _SplashScreenState extends State<SplashScreen> {
     final state = context.read<AuthCubit>().state;
     if (state is! AuthInitial && state is! AuthLoading && _timerFinished) {
       _navigationHandled = true;
+      final onboardingCompleted =
+          AppSharedPref.getData(key: AppSharedPrefKey.onboardingCompletedKey)
+              as bool? ??
+          false;
+      if (!onboardingCompleted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.onboardingTutorial);
+        return;
+      }
       if (state is AuthSuccess) {
         if (state.hasChild) {
           Navigator.pushReplacementNamed(context, AppRoutes.subjectsGridView);

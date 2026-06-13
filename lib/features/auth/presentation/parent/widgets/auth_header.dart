@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class AuthHeader extends StatelessWidget {
   const AuthHeader({super.key});
@@ -12,7 +13,7 @@ class AuthHeader extends StatelessWidget {
         const EduFocusLogo(fontSize: 32, animate: false),
         const SizedBox(height: 28),
         Text(
-          'Parent Portal',
+          S.of(context).parentPortal,
           style: TextStyle(
             color: context.colors.textPrimary,
             fontSize: 28,
@@ -22,7 +23,7 @@ class AuthHeader extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to set up a safe learning\nenvironment for your hero.',
+          S.of(context).parentPortalDescription,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: context.colors.textSecondary,

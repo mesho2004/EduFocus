@@ -2,6 +2,7 @@ import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class SubjectCard extends StatefulWidget {
   final SubjectData subject;
@@ -133,7 +134,7 @@ class _SubjectCardState extends State<SubjectCard>
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '${sub.units.length} units · ${sub.totalLessons} lessons',
+                    '${sub.units.length} ${S.of(context).units.toLowerCase()} · ${sub.totalLessons} ${S.of(context).lessons.toLowerCase()}',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -155,7 +156,9 @@ class _SubjectCardState extends State<SubjectCard>
               ),
               const SizedBox(height: 4),
               Text(
-                '$pct% Completed',
+                Localizations.localeOf(context).languageCode == 'ar'
+                    ? '${S.of(context).completed} $pct%'
+                    : '$pct% ${S.of(context).completed}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,

@@ -1,5 +1,6 @@
 import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class OverallProgressCard extends StatelessWidget {
   final double progress;
@@ -41,12 +42,12 @@ class OverallProgressCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                children: const [
-                  Text('🚀', style: TextStyle(fontSize: 22)),
-                  SizedBox(width: 8),
+                children: [
+                  const Text('🚀', style: TextStyle(fontSize: 22)),
+                  const SizedBox(width: 8),
                   Text(
-                    'Overall Progress',
-                    style: TextStyle(
+                    S.of(context).overallProgress,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -88,7 +89,7 @@ class OverallProgressCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Completed $completed of $total lessons 🎯',
+            '${S.of(context).completedLessonsProgress(completed, total)} 🎯',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.9),
               fontSize: 13,

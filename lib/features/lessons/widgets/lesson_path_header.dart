@@ -2,6 +2,7 @@ import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class LessonPathHeader extends StatelessWidget {
   final SubjectData subject;
@@ -150,7 +151,7 @@ class LessonPathHeader extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${unit.completedLessons} / ${unit.lessons.length} lessons',
+                  S.of(context).lessonsFraction(unit.completedLessons, unit.lessons.length),
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 11,

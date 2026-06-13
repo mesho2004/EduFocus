@@ -9,7 +9,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/core/di/di.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/features/subjects/models/avatar_shop_model.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class LegoConfig {
   final int headIndex;
@@ -141,7 +143,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
             borderRadius: BorderRadius.circular(24),
           ),
           title: Text(
-            hasEnoughCoins ? 'Unlock Piece! 🌟' : 'Need More Coins! 🪙',
+            hasEnoughCoins ? S.of(context).unlockPiece : S.of(context).needMoreCoins,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 20,
@@ -155,8 +157,8 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
               const SizedBox(height: 8),
               Text(
                 hasEnoughCoins
-                    ? 'Do you want to buy this item for $price coins?'
-                    : 'You need $price coins to buy this, but you only have $userCoins coins. Play more lessons to earn coins!',
+                    ? S.of(context).buyConfirmMessage(price)
+                    : S.of(context).notEnoughCoinsMessage(price, userCoins),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -173,7 +175,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'Cancel',
+                  S.of(context).cancel,
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
@@ -198,7 +200,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
                   _buyItem(item);
                 },
                 child: Text(
-                  'Unlock ($price 🪙)',
+                  S.of(context).unlockButton(price),
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
@@ -216,9 +218,9 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
                   ),
                 ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Okay',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                child: Text(
+                  S.of(context).okay,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
             ],
@@ -253,7 +255,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Successfully unlocked item! 🎉'),
+            content: Text(S.of(context).unlockSuccess),
             backgroundColor: Colors.green.shade600,
           ),
         );
@@ -265,7 +267,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to purchase item: $e'),
+            content: Text(S.of(context).unlockFailed(e.toString())),
             backgroundColor: Colors.red.shade600,
           ),
         );
@@ -463,12 +465,21 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
 
                     if (context.mounted) {
                       Navigator.pop(context);
+                      context.read<CurriculumCubit>().updateChildAvatar(
+                        EquippedAvatar(
+                          headIndex: _currentConfig.headIndex,
+                          hairIndex: _currentConfig.hairIndex,
+                          bodyIndex: _currentConfig.bodyIndex,
+                          legIndex: _currentConfig.legIndex,
+                          hatIndex: _currentConfig.hatIndex,
+                        ),
+                      );
                       Navigator.pop(context, _currentConfig);
                     }
                   },
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(fontWeight: FontWeight.w800),
+                  child: Text(
+                    S.of(context).save,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
                 ),
               ),
@@ -546,11 +557,11 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildTabItem(0, 'assets/images/character/icons/Head.svg', 'Face'),
-          _buildTabItem(1, 'assets/images/character/icons/Hair.svg', 'Hair'),
-          _buildTabItem(2, 'assets/images/character/icons/Body.svg', 'Shirt'),
-          _buildTabItem(3, 'assets/images/character/icons/Leg.svg', 'Pants'),
-          _buildTabItem(4, 'assets/images/character/icons/Hat.svg', 'Hat'),
+          _buildTabItem(0, 'assets/images/character/icons/Head.svg', S.of(context).faceTab),
+          _buildTabItem(1, 'assets/images/character/icons/Hair.svg', S.of(context).hairTab),
+          _buildTabItem(2, 'assets/images/character/icons/Body.svg', S.of(context).shirtTab),
+          _buildTabItem(3, 'assets/images/character/icons/Leg.svg', S.of(context).pantsTab),
+          _buildTabItem(4, 'assets/images/character/icons/Hat.svg', S.of(context).hatTab),
         ],
       ),
     );
@@ -735,14 +746,14 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Error loading shop items: $_errorMessage',
+              S.of(context).shopLoadError(_errorMessage ?? ''),
               textAlign: TextAlign.center,
               style: TextStyle(color: context.colors.brandRed),
             ),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _loadShopData,
-              child: const Text('Retry'),
+              child: Text(S.of(context).retry),
             ),
           ],
         ),
@@ -760,7 +771,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           (a, b) => (a.itemIndex ?? 0).compareTo(b.itemIndex ?? 0),
         );
         return _buildStyleGrid(
-          title: 'Choose Face',
+          title: S.of(context).chooseFace,
           categoryItems: categoryItems,
           selectedIndex: _currentConfig.headIndex,
           getStyleBytes: LegoCharacterHelper.getHeadBytes,
@@ -778,7 +789,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           (a, b) => (a.itemIndex ?? 0).compareTo(b.itemIndex ?? 0),
         );
         return _buildStyleGrid(
-          title: 'Choose Hair',
+          title: S.of(context).chooseHair,
           categoryItems: categoryItems,
           selectedIndex: _currentConfig.hairIndex,
           getStyleBytes: LegoCharacterHelper.getHairBytes,
@@ -796,7 +807,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           (a, b) => (a.itemIndex ?? 0).compareTo(b.itemIndex ?? 0),
         );
         return _buildStyleGrid(
-          title: 'Choose Shirt',
+          title: S.of(context).chooseShirt,
           categoryItems: categoryItems,
           selectedIndex: _currentConfig.bodyIndex,
           getStyleBytes: LegoCharacterHelper.getBodyBytes,
@@ -814,7 +825,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           (a, b) => (a.itemIndex ?? 0).compareTo(b.itemIndex ?? 0),
         );
         return _buildStyleGrid(
-          title: 'Choose Pants',
+          title: S.of(context).choosePants,
           categoryItems: categoryItems,
           selectedIndex: _currentConfig.legIndex,
           getStyleBytes: LegoCharacterHelper.getLegBytes,
@@ -832,7 +843,7 @@ class _LegoAvatarEditorDialogState extends State<LegoAvatarEditorDialog> {
           (a, b) => (a.itemIndex ?? 0).compareTo(b.itemIndex ?? 0),
         );
         return _buildStyleGrid(
-          title: 'Choose Hat',
+          title: S.of(context).chooseHat,
           categoryItems: categoryItems,
           selectedIndex: _currentConfig.hatIndex,
           getStyleBytes: LegoCharacterHelper.getHatBytes,

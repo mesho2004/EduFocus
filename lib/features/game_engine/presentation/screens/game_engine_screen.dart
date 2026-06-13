@@ -19,6 +19,7 @@ import '../widgets/popper_game.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/features/game_engine/data/services/curriculum_service.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class GameEngineScreen extends StatefulWidget {
   final LessonContent? lesson;
@@ -136,7 +137,7 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
                     ),
 
                     if (state is GameCorrectAnswerState ||
-                        state is GameCompletedState)
+                        (state is GameCompletedState && state.stars >= 2))
                       RewardOverlay(key: _rewardKey),
                   ],
                 ),
@@ -217,21 +218,28 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
         state is! GameWrongAnswerState) {
       _speak(state.currentQuestion.question, lesson?.ttsLanguage ?? 'en-US');
     } else if (state is GameCompletedState) {
-      _rewardKey.currentState?.trigger();
-      _speak(
-        _completedInLang(lesson?.ttsLanguage ?? 'en-US', state.stars),
-        lesson?.ttsLanguage ?? 'en-US',
-      );
-      if (lesson != null &&
-          lesson.rawSubjectType != null &&
-          lesson.unitId != null &&
-          lesson.lessonIndex != null) {
-        context.read<CurriculumCubit>().completeLesson(
-          subjectType: lesson.rawSubjectType!,
-          unitId: lesson.unitId!,
-          lessonIndex: lesson.lessonIndex!,
-          grade: lesson.grade,
-          term: lesson.term,
+      if (state.stars >= 2) {
+        _rewardKey.currentState?.trigger();
+        _speak(
+          _completedInLang(lesson?.ttsLanguage ?? 'en-US', state.stars),
+          lesson?.ttsLanguage ?? 'en-US',
+        );
+        if (lesson != null &&
+            lesson.rawSubjectType != null &&
+            lesson.unitId != null &&
+            lesson.lessonIndex != null) {
+          context.read<CurriculumCubit>().completeLesson(
+            subjectType: lesson.rawSubjectType!,
+            unitId: lesson.unitId!,
+            lessonIndex: lesson.lessonIndex!,
+            grade: lesson.grade,
+            term: lesson.term,
+          );
+        }
+      } else {
+        _speak(
+          _failedInLang(lesson?.ttsLanguage ?? 'en-US'),
+          lesson?.ttsLanguage ?? 'en-US',
         );
       }
     }
@@ -257,6 +265,11 @@ class _GameEngineScreenState extends State<GameEngineScreen> {
 
   String _tryAgainInLang(String lang) =>
       lang.startsWith('ar') ? 'حاول مرة أخرى!' : 'Try again! You can do it!';
+
+  String _failedInLang(String lang) =>
+      lang.startsWith('ar')
+          ? 'حاول مرة أخرى لتحصل على نجمتين أو أكثر وتجتاز الدرس!'
+          : 'Try again to get at least 2 stars and pass!';
 
   String _completedInLang(String lang, int stars) {
     if (lang.startsWith('ar')) {
@@ -472,6 +485,8 @@ class _CompletedPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stars = state.stars;
+    final isPassed = stars >= 2;
+
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -491,10 +506,10 @@ class _CompletedPanel extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('🏆', style: TextStyle(fontSize: 72)),
+              Text(isPassed ? '🏆' : '😢', style: const TextStyle(fontSize: 72)),
               const SizedBox(height: 12),
               Text(
-                'Lesson Complete!',
+                isPassed ? S.of(context).lessonComplete : S.of(context).tryAgain,
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w900,
@@ -503,13 +518,25 @@ class _CompletedPanel extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Score: ${state.score} / ${state.totalQuestions}',
+                S.of(context).lessonScore(state.score, state.totalQuestions),
                 style: TextStyle(
                   fontSize: 16,
                   color: context.colors.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              if (!isPassed) ...[
+                const SizedBox(height: 8),
+                Text(
+                  S.of(context).needTwoStars,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: context.colors.textSecondary.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -527,33 +554,40 @@ class _CompletedPanel extends StatelessWidget {
                 }),
               ),
               const SizedBox(height: 28),
-              _GreenButton(
-                label: '➡️  Next Lesson',
-                onTap: () async {
-                  final currentLesson = state.content;
-                  final subjectId = CurriculumData.parseSubjectId(
-                    currentLesson.rawSubjectType ?? '',
-                  );
-                  if (subjectId != null &&
-                      currentLesson.unitId != null &&
-                      currentLesson.lessonIndex != null) {
-                    final curriculumService = CurriculumService();
-                    final units = await curriculumService.loadCurriculum(
-                      subjectId,
+              if (isPassed)
+                _ActionButton(
+                  label: S.of(context).nextLesson,
+                  color: const Color(0xFF4CAF50),
+                  onTap: () async {
+                    final currentLesson = state.content;
+                    final subjectId = CurriculumData.parseSubjectId(
+                      currentLesson.rawSubjectType ?? '',
                     );
+                    if (subjectId != null &&
+                        currentLesson.unitId != null &&
+                        currentLesson.lessonIndex != null) {
+                      final curriculumService = CurriculumService();
+                      final units = await curriculumService.loadCurriculum(
+                        subjectId,
+                      );
 
-                    final unitIdx = units.indexWhere(
-                      (u) => u.unitIndex == currentLesson.unitId,
-                    );
-                    if (unitIdx != -1) {
-                      final unit = units[unitIdx];
-                      final nextLessonIndex = currentLesson.lessonIndex! + 1;
-                      if (nextLessonIndex < unit.lessons.length) {
-                        final nextLessonContent = unit.lessons[nextLessonIndex];
-                        if (context.mounted) {
-                          context.read<GameBloc>().add(
-                            GameLoadEvent(nextLessonContent),
-                          );
+                      final unitIdx = units.indexWhere(
+                        (u) => u.unitIndex == currentLesson.unitId,
+                      );
+                      if (unitIdx != -1) {
+                        final unit = units[unitIdx];
+                        final nextLessonIndex = currentLesson.lessonIndex! + 1;
+                        if (nextLessonIndex < unit.lessons.length) {
+                          final nextLessonContent = unit.lessons[nextLessonIndex];
+                          if (context.mounted) {
+                            context.read<GameBloc>().add(
+                              GameLoadEvent(nextLessonContent),
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         }
                       } else {
                         if (context.mounted) {
@@ -565,19 +599,22 @@ class _CompletedPanel extends StatelessWidget {
                         Navigator.pop(context);
                       }
                     }
-                  } else {
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  }
-                },
-              ),
+                  },
+                )
+              else
+                _ActionButton(
+                  label: S.of(context).tryAgainBtn,
+                  color: const Color(0xFFE53935),
+                  onTap: () {
+                    context.read<GameBloc>().add(const GameResetEvent());
+                  },
+                ),
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: const Text(
-                  'Back to Lessons →',
-                  style: TextStyle(
+                child: Text(
+                  S.of(context).backToLessons,
+                  style: const TextStyle(
                     color: Color(0xFF3B81B5),
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -592,11 +629,16 @@ class _CompletedPanel extends StatelessWidget {
   }
 }
 
-class _GreenButton extends StatelessWidget {
+class _ActionButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final Color color;
 
-  const _GreenButton({required this.label, required this.onTap});
+  const _ActionButton({
+    required this.label,
+    required this.onTap,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -606,7 +648,7 @@ class _GreenButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF4CAF50),
+          backgroundColor: color,
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(

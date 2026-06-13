@@ -1,5 +1,6 @@
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CreateChildProfileAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -12,7 +13,7 @@ class CreateChildProfileAppBar extends StatelessWidget
       elevation: 0,
       centerTitle: true,
       title: Text(
-        'New Explorer',
+        S.of(context).newExplorer,
         style: TextStyle(
           color: context.colors.textPrimary,
           fontSize: 20,

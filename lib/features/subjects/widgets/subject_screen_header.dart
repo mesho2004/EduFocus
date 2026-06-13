@@ -5,6 +5,8 @@ import 'package:edufocus/core/bloc/stars_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
 
+import 'package:edufocus/generated/l10n.dart';
+
 class SubjectScreenHeader extends StatelessWidget {
   const SubjectScreenHeader({super.key});
   @override
@@ -31,7 +33,7 @@ class SubjectScreenHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hi $name! 👋',
+                      S.of(context).hiName(name),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
@@ -39,7 +41,7 @@ class SubjectScreenHeader extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Choose your subject and start playing!',
+                      S.of(context).homeDescription,
                       style: TextStyle(
                         fontSize: 12,
                         color: context.colors.textTertiary,

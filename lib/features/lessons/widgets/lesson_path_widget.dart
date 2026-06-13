@@ -5,6 +5,7 @@ import 'package:edufocus/features/lessons/widgets/path_line_painter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class LessonPath extends StatelessWidget {
   final List<LessonData> lessons;
@@ -44,11 +45,14 @@ class LessonPath extends StatelessWidget {
             final lesson = lessons[lessonIdx];
             final offset = _offsets[lessonIdx % _offsets.length];
 
+            final isLocked = lessonIdx > 0 && !lessons[lessonIdx - 1].isCompleted;
+
             return LessonNode(
               lesson: lesson,
               index: lessonIdx,
               offset: offset,
               subject: subject,
+              isLocked: isLocked,
               onTap: () => _launchLesson(context, lessonIdx),
             );
           }),
@@ -68,8 +72,8 @@ class LessonPath extends StatelessWidget {
         Navigator.pushNamed(ctx, AppRoutes.gameEngine, arguments: content);
       } else if (ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('عذرًا، محتوى هذا الدرس غير متوفر حاليًا.'),
+          SnackBar(
+            content: Text(S.of(ctx).lessonNotFound),
           ),
         );
       }
@@ -77,7 +81,7 @@ class LessonPath extends StatelessWidget {
       if (ctx.mounted) {
         ScaffoldMessenger.of(
           ctx,
-        ).showSnackBar(SnackBar(content: Text('خطأ في تحميل الدرس: $e')));
+        ).showSnackBar(SnackBar(content: Text('${S.of(ctx).lessonErrorLoading} ($e)')));
       }
     }
   }

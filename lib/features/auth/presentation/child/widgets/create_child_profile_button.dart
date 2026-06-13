@@ -1,6 +1,7 @@
 import 'package:edufocus/features/auth/presentation/child/widgets/child_footer.dart';
 import 'package:edufocus/features/auth/presentation/child/widgets/create_child_primary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CreateChildProfileBottomSection extends StatelessWidget {
   const CreateChildProfileBottomSection({
@@ -19,15 +20,15 @@ class CreateChildProfileBottomSection extends StatelessWidget {
       child: Column(
         children: [
           CreateChildPrimaryButton(
-            text: 'Start Learning',
+            text: S.of(context).startLearning,
             onPressed: onPressed,
             trailingIcon: Icons.play_circle_fill_rounded,
             height: 64,
             isLoading: isLoading,
           ),
           const SizedBox(height: 8),
-          const ChildFooter(
-            text: 'Parents: You can change these later in settings',
+          ChildFooter(
+            text: S.of(context).heroFooter,
           ),
         ],
       ),

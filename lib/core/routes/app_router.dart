@@ -4,7 +4,6 @@ import 'package:edufocus/features/auth/presentation/child/create_child_profile.d
 import 'package:edufocus/features/auth/presentation/forgot%20password/forgot_password_screen.dart';
 import 'package:edufocus/features/auth/otp_screen.dart';
 import 'package:edufocus/features/lessons/lessons_path_screen.dart';
-import 'package:edufocus/features/dashboard/parent_dashboard_screen.dart';
 import 'package:edufocus/features/auth/presentation/parent/parent_auth_screen.dart';
 import 'package:edufocus/features/splash_screen.dart';
 import 'package:edufocus/features/units/units_screen.dart';
@@ -19,7 +18,6 @@ class AppRouter {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.registration: (context) => const CreateChildProfile(),
         AppRoutes.parentAuth: (context) => const ParentAuthScreen(),
-        AppRoutes.parentDashboard: (context) => const ParentDashboardScreen(),
         AppRoutes.subjectsGridView: (context) =>
             const MainNavigationScreen(initialIndex: 0),
         AppRoutes.units: (context) => const UnitsScreen(),

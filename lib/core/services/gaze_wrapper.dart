@@ -49,7 +49,7 @@ class _GazeWrapperState extends State<GazeWrapper> with WidgetsBindingObserver {
   void _startGaze() {
     final size = MediaQuery.of(context).size;
     _gazeService.start(
-      serverUrl: 'ws://192.168.1.72:8000/ws/gaze/client1',
+      serverUrl: 'ws://192.168.1.82:8000/ws/gaze/client1',
       screenWidth: size.width,
       screenHeight: size.height,
     );

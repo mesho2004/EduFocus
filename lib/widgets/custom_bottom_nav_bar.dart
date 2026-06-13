@@ -1,6 +1,7 @@
 import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -30,21 +31,21 @@ class CustomBottomNavBar extends StatelessWidget {
               _buildBottomNav(
                 context,
                 Icons.home,
-                'Home',
+                S.of(context).homeTab,
                 currentIndex == 0,
                 () => onTap(0),
               ),
               _buildBottomNav(
                 context,
                 Icons.trending_up,
-                'Progress',
+                S.of(context).progressTab,
                 currentIndex == 1,
                 () => onTap(1),
               ),
               _buildBottomNav(
                 context,
                 Icons.person,
-                'Profile',
+                S.of(context).profileTab,
                 currentIndex == 2,
                 () => onTap(2),
               ),

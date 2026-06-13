@@ -6,6 +6,7 @@ import 'package:edufocus/core/bloc/stars_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_cubit.dart';
 import 'package:edufocus/core/bloc/curriculum_state.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
@@ -19,7 +20,7 @@ class ProgressScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'My Progress',
+          S.of(context).myProgress,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
@@ -38,7 +39,7 @@ class ProgressScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildSectionTitle(
                 context,
-                'Trophy Room',
+                S.of(context).trophyRoom,
                 Icons.emoji_events_rounded,
                 context.colors.brandYellow,
               ),
@@ -130,8 +131,8 @@ class ProgressScreen extends StatelessWidget {
                 children: [
                   _buildHeroStat(
                     icon: '🔥',
-                    label: 'Streak',
-                    value: '$streakDays Days',
+                    label: S.of(context).streak,
+                    value: S.of(context).streakDaysValue(streakDays),
                     color: context.colors.brandOrange,
                   ),
                   Container(
@@ -141,7 +142,7 @@ class ProgressScreen extends StatelessWidget {
                   ),
                   _buildHeroStat(
                     icon: '🪙',
-                    label: 'Coins',
+                    label: S.of(context).coins,
                     value: '$stars',
                     color: context.colors.brandYellow,
                   ),
@@ -155,7 +156,7 @@ class ProgressScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Completed $completedLessons of $totalLessons lessons',
+                        S.of(context).completedLessonsProgress(completedLessons, totalLessons),
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -281,7 +282,7 @@ class ProgressScreen extends StatelessWidget {
             children: [
               _buildMapNode(
                 context,
-                title: 'Sentences',
+                title: S.of(context).sentencesUnit,
                 isLocked: true,
                 isActive: false,
                 isCompleted: false,
@@ -292,7 +293,7 @@ class ProgressScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildMapNode(
                 context,
-                title: 'Words II',
+                title: S.of(context).wordsUnit2,
                 isLocked: true,
                 isActive: false,
                 isCompleted: false,
@@ -303,7 +304,7 @@ class ProgressScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildMapNode(
                 context,
-                title: 'Words I',
+                title: S.of(context).wordsUnit1,
                 isLocked: false,
                 isActive: true,
                 isCompleted: false,
@@ -314,7 +315,7 @@ class ProgressScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildMapNode(
                 context,
-                title: 'Letters II',
+                title: S.of(context).lettersUnit2,
                 isLocked: false,
                 isActive: false,
                 isCompleted: true,
@@ -325,7 +326,7 @@ class ProgressScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildMapNode(
                 context,
-                title: 'Letters I',
+                title: S.of(context).lettersUnit1,
                 isLocked: false,
                 isActive: false,
                 isCompleted: true,
@@ -472,12 +473,12 @@ class ProgressScreen extends StatelessWidget {
             crossAxisSpacing: 16,
             childAspectRatio: 0.8,
             children: [
-              _buildTrophyBadge(context, 'First Win', '🌟', firstWinUnlocked),
-              _buildTrophyBadge(context, 'Speedy', '⚡', speedyUnlocked),
-              _buildTrophyBadge(context, 'Streak x3', '🔥', streakUnlocked),
-              _buildTrophyBadge(context, 'Words', '📖', wordsUnlocked),
-              _buildTrophyBadge(context, 'Numbers', '🔢', numbersUnlocked),
-              _buildTrophyBadge(context, 'Master', '👑', masterUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophyFirstWin, '🌟', firstWinUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophySpeedy, '⚡', speedyUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophyStreak3, '🔥', streakUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophyWords, '📖', wordsUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophyNumbers, '🔢', numbersUnlocked),
+              _buildTrophyBadge(context, S.of(context).trophyMaster, '👑', masterUnlocked),
             ],
           ),
         );
@@ -578,7 +579,7 @@ class ProgressScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Supermarket',
+                  S.of(context).supermarketTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
@@ -587,7 +588,7 @@ class ProgressScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Continue your shopping adventure!',
+                  S.of(context).supermarketDesc,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -619,8 +620,8 @@ class ProgressScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text(
-                      'Play Again',
+                    child: Text(
+                      S.of(context).playAgain,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,

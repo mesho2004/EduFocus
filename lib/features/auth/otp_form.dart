@@ -1,6 +1,7 @@
 import 'package:edufocus/features/auth/presentation/parent/widgets/auth_field_label.dart';
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/utils/widgets/custom_text_field.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class OtpForm extends StatelessWidget {
   const OtpForm({
@@ -29,38 +30,38 @@ class OtpForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const AuthFieldLabel(text: 'Email'),
+        AuthFieldLabel(text: S.of(context).email),
         const SizedBox(height: 8),
 
         CustomTextFormField(
           controller: emailController,
-          hintText: 'Email',
+          hintText: S.of(context).emailHint,
           keyboardType: TextInputType.emailAddress,
           validator: emailValidator,
         ),
 
         const SizedBox(height: 16),
 
-        const AuthFieldLabel(text: 'Reset Code / OTP'),
+        AuthFieldLabel(text: S.of(context).resetCodeLabel),
 
         const SizedBox(height: 8),
 
         CustomTextFormField(
           controller: codeController,
-          hintText: 'Enter 6-digit code',
+          hintText: S.of(context).resetCodeHint,
           keyboardType: TextInputType.number,
           validator: codeValidator,
         ),
 
         const SizedBox(height: 16),
 
-        const AuthFieldLabel(text: 'New Password'),
+        AuthFieldLabel(text: S.of(context).newPasswordLabel),
 
         const SizedBox(height: 8),
 
         CustomTextFormField(
           controller: passwordController,
-          hintText: 'Choose a new password',
+          hintText: S.of(context).newPasswordHint,
           obscureText: true,
           isPassword: true,
           validator: passwordValidator,
@@ -68,13 +69,13 @@ class OtpForm extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        const AuthFieldLabel(text: 'Confirm New Password'),
+        AuthFieldLabel(text: S.of(context).confirmNewPasswordLabel),
 
         const SizedBox(height: 8),
 
         CustomTextFormField(
           controller: confirmPasswordController,
-          hintText: 'Re-enter new password',
+          hintText: S.of(context).confirmNewPasswordHint,
           obscureText: true,
           isPassword: true,
           validator: confirmPasswordValidator,

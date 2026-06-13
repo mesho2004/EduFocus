@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 void showTopNotification(BuildContext context, String code) {
   final overlay = Overlay.of(context);
@@ -92,9 +93,9 @@ class _TopNotificationWidgetState extends State<_TopNotificationWidget>
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'EduFocus Reset Code',
-                          style: TextStyle(
+                        Text(
+                          S.of(context).resetCodeNotificationTitle,
+                          style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -102,7 +103,7 @@ class _TopNotificationWidgetState extends State<_TopNotificationWidget>
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Your reset code is: ${widget.code}',
+                          S.of(context).resetCodeNotificationBody(widget.code),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,

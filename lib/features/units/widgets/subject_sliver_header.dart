@@ -3,6 +3,7 @@ import 'package:edufocus/features/units/widgets/stat_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:edufocus/core/bloc/stars_cubit.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class SubjectSliverHeader extends StatelessWidget {
   final SubjectData subject;
@@ -131,9 +132,9 @@ class SubjectSliverHeader extends StatelessWidget {
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                StatChip('${subject.units.length} units'),
+                                StatChip('${subject.units.length} ${S.of(context).units.toLowerCase()}'),
                                 const SizedBox(width: 8),
-                                StatChip('${subject.totalLessons} lesson'),
+                                StatChip('${subject.totalLessons} ${S.of(context).lessons.toLowerCase()}'),
                               ],
                             ),
                             const SizedBox(height: 8),

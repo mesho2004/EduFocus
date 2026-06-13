@@ -2,6 +2,7 @@ import 'package:edufocus/core/data/curriculum_data.dart';
 import 'package:edufocus/core/themes/app_colors.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class UnitCard extends StatefulWidget {
   final UnitData unit;
@@ -146,7 +147,7 @@ class _UnitCardState extends State<UnitCard>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${unit.completedLessons} / ${unit.lessons.length} درس  ($pct%)',
+                          S.of(context).lessonsCount(unit.completedLessons, unit.lessons.length, pct),
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -155,7 +156,7 @@ class _UnitCardState extends State<UnitCard>
                         ),
                       ] else
                         Text(
-                          '🔒 أكمل الوحدة السابقة أولاً',
+                          '🔒 ${S.of(context).completePrevUnitFirst}',
                           style: TextStyle(
                             fontSize: 11,
                             color: context.colors.textTertiary,

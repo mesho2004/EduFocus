@@ -6,6 +6,7 @@ import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/network/api_services.dart';
 import 'package:edufocus/core/di/di.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -51,17 +52,17 @@ class _OtpScreenState extends State<OtpScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
+      return S.of(context).emailRequired;
     }
 
     final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    return regex.hasMatch(value.trim()) ? null : 'Enter a valid email address';
+    return regex.hasMatch(value.trim()) ? null : S.of(context).emailInvalid;
   }
 
   String? _validateCode(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Reset code is required';
+      return S.of(context).resetCodeRequired;
     }
 
     return null;
@@ -69,11 +70,11 @@ class _OtpScreenState extends State<OtpScreen> {
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return S.of(context).passwordRequired;
     }
 
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return S.of(context).passwordTooShort;
     }
 
     return null;
@@ -81,11 +82,11 @@ class _OtpScreenState extends State<OtpScreen> {
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return S.of(context).confirmPasswordRequired;
     }
 
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return S.of(context).passwordsDoNotMatch;
     }
 
     return null;

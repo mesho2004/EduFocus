@@ -13,6 +13,7 @@ import 'package:edufocus/core/caching/app_shared_pref.dart';
 import 'package:edufocus/core/caching/app_shared_pref_key.dart';
 import 'package:edufocus/main.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class CreateChildProfile extends StatefulWidget {
   const CreateChildProfile({super.key});
@@ -37,7 +38,7 @@ class _CreateChildProfileState extends State<CreateChildProfile> {
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter your name'),
+          content: Text(S.of(context).enterNameError),
           backgroundColor: context.colors.brandRed,
         ),
       );
@@ -67,12 +68,12 @@ class _CreateChildProfileState extends State<CreateChildProfile> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Welcome, ${state.child.name}! Let\'s start learning! 🚀',
+                S.of(context).welcomeHero(state.child.name),
               ),
               backgroundColor: context.colors.brandGreen,
             ),
           );
-          Navigator.pushReplacementNamed(context, AppRoutes.onboardingTutorial);
+          Navigator.pushReplacementNamed(context, AppRoutes.subjectsGridView);
         } else if (state is ChildCreateFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -102,7 +103,7 @@ class _CreateChildProfileState extends State<CreateChildProfile> {
                         CreateChildProfileForm(controller: _nameController),
                         const SizedBox(height: 28),
                         Text(
-                          'How old are you?',
+                          S.of(context).howOldAreYou,
                           style: TextStyle(
                             color: context.colors.textSecondary,
                             fontSize: 16,

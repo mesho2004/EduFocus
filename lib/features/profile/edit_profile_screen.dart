@@ -6,6 +6,7 @@ import 'package:edufocus/core/bloc/curriculum_state.dart';
 import 'package:edufocus/core/utils/lego_character_helper.dart';
 import 'package:edufocus/core/utils/widgets/lego_character_widget.dart';
 import 'package:edufocus/features/profile/widgets/lego_avatar_editor_dialog.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -49,8 +50,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!_isInitialized) {
       final state = context.read<CurriculumCubit>().state;
       if (state is CurriculumLoaded && state.childProfile != null) {
-        _nameCtrl.text = state.childProfile!.name;
-        _ageCtrl.text = state.childProfile!.age.toString();
+        final profile = state.childProfile!;
+        _nameCtrl.text = profile.name;
+        _ageCtrl.text = profile.age.toString();
+        if (profile.equippedAvatar != null) {
+          final avatar = profile.equippedAvatar!;
+          _legoConfig = LegoConfig(
+            headIndex: avatar.headIndex ?? 1,
+            hairIndex: avatar.hairIndex ?? 1,
+            bodyIndex: avatar.bodyIndex ?? 1,
+            legIndex: avatar.legIndex ?? 1,
+            hatIndex: avatar.hatIndex ?? 0,
+          );
+        }
       }
       _isInitialized = true;
     }
@@ -79,7 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Profile updated successfully! ✨'),
+            content: Text(S.of(context).profileUpdatedSuccess),
             backgroundColor: context.colors.brandGreen,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -93,7 +105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating profile: $e 😢'),
+            content: Text(S.of(context).profileUpdatedError(e.toString())),
             backgroundColor: context.colors.brandRed,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -125,7 +137,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         centerTitle: true,
         title: Text(
-          'Edit Profile',
+          S.of(context).editProfile,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w900,
@@ -212,7 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 36),
 
                 Text(
-                  "Child's Name",
+                  S.of(context).childNameLabel,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -227,7 +239,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Enter name',
+                    hintText: S.of(context).enterNameHint,
                     hintStyle: TextStyle(color: context.colors.textTertiary),
                     filled: true,
                     fillColor: context.colors.cardBackground,
@@ -263,14 +275,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty)
-                      return 'Name cannot be empty';
+                      return S.of(context).nameCannotBeEmpty;
                     return null;
                   },
                 ),
                 const SizedBox(height: 24),
 
                 Text(
-                  "Child's Age",
+                  S.of(context).childAgeLabel,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -286,7 +298,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Enter age',
+                    hintText: S.of(context).enterAgeHint,
                     hintStyle: TextStyle(color: context.colors.textTertiary),
                     filled: true,
                     fillColor: context.colors.cardBackground,
@@ -322,10 +334,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty)
-                      return 'Age cannot be empty';
+                      return S.of(context).ageCannotBeEmpty;
                     final age = int.tryParse(v.trim());
                     if (age == null || age <= 0)
-                      return 'Enter a valid positive age';
+                      return S.of(context).enterValidAge;
                     return null;
                   },
                 ),
@@ -355,9 +367,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               strokeWidth: 3,
                             ),
                           )
-                        : const Text(
-                            'Save Changes',
-                            style: TextStyle(
+                        : Text(
+                            S.of(context).saveChanges,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
                             ),

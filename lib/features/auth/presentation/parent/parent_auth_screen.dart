@@ -12,6 +12,8 @@ import 'package:edufocus/features/auth/presentation/parent/widgets/auth_mode_tog
 import 'package:edufocus/features/auth/presentation/parent/widgets/auth_primary_button.dart';
 import 'package:edufocus/core/routes/app_routes.dart';
 
+import 'package:edufocus/generated/l10n.dart';
+
 class ParentAuthScreen extends StatefulWidget {
   const ParentAuthScreen({super.key});
 
@@ -126,7 +128,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
 
                     const SizedBox(height: 24),
                     AuthPrimaryButton(
-                      label: isLogin ? 'Sign In' : 'Create Account',
+                      label: isLogin ? S.of(context).login : S.of(context).createAccount,
                       icon: isLogin
                           ? Icons.login_rounded
                           : Icons.person_add_alt_1_rounded,

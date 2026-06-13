@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 enum AuthMode { login, signUp }
 
@@ -24,12 +25,12 @@ class AuthModeToggle extends StatelessWidget {
       child: Row(
         children: [
           _AuthTab(
-            label: 'Login',
+            label: S.of(context).login,
             selected: current == AuthMode.login,
             onTap: () => onChanged(AuthMode.login),
           ),
           _AuthTab(
-            label: 'Sign Up',
+            label: S.of(context).signUp,
             selected: current == AuthMode.signUp,
             onTap: () => onChanged(AuthMode.signUp),
           ),

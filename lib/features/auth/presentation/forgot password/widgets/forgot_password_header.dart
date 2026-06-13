@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:edufocus/core/themes/app_theme.dart';
 import 'package:edufocus/core/widgets/edufocus_logo.dart';
+import 'package:edufocus/generated/l10n.dart';
 
 class ForgotPasswordHeader extends StatelessWidget {
   const ForgotPasswordHeader({super.key});
@@ -14,7 +15,7 @@ class ForgotPasswordHeader extends StatelessWidget {
         const SizedBox(height: 28),
 
         Text(
-          'Forgot Password',
+          S.of(context).forgotPassword,
           style: TextStyle(
             color: context.colors.textPrimary,
             fontSize: 26,
@@ -26,7 +27,7 @@ class ForgotPasswordHeader extends StatelessWidget {
         const SizedBox(height: 8),
 
         Text(
-          'Enter your registered parent email to receive a password reset code.',
+          S.of(context).forgotPasswordDescription,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: context.colors.textSecondary,
