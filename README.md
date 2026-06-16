@@ -123,3 +123,23 @@ The `GazeService` connects to a WebSocket server to process frames and return co
 - **confetti**: Celebrating child victories and completions.
 - **shared_preferences**: Local database storage for user settings.
 - **google_fonts**: Visual styles and premium typography.
+
+
+---
+
+## Demo📱
+
+https://github.com/user-attachments/assets/ee1d6ab1-db9a-4bf8-af86-7abfedb19d6a
+
+---
+
+## APK📱
+
+https://drive.google.com/file/d/1oo2WIgFCF_J4nu20UZ1yYsNsqtYqORkW/view?usp=drive_link
+
+
+
+
+
+
+
